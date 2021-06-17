@@ -481,6 +481,9 @@ def no_log_url_not_secure():
     the_silent()
 
 def log():
+    global file
+    file = open("log.txt", "a")
+    
     global website
     
     os.system("clear")
