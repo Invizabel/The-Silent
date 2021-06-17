@@ -893,6 +893,8 @@ def log_url_not_secure():
     the_silent()
     
 def image():
+    secure = ""
+
     global website
     
     os.system("clear")
@@ -907,8 +909,14 @@ def image():
     print("Downloading!")
 
     start = time.time()
+
+    if https == True:
+        secure = "https"
+
+    if https == False:
+        secure = "http"
     
-    output = https + website
+    output = secure + website
 
     picture = str(output)
 
@@ -925,6 +933,8 @@ def image():
     the_silent()
 
 def pdf():
+    secure = ""
+    
     global website
     
     os.system("clear")
@@ -939,8 +949,14 @@ def pdf():
     print("Downloading!")
 
     start = time.time()
+
+    if https == True:
+        secure = "https"
+
+    if https == False:
+        secure = "http"
     
-    output = https + website
+    output = secure + website
 
     pdf = output
 
@@ -959,6 +975,8 @@ def pdf():
     the_silent()
 
 def html():
+    secure = ""
+    
     global website
     
     os.system("clear")
@@ -970,8 +988,14 @@ def html():
     print("Downloading!")
 
     start = time.time()
+
+    if https == True:
+        secure = "https"
+
+    if https == False:
+        secure = "http"
     
-    output = https + website
+    output = secure + website
 
     final = requests.get(output, verify = valid_certificate)
 
@@ -987,6 +1011,8 @@ def html():
     the_silent()
 
 def all_images():
+    secure = ""
+    
     count = 0
     
     global website
@@ -1000,8 +1026,14 @@ def all_images():
     print("Downloading!")
 
     start = time.time()
+
+    if https == True:
+        secure = "https"
+
+    if https == False:
+        secure = "http"
     
-    output = https + website
+    output = secure + website
 
     url = requests.get(output, verify = valid_certificate)
     out = str(url.text)
@@ -1077,6 +1109,8 @@ def all_images():
     the_silent()
 
 def all_data():
+    secure = ""
+
     count = 0
     
     global website
@@ -1090,8 +1124,14 @@ def all_data():
     print("Downloading!")
 
     start = time.time()
+
+    if https == True:
+        secure = "https"
+
+    if https == False:
+        secure = "http"
     
-    output = https + website
+    output = secure + website
 
     url = requests.get(output, verify = valid_certificate)
     out = str(url.text)
