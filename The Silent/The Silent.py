@@ -102,7 +102,7 @@ def security():
         user_valid_certificate = input("valid certificate? y/n\n")
 
         if user_valid_certificate == "y":
-            valid_certificate == True
+            valid_certificate = True
 
         if user_valid_certificate == "n":
             valid_certificate = False
