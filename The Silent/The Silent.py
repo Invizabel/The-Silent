@@ -914,10 +914,10 @@ def image():
     start = time.time()
 
     if https == True:
-        secure = "https"
+        secure = "https://"
 
     if https == False:
-        secure = "http"
+        secure = "http://"
     
     output = secure + website
 
@@ -954,10 +954,10 @@ def pdf():
     start = time.time()
 
     if https == True:
-        secure = "https"
+        secure = "https://"
 
     if https == False:
-        secure = "http"
+        secure = "http://"
     
     output = secure + website
 
@@ -993,10 +993,10 @@ def html():
     start = time.time()
 
     if https == True:
-        secure = "https"
+        secure = "https://"
 
     if https == False:
-        secure = "http"
+        secure = "http://"
     
     output = secure + website
 
@@ -1031,10 +1031,10 @@ def all_images():
     start = time.time()
 
     if https == True:
-        secure = "https"
+        secure = "https://"
 
     if https == False:
-        secure = "http"
+        secure = "http://"
     
     output = secure + website
 
@@ -1129,10 +1129,10 @@ def all_data():
     start = time.time()
 
     if https == True:
-        secure = "https"
+        secure = "https://"
 
     if https == False:
-        secure = "http"
+        secure = "http://"
     
     output = secure + website
 
