@@ -4,6 +4,7 @@
 #https://www.geeksforgeeks.org/python-check-url-string/
 #https://www.w3schools.com/python/gloss_python_check_string.asp
 #https://stackoverflow.com/questions/38015537/python-requests-exceptions-sslerror-dh-key-too-small
+#https://www.geeksforgeeks.org/create-a-directory-in-python/
 
 import os
 import random
@@ -11,6 +12,28 @@ import re
 import requests
 import time
 import urllib3
+
+main_folder = "data"
+all_data_folder = "all data"
+html_folder = "html"
+images_folder = "images"
+log_folder = "log"
+pdf_folder = "pdf"
+
+files = os.path.join(main_folder, all_data_folder)
+os.makedirs(files, exist_ok = True)
+
+files = os.path.join(main_folder, html_folder)
+os.makedirs(files, exist_ok = True)
+
+files = os.path.join(main_folder, images_folder)
+os.makedirs(files, exist_ok = True)
+
+files = os.path.join(main_folder, log_folder)
+os.makedirs(files, exist_ok = True)
+
+files = os.path.join(main_folder, pdf_folder)
+os.makedirs(files, exist_ok = True)
 
 https = True
 valid_certificate = True
