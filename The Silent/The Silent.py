@@ -5,6 +5,7 @@
 #https://www.w3schools.com/python/gloss_python_check_string.asp
 #https://stackoverflow.com/questions/38015537/python-requests-exceptions-sslerror-dh-key-too-small
 #https://www.geeksforgeeks.org/create-a-directory-in-python/
+#https://stackoverflow.com/questions/7935972/writing-to-a-new-directory-in-python-without-changing-directory
 
 import os
 import random
@@ -1077,7 +1078,7 @@ def all_images():
             picture = str(i)
             data = requests.get(picture, verify = valid_certificate)
 
-            with open("image " + str(count)  + ".jpeg", "wb") as file_writer:
+            with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jpeg == True and y == False:
@@ -1086,7 +1087,7 @@ def all_images():
             picture = secure + str(i)
             data = requests.get(picture, verify = valid_certificate)
 
-            with open("image " + str(count)  + ".jpeg", "wb") as file_writer:
+            with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jpg == True and y == True:
@@ -1095,7 +1096,7 @@ def all_images():
             picture = str(i)
             data = requests.get(picture, verify = valid_certificate)
 
-            with open("image " + str(count)  + ".jpg", "wb") as file_writer:
+            with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
                 file_writer.write(data.content)
                 
         if jpg == True and y == False:
@@ -1104,7 +1105,7 @@ def all_images():
             picture = secure + str(i)
             data = requests.get(picture, verify = valid_certificate)
 
-            with open("image " + str(count)  + ".jpg", "wb") as file_writer:
+            with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if png == True and y == True:
@@ -1113,7 +1114,7 @@ def all_images():
             picture = str(i)
             data = requests.get(picture, verify = valid_certificate)
 
-            with open("image " + str(count)  + ".png", "wb") as file_writer:
+            with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if png == True and y == False:
@@ -1122,7 +1123,7 @@ def all_images():
             picture = secure + str(i)
             data = requests.get(picture, verify = valid_certificate)
 
-            with open("image " + str(count)  + ".png", "wb") as file_writer:
+            with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
                 file_writer.write(data.content)
 
     end = time.time()
