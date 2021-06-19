@@ -506,10 +506,10 @@ def no_log_url_not_secure():
 
 def log():
     global file
-    file = open("log.txt", "a")
-    
     global website
-    
+
+    file = open(os.path.join("data/log", "log.txt"), "a")
+
     os.system("clear")
 
     website = input("enter website:\n")
