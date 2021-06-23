@@ -949,7 +949,7 @@ def image():
 
     data = requests.get(picture, verify = valid_certificate)
 
-    with open(name, "wb") as file_writer:
+    with open(os.path.join("data/images", name), "wb") as file_writer:
         file_writer.write(data.content)
 
     end = time.time()
@@ -989,7 +989,7 @@ def pdf():
 
     data = requests.get(pdf, stream = True, verify = valid_certificate)
 
-    with open(name, "wb") as pdf:
+    with open(os.path.join("data/pdf", name), "wb") as pdf:
         for chunk in data.iter_content(chunk_size=1024):
             if chunk:
                 pdf.write(chunk)
@@ -1026,7 +1026,7 @@ def html():
 
     final = requests.get(output, verify = valid_certificate)
 
-    file = open(user_input + ".html", "w+")
+    file = open(os.path.join("data/html", website + ".html"), "w+")
     file.write(final.text)
 
     final.close()
@@ -1164,7 +1164,7 @@ def all_data():
     out = str(url.text)
     web_list = find_url(out)
 
-    file = open(user_input + ".html", "w+")
+    file = open(os.path.join("data/all data", website + ".html"), "w+")
     file.write(url.text)
 
     url.close()
@@ -1203,7 +1203,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".app", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".app"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if app == True and y == False:
@@ -1212,7 +1212,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".app", "wb") as file_writer:
+            with open(os.path.join("data/all data","file " + str(count)  + ".app"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if avi == True and y == True:
@@ -1221,7 +1221,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".avi", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".avi"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if avi == True and y == False:
@@ -1230,7 +1230,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".avi", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".avi"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if bat == True and y == True:
@@ -1239,7 +1239,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".bat", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".bat"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if bat == True and y == False:
@@ -1248,7 +1248,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".bat", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".bat"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if cmd == True and y == True:
@@ -1257,7 +1257,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".cmd", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".cmd"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if cmd == True and y == False:
@@ -1266,7 +1266,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".cmd", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".cmd"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if css == True and y == True:
@@ -1275,7 +1275,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".css", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".css"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if css == True and y == False:
@@ -1284,7 +1284,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".css", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".css"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if doc == True and y == True:
@@ -1293,7 +1293,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".doc", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".doc"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if doc == True and y == False:
@@ -1302,7 +1302,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".doc", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".doc"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if docx == True and y == True:
@@ -1311,7 +1311,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".docx", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".docx"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if docx == True and y == False:
@@ -1320,7 +1320,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".docx", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".docx"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if exe == True and y == True:
@@ -1329,7 +1329,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".exe", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".exe"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if exe == True and y == False:
@@ -1338,7 +1338,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".exe", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".exe"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if gif == True and y == True:
@@ -1347,7 +1347,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".gif", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".gif"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if gif == True and y == False:
@@ -1356,7 +1356,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".gif", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".gif"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if html == True and y == True:
@@ -1365,7 +1365,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".html", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".html"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if html == True and y == False:
@@ -1374,7 +1374,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".html", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".html"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jar == True and y == True:
@@ -1383,7 +1383,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".jar", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".jar"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jar == True and y == False:
@@ -1392,7 +1392,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".jar", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".jar"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if java == True and y == True:
@@ -1401,7 +1401,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".java", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".java"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if java == True and y == False:
@@ -1410,7 +1410,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".java", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".java"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jpeg == True and y == True:
@@ -1419,7 +1419,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".jpeg", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jpeg == True and y == False:
@@ -1428,7 +1428,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".jpeg", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jpg == True and y == True:
@@ -1437,7 +1437,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".jpg", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".jpg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jpg == True and y == False:
@@ -1446,7 +1446,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".jpg", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".jpg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jss == True and y == True:
@@ -1455,7 +1455,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".jss", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".jss"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jss == True and y == False:
@@ -1464,7 +1464,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".jss", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".jss"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if m4a == True and y == True:
@@ -1473,7 +1473,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".m4a", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".m4a"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if m4a == True and y == False:
@@ -1482,7 +1482,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".m4a", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".m4a"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if mp3 == True and y == True:
@@ -1491,7 +1491,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".mp3", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".mp3"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if mp3 == True and y == False:
@@ -1500,7 +1500,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".mp3", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".mp3"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if mp4 == True and y == True:
@@ -1509,7 +1509,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".mp4", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".mp4"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if mp4 == True and y == False:
@@ -1518,7 +1518,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".mp4", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".mp4"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if pdf == True and y == True:
@@ -1527,7 +1527,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".pdf", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".pdf"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if pdf == True and y == False:
@@ -1536,7 +1536,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".pdf", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".pdf"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if png == True and y == True:
@@ -1545,7 +1545,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".png", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".png"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if png == True and y == False:
@@ -1554,7 +1554,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".png", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".png"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if py == True and y == True:
@@ -1563,7 +1563,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".py", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".py"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if py == True and y == False:
@@ -1572,7 +1572,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".py", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".py"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if sh == True and y == True:
@@ -1581,7 +1581,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".sh", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".sh"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if sh == True and y == False:
@@ -1590,7 +1590,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".sh", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".sh"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if txt == True and y == True:
@@ -1599,7 +1599,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".txt", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".txt"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if txt == True and y == False:
@@ -1608,7 +1608,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".txt", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".txt"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if xml == True and y == True:
@@ -1617,7 +1617,7 @@ def all_data():
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".xml", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".xml"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if xml == True and y == False:
@@ -1626,7 +1626,7 @@ def all_data():
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
-            with open("file " + str(count)  + ".xml", "wb") as file_writer:
+            with open(os.path.join("data/all data", "file " + str(count)  + ".xml"), "wb") as file_writer:
                 file_writer.write(data.content)
 
     end = time.time()
