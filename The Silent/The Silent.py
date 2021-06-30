@@ -6,6 +6,7 @@
 #https://stackoverflow.com/questions/38015537/python-requests-exceptions-sslerror-dh-key-too-small
 #https://www.geeksforgeeks.org/create-a-directory-in-python/
 #https://stackoverflow.com/questions/7935972/writing-to-a-new-directory-in-python-without-changing-directory
+#https://medium.com/@jasonrigden/using-tor-with-the-python-request-library-79015b2606cb
 
 import os
 import random
@@ -13,6 +14,18 @@ import re
 import requests
 import time
 import urllib3
+
+tor = requests.session()
+tor.proxies = {}
+
+tor.proxies["http"] = "socks5h://localhost:9050"
+tor.proxies["https"] = "socks5h://localhost:9050"
+
+operating_systems = {}
+operating_systems['User-agent'] = "Chrome"
+
+#r = tor.get('https://httpbin.org/user-agent', headers = operating_systems)
+#print(r.text)
 
 main_folder = "data"
 all_data_folder = "all data"
@@ -37,6 +50,7 @@ files = os.path.join(main_folder, pdf_folder)
 os.makedirs(files, exist_ok = True)
 
 https = True
+tor = False
 valid_certificate = True
 
 website = ""
@@ -97,16 +111,17 @@ def the_silent():
 
 def security():
     global https
+    global tor
     global valid_certificate
     
     os.system("clear")
 
-    user_input = input("1 = security status\n2 = edit security\n")
+    user_input = input("1 = security status\n2 = edit security\n3 = install tor\n4 = remove tor\n")
 
     if user_input == "1":
         os.system("clear")
 
-        print("https =", https, "\nvalid certificate =", valid_certificate)
+        print("https =", https, "\nvalid certificate =", valid_certificate, "\ntor =", tor)
 
         pause = input()
 
@@ -130,9 +145,58 @@ def security():
 
         if user_valid_certificate == "n":
             valid_certificate = False
-            
+
+        os.system("clear")
+
+        user_tor = input("tor? y/n\n")
+
+        if user_tor == "y":
+            tor = True
+
+            os.system("sudo service tor start")
+
+        if user_tor == "n":
+            tor = False
+
+            os.system("sudo service tor stop")
+
+    if user_input == "3":
+        os.system("clear")
+
+        user_tor = input("1 = debian\n2 = fedora\n")
+
+        if user_tor == "1":
+            os.system("clear")
+
+            print("installing tor")
+            os.system("sudo apt update")
+            os.system("sudo apt install tor")
+
+        if user_tor == "2":
+            os.system("clear")
+
+            print("installing tor")
+            os.system("sudo dnf install tor")
+
+    if user_input == "4":
+        os.system("clear")
+
+        user_tor = input("1 = debian\n2 = fedora\n")
+
+        if user_tor == "1":
+            os.system("clear")
+
+            print("removing tor")
+            os.system("sudo apt purge tor")
+
+        if user_tor == "2":
+            os.system("clear")
+
+            print("removing tor")
+            os.system("sudo dnf remove tor")
+
     the_silent()
-    
+
 def no_log():
     global website
     
