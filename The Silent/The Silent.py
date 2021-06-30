@@ -53,6 +53,8 @@ https = True
 tor = False
 valid_certificate = True
 
+https_string = "https://"
+
 website = ""
 
 requests.packages.urllib3.disable_warnings()
@@ -113,6 +115,8 @@ def security():
     global https
     global tor
     global valid_certificate
+
+    global https_string
     
     os.system("clear")
 
@@ -133,8 +137,12 @@ def security():
         if user_https == "y":
             https = True
 
+            https_string = "https://"
+
         if user_https == "n":
             https = False
+
+            https_string = "http://"
 
         os.system("clear")
         
@@ -208,70 +216,40 @@ def no_log():
 
     user_input = input("1 = cookies\n2 = encoding\n3 = headers\n4 = html code\n5 = ok\n6 = permanent redirect\n7 = reason\n8 = redirect\n9 = status code\n10 = url\n")
     
-    if user_input == "1" and https == True:
-        no_log_cookies_secure()
-            
-    if user_input == "1" and https == False:
-        no_log_cookies_not_secure()
-            
-    if user_input == "2" and https == True:
-        no_log_encoding_secure()
-            
-    if user_input == "2" and https == False:
-        no_log_encoding_not_secure()
-            
-    if user_input == "3" and https == True:
-        no_log_headers_secure()
-            
-    if user_input == "3" and https == False:
-        no_log_headers_not_secure()
-            
-    if user_input == "4" and https == True:
-        no_log_html_code_secure()
-            
-    if user_input == "4" and https == False:
-        no_log_html_code_not_secure()
-            
-    if user_input == "5" and https == True:
-        no_log_ok_secure()
-            
-    if user_input == "5" and https == False:
-        no_log_ok_not_secure()
-            
-    if user_input == "6" and https == True:
-        no_log_permanent_redirect_secure()
-            
-    if user_input == "6" and https == False:
-        no_log_permanent_redirect_not_secure()
-            
-    if user_input == "7" and https == True:
-        no_log_reason_secure()
-            
-    if user_input == "7" and https == False:
-        no_log_reason_not_secure()
-            
-    if user_input == "8" and https == True:
-        no_log_redirect_secure()
-            
-    if user_input == "8" and https == False:
-        no_log_redirect_not_secure()
-            
-    if user_input == "9" and https == True:
-        no_log_status_code_secure()
-            
-    if user_input == "9" and https == False:
-        no_log_status_code_not_secure()
-            
-    if user_input == "10" and https == True:
-        no_log_url_secure()
-            
-    if user_input == "10" and https == False:
-        no_log_url_not_secure()
-	    
-def no_log_cookies_secure():
+    if user_input == "1":
+        no_log_cookies()
+
+    if user_input == "2":
+        no_log_encoding()
+
+    if user_input == "3":
+        no_log_headers()
+
+    if user_input == "4":
+        no_log_html_code()
+
+    if user_input == "5":
+        no_log_ok()
+
+    if user_input == "6":
+        no_log_permanent_redirect()
+
+    if user_input == "7":
+        no_log_reason()
+
+    if user_input == "8":
+        no_log_redirect()
+
+    if user_input == "9":
+        no_log_status_code()
+
+    if user_input == "10":
+        no_log_url()
+
+def no_log_cookies():
     os.system("clear")
     
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -282,26 +260,11 @@ def no_log_cookies_secure():
     pause = input()
 
     the_silent()
-
-def no_log_cookies_not_secure():
-    os.system("clear")
-
-    output = "http://" + website
     
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("cookies: " + str(final.cookies))
-
-    final.close()
-
-    pause = input()
-
-    the_silent()
-
-def no_log_encoding_secure():
+def no_log_encoding():
     os.system("clear")
     
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -312,26 +275,11 @@ def no_log_encoding_secure():
     pause = input()
 
     the_silent()
-
-def no_log_encoding_not_secure():
-    os.system("clear")
     
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("encoding: " + str(final.encoding))
-
-    final.close()
-
-    pause = input()
-
-    the_silent()
-
-def no_log_headers_secure():
+def no_log_headers():
     os.system("clear")
 
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -342,26 +290,11 @@ def no_log_headers_secure():
     pause = input()
 
     the_silent()
-
-def no_log_headers_not_secure():
-    os.system("clear")
-
-    output = "http://" + website
     
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("headers: " + str(final.headers))
-
-    final.close()
-
-    pause = input()
-
-    the_silent()
-
-def no_log_html_code_secure():
+def no_log_html_code():
     os.system("clear")
     
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -372,26 +305,11 @@ def no_log_html_code_secure():
     pause = input()
 
     the_silent()
-
-def no_log_html_code_not_secure():
+    
+def no_log_ok():
     os.system("clear")
     
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("html code: " + str(final.text))
-
-    final.close()
-
-    pause = input()
-
-    the_silent()
-
-def no_log_ok_secure():
-    os.system("clear")
-    
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -403,25 +321,10 @@ def no_log_ok_secure():
 
     the_silent()
 
-def no_log_ok_not_secure():
+def no_log_permanent_redirect():
     os.system("clear")
 
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("ok: " + str(final.ok))
-
-    final.close()
-
-    pause = input()
-
-    the_silent()
-
-def no_log_permanent_redirect_secure():
-    os.system("clear")
-
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -433,25 +336,10 @@ def no_log_permanent_redirect_secure():
 
     the_silent()
 
-def no_log_permanent_redirect_not_secure():
+def no_log_reason():
     os.system("clear")
     
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("permanent redirect: " + str(final.is_permanent_redirect))
-
-    final.close()
-
-    pause = input()
-
-    the_silent()
-
-def no_log_reason_secure():
-    os.system("clear")
-    
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -463,25 +351,10 @@ def no_log_reason_secure():
 
     the_silent()
 
-def no_log_reason_not_secure():
+def no_log_redirect():
     os.system("clear")
     
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("reason: " + str(final.reason))
-
-    final.close()
-
-    pause = input()
-
-    the_silent()
-	
-def no_log_redirect_secure():
-    os.system("clear")
-    
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -493,25 +366,10 @@ def no_log_redirect_secure():
 
     the_silent()
 
-def no_log_redirect_not_secure():
+def no_log_status_code():
     os.system("clear")
     
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("redirect: " + str(final.is_redirect))
-
-    final.close()
-
-    pause = input()
-
-    the_silent()
-
-def no_log_status_code_secure():
-    os.system("clear")
-    
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -523,25 +381,10 @@ def no_log_status_code_secure():
 
     the_silent()
 
-def no_log_status_code_not_secure():
+def no_log_url():
     os.system("clear")
     
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("status code: " + str(final.status_code))
-
-    final.close()
-
-    pause = input()
-
-    the_silent()
-
-def no_log_url_secure():
-    os.system("clear")
-    
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -552,22 +395,7 @@ def no_log_url_secure():
     pause = input()
 
     the_silent()
-
-def no_log_url_not_secure():
-    os.system("clear")
     
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("url: " + str(final.url))
-
-    final.close()
-
-    pause = input()
-
-    the_silent()
-
 def log():
     global file
     global website
@@ -583,70 +411,40 @@ def log():
     print("1 = cookies\n2 = encoding\n3 = headers\n4 = html code\n5 = ok\n6 = permanent redirect\n7 = reason\n8 = redirect\n9 = status code\n10 = url")
     user_input = input()
 
-    if user_input == "1" and https == True:
-        log_cookies_secure()
-            
-    if user_input == "1" and https == False:
-        log_cookies_not_secure()
-            
-    if user_input == "2" and https == True:
-        log_encoding_secure()
-            
-    if user_input == "2" and https == False:
-        log_encoding_not_secure()
-            
-    if user_input == "3" and https == True:
-        log_headers_secure()
-            
-    if user_input == "3" and https == False:
-        log_headers_not_secure()
-            
-    if user_input == "4" and https == True:
-        log_html_code_secure()
-            
-    if user_input == "4" and https == False:
-        log_html_code_not_secure()
-            
-    if user_input == "5" and https == True:
-        log_ok_secure()
-            
-    if user_input == "5" and https == False:
-        log_ok_not_secure()
-            
-    if user_input == "6" and https == True:
-        log_permanent_redirect_secure()
-            
-    if user_input == "6" and https == False:
-        log_permanent_redirect_not_secure()
-            
-    if user_input == "7" and https == True:
-        log_reason_secure()
-            
-    if user_input == "7" and https == False:
-        log_reason_not_secure()
-            
-    if user_input == "8" and https == True:
-        log_redirect_secure()
-            
-    if user_input == "8" and https == False:
-        log_redirect_not_secure()
-            
-    if user_input == "9" and https == True:
-        log_status_code_secure()
-            
-    if user_input == "9" and https == False:
-        log_status_code_not_secure()
-            
-    if user_input == "10" and https == True:
-        log_url_secure()
-            
-    if user_input == "10" and https == False:
-        log_url_not_secure()
+    if user_input == "1":
+        log_cookies()
         
-def log_cookies_secure():
+    if user_input == "2":
+        log_encoding()
+        
+    if user_input == "3":
+        log_headers()
+
+    if user_input == "4":
+        log_html_code()
+
+    if user_input == "5":
+        log_ok()
+
+    if user_input == "6":
+        log_permanent_redirect()
+            
+    if user_input == "7":
+        log_reason()
+            
+    if user_input == "8":
+        log_redirect()
+            
+    if user_input == "9":
+        log_status_code()
+            
+    if user_input == "10":
+        log_url()
+
+def log_cookies():
     os.system("clear")
 
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -660,27 +458,10 @@ def log_cookies_secure():
 
     the_silent()
 
-def log_cookies_not_secure():
+def log_encoding():
     os.system("clear")
 
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("cookies: " + str(final.cookies))
-    file.write("\n\ncookies: " + str(final.cookies))
-
-    final.close()
-    file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_encoding_secure():
-    os.system("clear")
-
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -694,27 +475,10 @@ def log_encoding_secure():
 
     the_silent()
 
-def log_encoding_not_secure():
+def log_headers():
     os.system("clear")
 
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("encoding: " + str(final.encoding))
-    file.write("\n\nencoding: " + str(final.encoding))
-
-    final.close()
-    file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_headers_secure():
-    os.system("clear")
-
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -728,27 +492,10 @@ def log_headers_secure():
 
     the_silent()
 
-def log_headers_not_secure():
+def log_html_code():
     os.system("clear")
 
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("headers: " + str(final.headers))
-    file.write("\n\nheaders: " + str(final.headers))
-
-    final.close()
-    file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_html_code_secure():
-    os.system("clear")
-
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -762,27 +509,10 @@ def log_html_code_secure():
 
     the_silent()
 
-def log_html_code_not_secure():
+def log_ok():
     os.system("clear")
 
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("html code: " + str(final.text))
-    file.write("\n\nhtml code: " + str(final.text))
-
-    final.close()
-    file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_ok_secure():
-    os.system("clear")
-
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -796,27 +526,10 @@ def log_ok_secure():
 
     the_silent()
 
-def log_ok_not_secure():
+def log_permanent_redirect():
     os.system("clear")
 
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("ok: " + str(final.ok))
-    file.write("\n\nok: " + str(final.ok))
-
-    final.close()
-    file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_permanent_redirect_secure():
-    os.system("clear")
-
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -830,27 +543,10 @@ def log_permanent_redirect_secure():
 
     the_silent()
 
-def log_permanent_redirect_not_secure():
+def log_reason():
     os.system("clear")
 
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("permanent redirect: " + str(final.is_permanent_redirect))
-    file.write("\n\npermanent redirect: " + str(final.is_permanent_redirect))
-
-    final.close()
-    file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_reason_secure():
-    os.system("clear")
-
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -864,27 +560,10 @@ def log_reason_secure():
 
     the_silent()
 
-def log_reason_not_secure():
+def log_redirect():
     os.system("clear")
 
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("reason: " + str(final.reason))
-    file.write("\n\nreason: " + str(final.reason))
-
-    final.close()
-    file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_redirect_secure():
-    os.system("clear")
-
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -898,27 +577,10 @@ def log_redirect_secure():
 
     the_silent()
 
-def log_redirect_not_secure():
+def log_status_code():
     os.system("clear")
 
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("redirect: " + str(final.is_redirect))
-    file.write("\n\nredirect: " + str(final.is_redirect))
-
-    final.close()
-    file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_status_code_secure():
-    os.system("clear")
-
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -932,27 +594,10 @@ def log_status_code_secure():
 
     the_silent()
 
-def log_status_code_not_secure():
+def log_url():
     os.system("clear")
 
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("status code: " + str(final.status_code))
-    file.write("\n\nstatus code: " + str(final.status_code))
-
-    final.close()
-    file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_url_secure():
-    os.system("clear")
-
-    output = "https://" + website
+    output = https_string + website
     
     final = requests.get(output, verify = valid_certificate)
     
@@ -966,23 +611,6 @@ def log_url_secure():
 
     the_silent()
 
-def log_url_not_secure():
-    os.system("clear")
-
-    output = "http://" + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("url: " + str(final.url))
-    file.write("\n\nurl: " + str(final.url) + "\n\n")
-
-    final.close()
-    file.close()
-
-    pause = input()
-
-    the_silent()
-    
 def image():
     secure = ""
 
