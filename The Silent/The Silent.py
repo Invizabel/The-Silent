@@ -18,7 +18,7 @@ import urllib3
 tor = requests.session()
 tor.proxies = {}
 
-tor.proxies["http"] = "socks5h://localhost:9050"
+#tor.proxies["http"] = "socks5h://localhost:9050"
 tor.proxies["https"] = "socks5h://localhost:9050"
 
 operating_systems = {}
@@ -50,7 +50,7 @@ files = os.path.join(main_folder, pdf_folder)
 os.makedirs(files, exist_ok = True)
 
 https = True
-tor = False
+tor_boolean = False
 valid_certificate = True
 
 https_string = "https://"
@@ -113,7 +113,7 @@ def the_silent():
 
 def security():
     global https
-    global tor
+    global tor_boolean
     global valid_certificate
 
     global https_string
@@ -125,7 +125,7 @@ def security():
     if user_input == "1":
         os.system("clear")
 
-        print("https =", https, "\nvalid certificate =", valid_certificate, "\ntor =", tor)
+        print("https =", https, "\nvalid certificate =", valid_certificate, "\ntor =", tor_boolean)
 
         pause = input()
 
@@ -159,12 +159,12 @@ def security():
         user_tor = input("tor? y/n\n")
 
         if user_tor == "y":
-            tor = True
+            tor_boolean = True
 
             os.system("sudo service tor start")
 
         if user_tor == "n":
-            tor = False
+            tor_boolean = False
 
             os.system("sudo service tor stop")
 
@@ -250,11 +250,15 @@ def no_log_cookies():
     os.system("clear")
     
     output = https_string + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
-    print("cookies: " + str(final.cookies))
 
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
+
+    print("cookies: " + str(final.cookies))
+        
     final.close()
 
     pause = input()
@@ -265,9 +269,13 @@ def no_log_encoding():
     os.system("clear")
     
     output = https_string + website
-    
-    final = requests.get(output, verify = valid_certificate)
-    
+
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
+
     print("encoding: " + str(final.encoding))
 
     final.close()
@@ -281,7 +289,11 @@ def no_log_headers():
 
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("headers: " + str(final.headers))
 
@@ -296,7 +308,11 @@ def no_log_html_code():
     
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("html code: " + str(final.text))
 
@@ -311,7 +327,11 @@ def no_log_ok():
     
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("ok: " + str(final.ok))
 
@@ -326,7 +346,11 @@ def no_log_permanent_redirect():
 
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("permanent redirect: " + str(final.is_permanent_redirect))
 
@@ -341,7 +365,11 @@ def no_log_reason():
     
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("reason: " + str(final.reason))
 
@@ -356,7 +384,11 @@ def no_log_redirect():
     
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("redirect: " + str(final.is_redirect))
 
@@ -371,7 +403,11 @@ def no_log_status_code():
     
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("status code: " + str(final.status_code))
 
@@ -386,7 +422,11 @@ def no_log_url():
     
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("url: " + str(final.url))
 
@@ -446,7 +486,11 @@ def log_cookies():
 
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("cookies: " + str(final.cookies))
     file.write("\n\ncookies: " + str(final.cookies))
@@ -463,7 +507,11 @@ def log_encoding():
 
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("encoding: " + str(final.encoding))
     file.write("\n\nencoding: " + str(final.encoding))
@@ -480,7 +528,11 @@ def log_headers():
 
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("headers: " + str(final.headers))
     file.write("\n\nheaders: " + str(final.headers))
@@ -497,7 +549,11 @@ def log_html_code():
 
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("html code: " + str(final.text))
     file.write("\n\nhtml code: " + str(final.text))
@@ -514,7 +570,11 @@ def log_ok():
 
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("ok: " + str(final.ok))
     file.write("\n\nok: " + str(final.ok))
@@ -531,7 +591,11 @@ def log_permanent_redirect():
 
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("permanent redirect: " + str(final.is_permanent_redirect))
     file.write("\n\npermanent redirect: " + str(final.is_permanent_redirect))
@@ -548,7 +612,11 @@ def log_reason():
 
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("reason: " + str(final.reason))
     file.write("\n\nreason: " + str(final.reason))
@@ -565,7 +633,11 @@ def log_redirect():
 
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("redirect: " + str(final.is_redirect))
     file.write("\n\nredirect: " + str(final.is_redirect))
@@ -582,7 +654,11 @@ def log_status_code():
 
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("status code: " + str(final.status_code))
     file.write("\n\nstatus code: " + str(final.status_code))
@@ -599,7 +675,11 @@ def log_url():
 
     output = https_string + website
     
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
     
     print("url: " + str(final.url))
     file.write("\n\nurl: " + str(final.url) + "\n\n")
@@ -639,8 +719,12 @@ def image():
 
     picture = str(output)
 
-    data = requests.get(picture, verify = valid_certificate)
-
+    if tor_boolean == True:
+        data = tor.get(picture, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        data = requests.get(picture, verify = valid_certificate)
+        
     with open(os.path.join("data/images", name), "wb") as file_writer:
         file_writer.write(data.content)
 
@@ -679,6 +763,12 @@ def pdf():
 
     pdf = output
 
+    if tor_boolean == True:
+        data = tor.get(pdf, stream = True, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        data = requests.get(pdf, stream = True, verify = valid_certificate)
+
     data = requests.get(pdf, stream = True, verify = valid_certificate)
 
     with open(os.path.join("data/pdf", name), "wb") as pdf:
@@ -716,7 +806,11 @@ def html():
     
     output = secure + website
 
-    final = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        final = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        final = requests.get(output, verify = valid_certificate)
 
     file = open(os.path.join("data/html", website + ".html"), "w+")
     file.write(final.text)
@@ -754,7 +848,12 @@ def all_images():
     
     output = secure + website
 
-    url = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        url = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        url = requests.get(output, verify = valid_certificate)
+
     out = str(url.text)
     web_list = find_url(out)
 
@@ -852,7 +951,12 @@ def all_data():
     
     output = secure + website
 
-    url = requests.get(output, verify = valid_certificate)
+    if tor_boolean == True:
+        url = tor.get(output, verify = valid_certificate)
+        
+    if tor_boolean == False:
+        url = requests.get(output, verify = valid_certificate)
+        
     out = str(url.text)
     web_list = find_url(out)
 
