@@ -702,7 +702,7 @@ def image():
 
     os.system("clear")
     
-    name = input("\nenter desired name:\n")
+    name = input("enter desired name:\n")
     
     os.system("clear")
     print("Downloading!")
