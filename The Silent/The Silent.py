@@ -7,6 +7,7 @@
 #https://www.geeksforgeeks.org/create-a-directory-in-python/
 #https://stackoverflow.com/questions/7935972/writing-to-a-new-directory-in-python-without-changing-directory
 #https://medium.com/@jasonrigden/using-tor-with-the-python-request-library-79015b2606cb
+#https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
 
 import os
 import random
@@ -22,7 +23,7 @@ tor.proxies = {}
 tor.proxies["https"] = "socks5h://localhost:9050"
 
 operating_systems = {}
-operating_systems['User-agent'] = "Chrome"
+operating_systems["User-agent"] = "Chrome"
 
 #r = tor.get('https://httpbin.org/user-agent', headers = operating_systems)
 #print(r.text)
