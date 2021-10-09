@@ -22,8 +22,10 @@ tor.proxies = {}
 #tor.proxies["http"] = "socks5h://localhost:9050"
 tor.proxies["https"] = "socks5h://localhost:9050"
 
-operating_systems = {}
-operating_systems["User-agent"] = "Chrome"
+user_agent = {"User-Agent" : "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/94.0.4606.71 Safari/537.36"}
+
+final = requests.get("https://amazon.com", headers = user_agent)
+print("status code: " + str(final.status_code))
 
 #r = tor.get('https://httpbin.org/user-agent', headers = operating_systems)
 #print(r.text)
