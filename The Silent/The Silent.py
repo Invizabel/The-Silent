@@ -22,9 +22,6 @@ tor.proxies["https"] = "socks5h://localhost:9050"
 
 user_agent = {"User-Agent" : "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36"}
 
-final = requests.get("https://amazon.com", headers = user_agent)
-print("status code: " + str(final.status_code))
-
 main_folder = "data"
 all_data_folder = "all data"
 html_folder = "html"
@@ -47,6 +44,7 @@ os.makedirs(files, exist_ok = True)
 files = os.path.join(main_folder, pdf_folder)
 os.makedirs(files, exist_ok = True)
 
+change_tor_boolean = False
 https = True
 tor_boolean = False
 valid_certificate = True
@@ -70,6 +68,10 @@ def find_url(string):
 	return [x[0] for x in url]
 
 def the_silent():
+    if change_tor_boolean == True:
+        os.system("sudo service tor stop")
+        os.system("sudo service tor start")
+    
     os.system("clear")
     
     user_input = input("0 = security\n1 = data no log\n2 = data log\n3 = file\n4 = password generator\n5 = brute force (dictionary)\n")
@@ -110,6 +112,7 @@ def the_silent():
         brute_force_dictionary()
 
 def security():
+    global change_tor_boolean
     global https
     global tor_boolean
     global valid_certificate
@@ -123,7 +126,7 @@ def security():
     if user_input == "1":
         os.system("clear")
 
-        print("https =", https, "\nvalid certificate =", valid_certificate, "\ntor =", tor_boolean)
+        print("https =", https, "\nvalid certificate =", valid_certificate, "\ntor =", tor_boolean, "\nchange tor circuit with each request =", change_tor_boolean)
 
         pause = input()
 
@@ -165,6 +168,16 @@ def security():
             tor_boolean = False
 
             os.system("sudo service tor stop")
+
+        os.system("clear")
+        
+        user_change_tor = input("change tor circuit with each request? y/n\n")
+
+        if user_change_tor == "y":
+            change_tor_boolean = True
+
+        if user_change_tor == "n":
+            change_tor_boolean = False
 
     if user_input == "3":
         os.system("clear")
