@@ -74,7 +74,7 @@ def the_silent():
     
     os.system("clear")
     
-    user_input = input("0 = security\n1 = data no log\n2 = data log\n3 = file\n4 = password generator\n5 = brute force (dictionary)\n")
+    user_input = input("0 = security\n1 = data no log\n2 = data log\n3 = file\n4 = password generator\n5 = brute force (dictionary)\n6 = exit\n")
 
     if user_input == "0":
         security()
@@ -110,6 +110,9 @@ def the_silent():
 
     if user_input == "5":
         brute_force_dictionary()
+
+    if user_input == "6":
+        exit()
 
 def security():
     global change_tor_boolean
