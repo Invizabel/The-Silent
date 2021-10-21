@@ -260,9 +260,8 @@ def no_log():
     if user_input == "10":
         no_log_url()
 
-def no_log_cookies():
+def no_log_cookies(website):
     os.system("clear")
-    
     output = https_string + website
 
     if tor_boolean == True:
@@ -271,17 +270,11 @@ def no_log_cookies():
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
 
-    print("cookies: " + str(final.cookies))
-        
     final.close()
+    return final.cookies
 
-    pause = input()
-
-    the_silent()
-    
-def no_log_encoding():
+def no_log_encoding(website):
     os.system("clear")
-    
     output = https_string + website
 
     if tor_boolean == True:
@@ -290,17 +283,12 @@ def no_log_encoding():
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
 
-    print("encoding: " + str(final.encoding))
-
     final.close()
-
-    pause = input()
-
-    the_silent()
+    return final.encoding
     
-def no_log_headers():
+    
+def no_log_headers(website):
     os.system("clear")
-
     output = https_string + website
     
     if tor_boolean == True:
@@ -308,18 +296,12 @@ def no_log_headers():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("headers: " + str(final.headers))
-
+        
     final.close()
-
-    pause = input()
-
-    the_silent()
+    return final.headers
     
-def no_log_html_code():
+def no_log_html_code(website):
     os.system("clear")
-    
     output = https_string + website
     
     if tor_boolean == True:
@@ -327,18 +309,12 @@ def no_log_html_code():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("html code: " + str(final.text))
-
+        
     final.close()
-
-    pause = input()
-
-    the_silent()
+    return final.text
     
-def no_log_ok():
+def no_log_ok(website):
     os.system("clear")
-    
     output = https_string + website
     
     if tor_boolean == True:
@@ -346,18 +322,12 @@ def no_log_ok():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("ok: " + str(final.ok))
-
+        
     final.close()
-
-    pause = input()
-
-    the_silent()
-
-def no_log_permanent_redirect():
+    return final.ok
+    
+def no_log_permanent_redirect(website):
     os.system("clear")
-
     output = https_string + website
     
     if tor_boolean == True:
@@ -365,18 +335,12 @@ def no_log_permanent_redirect():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("permanent redirect: " + str(final.is_permanent_redirect))
-
+        
     final.close()
+    return final.is_permanent_redirect
 
-    pause = input()
-
-    the_silent()
-
-def no_log_reason():
+def no_log_reason(website):
     os.system("clear")
-    
     output = https_string + website
     
     if tor_boolean == True:
@@ -384,18 +348,12 @@ def no_log_reason():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("reason: " + str(final.reason))
-
+        
     final.close()
+    return final.reason
 
-    pause = input()
-
-    the_silent()
-
-def no_log_redirect():
+def no_log_redirect(website):
     os.system("clear")
-    
     output = https_string + website
     
     if tor_boolean == True:
@@ -403,18 +361,12 @@ def no_log_redirect():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("redirect: " + str(final.is_redirect))
-
+        
     final.close()
-
-    pause = input()
-
-    the_silent()
-
-def no_log_status_code():
-    os.system("clear")
+    return final.is_redirect
     
+def no_log_status_code(website):
+    os.system("clear")
     output = https_string + website
     
     if tor_boolean == True:
@@ -422,18 +374,12 @@ def no_log_status_code():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("status code: " + str(final.status_code))
-
+        
     final.close()
-
-    pause = input()
-
-    the_silent()
-
-def no_log_url():
-    os.system("clear")
+    return final.status_code
     
+def no_log_url(website):
+    os.system("clear")
     output = https_string + website
     
     if tor_boolean == True:
@@ -441,15 +387,10 @@ def no_log_url():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("url: " + str(final.url))
-
+        
     final.close()
+    return final.url
 
-    pause = input()
-
-    the_silent()
-    
 def log():
     global file
     global website
@@ -495,9 +436,8 @@ def log():
     if user_input == "10":
         log_url()
 
-def log_cookies():
+def log_cookies(website):
     os.system("clear")
-
     output = https_string + website
     
     if tor_boolean == True:
@@ -505,20 +445,14 @@ def log_cookies():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("cookies: " + str(final.cookies))
+        
     file.write("\n\ncookies: " + str(final.cookies))
-
     final.close()
     file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_encoding():
+    return final.cookis
+    
+def log_encoding(website):
     os.system("clear")
-
     output = https_string + website
     
     if tor_boolean == True:
@@ -526,20 +460,14 @@ def log_encoding():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("encoding: " + str(final.encoding))
+        
     file.write("\n\nencoding: " + str(final.encoding))
-
     final.close()
     file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_headers():
+    return final.encoding
+    
+def log_headers(website):
     os.system("clear")
-
     output = https_string + website
     
     if tor_boolean == True:
@@ -547,20 +475,14 @@ def log_headers():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("headers: " + str(final.headers))
+        
     file.write("\n\nheaders: " + str(final.headers))
-
     final.close()
     file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_html_code():
+    return final.headers
+    
+def log_html_code(website):
     os.system("clear")
-
     output = https_string + website
     
     if tor_boolean == True:
@@ -568,17 +490,12 @@ def log_html_code():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("html code: " + str(final.text))
-    file.write("\n\nhtml code: " + str(final.text))
 
+    file.write("\n\nhtml code: " + str(final.text))
     final.close()
     file.close()
-
-    pause = input()
-
-    the_silent()
-
+    return final.text
+    
 def log_ok():
     os.system("clear")
 
