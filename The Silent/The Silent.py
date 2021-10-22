@@ -496,9 +496,8 @@ def log_html_code(website):
     file.close()
     return final.text
     
-def log_ok():
+def log_ok(website):
     os.system("clear")
-
     output = https_string + website
     
     if tor_boolean == True:
@@ -506,20 +505,14 @@ def log_ok():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("ok: " + str(final.ok))
+        
     file.write("\n\nok: " + str(final.ok))
-
     final.close()
     file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_permanent_redirect():
+    return final.ok
+    
+def log_permanent_redirect(website):
     os.system("clear")
-
     output = https_string + website
     
     if tor_boolean == True:
@@ -527,20 +520,14 @@ def log_permanent_redirect():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("permanent redirect: " + str(final.is_permanent_redirect))
+        
     file.write("\n\npermanent redirect: " + str(final.is_permanent_redirect))
-
     final.close()
     file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_reason():
+    return final.is_permanent_redirect
+    
+def log_reason(website):
     os.system("clear")
-
     output = https_string + website
     
     if tor_boolean == True:
@@ -548,20 +535,14 @@ def log_reason():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("reason: " + str(final.reason))
+        
     file.write("\n\nreason: " + str(final.reason))
-
     final.close()
     file.close()
-
-    pause = input()
-
-    the_silent()
-
-def log_redirect():
+    return final.reason
+    
+def log_redirect(website):
     os.system("clear")
-
     output = https_string + website
     
     if tor_boolean == True:
@@ -569,20 +550,14 @@ def log_redirect():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("redirect: " + str(final.is_redirect))
+        
     file.write("\n\nredirect: " + str(final.is_redirect))
-
     final.close()
     file.close()
+    return final.is_redirect
 
-    pause = input()
-
-    the_silent()
-
-def log_status_code():
+def log_status_code(website):
     os.system("clear")
-
     output = https_string + website
     
     if tor_boolean == True:
@@ -590,20 +565,14 @@ def log_status_code():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("status code: " + str(final.status_code))
+        
     file.write("\n\nstatus code: " + str(final.status_code))
-
     final.close()
     file.close
-
-    pause = input()
-
-    the_silent()
-
-def log_url():
+    return final.status_code
+    
+def log_url(website):
     os.system("clear")
-
     output = https_string + website
     
     if tor_boolean == True:
@@ -611,17 +580,12 @@ def log_url():
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-    
-    print("url: " + str(final.url))
+        
     file.write("\n\nurl: " + str(final.url) + "\n\n")
-
     final.close()
     file.close()
-
-    pause = input()
-
-    the_silent()
-
+    return final.url
+    
 def image():
     secure = ""
 
