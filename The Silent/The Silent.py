@@ -46,12 +46,9 @@ os.makedirs(files, exist_ok = True)
 
 change_tor_boolean = False
 https = True
+https_string = "https://"
 tor_boolean = False
 valid_certificate = True
-
-https_string = "https://"
-
-website = ""
 
 requests.packages.urllib3.disable_warnings()
 requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ":HIGH:!DH:!aNULL"
@@ -66,90 +63,34 @@ def find_url(string):
 	regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
 	url = re.findall(regex,string)
 	return [x[0] for x in url]
-
-def the_silent():
-    if change_tor_boolean == True:
-        os.system("sudo service tor stop")
-        os.system("sudo service tor start")
     
-    os.system("clear")
-    
-    user_input = input("0 = security\n1 = data no log\n2 = data log\n3 = file\n4 = password generator\n5 = brute force (dictionary)\n6 = exit\n")
-
-    if user_input == "0":
-        security()
-
-    if user_input == "1":
-        no_log()
-
-    if user_input == "2":
-        log()
-
-    if user_input == "3":
-        os.system("clear")
-
-        user_file = input("1 = image | 2 = pdf | 3 = html | 4 = all images | 5 = all data\n")
-
-        if user_file == "1":
-            image()
-
-        if user_file == "2":
-            pdf()
-
-        if user_file == "3":
-            html()
-
-        if user_file == "4":
-            all_images()
-
-        if user_file == "5":
-            all_data()
-
-    if user_input == "4":
-        password_generator()
-
-    if user_input == "5":
-        brute_force_dictionary()
-
-    if user_input == "6":
-        exit()
-
 def security():
     global change_tor_boolean
     global https
+    global https_string
     global tor_boolean
     global valid_certificate
-
-    global https_string
-    
     os.system("clear")
-
     user_input = input("1 = security status\n2 = edit security\n3 = install tor\n4 = remove tor\n")
 
     if user_input == "1":
         os.system("clear")
-
         print("https =", https, "\nvalid certificate =", valid_certificate, "\ntor =", tor_boolean, "\nchange tor circuit with each request =", change_tor_boolean)
-
         pause = input()
 
     if user_input == "2":
         os.system("clear")
-
         user_https = input("https? y/n\n")
 
         if user_https == "y":
             https = True
-
             https_string = "https://"
 
         if user_https == "n":
             https = False
-
             https_string = "http://"
 
         os.system("clear")
-        
         user_valid_certificate = input("valid certificate? y/n\n")
 
         if user_valid_certificate == "y":
@@ -159,21 +100,17 @@ def security():
             valid_certificate = False
 
         os.system("clear")
-
         user_tor = input("tor? y/n\n")
 
         if user_tor == "y":
             tor_boolean = True
-
             os.system("sudo service tor start")
 
         if user_tor == "n":
             tor_boolean = False
-
             os.system("sudo service tor stop")
 
         os.system("clear")
-        
         user_change_tor = input("change tor circuit with each request? y/n\n")
 
         if user_change_tor == "y":
@@ -184,81 +121,69 @@ def security():
 
     if user_input == "3":
         os.system("clear")
-
         user_tor = input("1 = debian\n2 = fedora\n")
 
         if user_tor == "1":
             os.system("clear")
-
             print("installing tor")
             os.system("sudo apt update")
             os.system("sudo apt install tor")
 
         if user_tor == "2":
             os.system("clear")
-
             print("installing tor")
             os.system("sudo dnf install tor")
 
     if user_input == "4":
         os.system("clear")
-
         user_tor = input("1 = debian\n2 = fedora\n")
 
         if user_tor == "1":
             os.system("clear")
-
             print("removing tor")
             os.system("sudo apt purge tor")
 
         if user_tor == "2":
             os.system("clear")
-
             print("removing tor")
             os.system("sudo dnf remove tor")
-
-    the_silent()
-
+            
 def no_log():
     global website
-    
     os.system("clear")
-
     website = input("enter website:\n")
-    
     os.system("clear")
-
     user_input = input("1 = cookies\n2 = encoding\n3 = headers\n4 = html code\n5 = ok\n6 = permanent redirect\n7 = reason\n8 = redirect\n9 = status code\n10 = url\n")
     
     if user_input == "1":
-        no_log_cookies()
+        print(no_log_cookies(website))
 
     if user_input == "2":
-        no_log_encoding()
+        print(no_log_encoding(website))
 
     if user_input == "3":
-        no_log_headers()
+        print(no_log_headers(website))
 
     if user_input == "4":
-        no_log_html_code()
+        print(no_log_html_code(website))
 
     if user_input == "5":
-        no_log_ok()
+        print(no_log_ok(website))
 
     if user_input == "6":
-        no_log_permanent_redirect()
+        print(no_log_permanent_redirect(website))
 
     if user_input == "7":
-        no_log_reason()
+        print(no_log_reason(website))
 
     if user_input == "8":
-        no_log_redirect()
+        print(no_log_redirect(website))
 
     if user_input == "9":
-        no_log_status_code()
+        print(no_log_status_code(website))
 
     if user_input == "10":
-        no_log_url()
+        print(no_log_url(website))
 
 def no_log_cookies(website):
     os.system("clear")
@@ -407,34 +332,34 @@ def log():
     user_input = input()
 
     if user_input == "1":
-        log_cookies()
+        log_cookies(website)
         
     if user_input == "2":
-        log_encoding()
+        log_encoding(website)
         
     if user_input == "3":
-        log_headers()
+        log_headers(website)
 
     if user_input == "4":
-        log_html_code()
+        log_html_code(website)
 
     if user_input == "5":
-        log_ok()
+        log_ok(website)
 
     if user_input == "6":
-        log_permanent_redirect()
+        log_permanent_redirect(website)
             
     if user_input == "7":
-        log_reason()
+        log_reason(website)
             
     if user_input == "8":
-        log_redirect()
+        log_redirect(website)
             
     if user_input == "9":
-        log_status_code()
+        log_status_code(website)
             
     if user_input == "10":
-        log_url()
+        log_url(website)
 
 def log_cookies(website):
     os.system("clear")
@@ -1387,5 +1312,48 @@ def brute_force_dictionary():
             count += 1
 
     the_silent()
-			
-the_silent()
+
+while True:
+    if change_tor_boolean == True:
+        os.system("sudo service tor stop")
+        os.system("sudo service tor start")
+    
+    os.system("clear")
+    user_input = input("0 = security\n1 = data no log\n2 = data log\n3 = file\n4 = password generator\n5 = brute force (dictionary)\n6 = exit\n")
+
+    if user_input == "0":
+        security()
+
+    if user_input == "1":
+        no_log()
+
+    if user_input == "2":
+        log()
+
+    if user_input == "3":
+        os.system("clear")
+        user_file = input("1 = image | 2 = pdf | 3 = html | 4 = all images | 5 = all data\n")
+
+        if user_file == "1":
+            image()
+
+        if user_file == "2":
+            pdf()
+
+        if user_file == "3":
+            html()
+
+        if user_file == "4":
+            all_images()
+
+        if user_file == "5":
+            all_data()
+
+    if user_input == "4":
+        password_generator()
+
+    if user_input == "5":
+        brute_force_dictionary()
+
+    if user_input == "6":
+        exit()
