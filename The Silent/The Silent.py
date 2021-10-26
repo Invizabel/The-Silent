@@ -1293,6 +1293,7 @@ while True:
         password = input("password: ")
         result = sha256(password.encode("utf-8")).hexdigest()
         print(result)
+        pause = input()
 
     if user_input == "e":
         exit()
