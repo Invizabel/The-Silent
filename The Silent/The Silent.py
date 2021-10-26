@@ -319,47 +319,42 @@ def no_log_url(website):
 def log():
     global file
     global website
-
     file = open(os.path.join("data/log", "log.txt"), "a")
-
     os.system("clear")
-
     website = input("enter website:\n")
-    
     os.system("clear")
-
     print("1 = cookies\n2 = encoding\n3 = headers\n4 = html code\n5 = ok\n6 = permanent redirect\n7 = reason\n8 = redirect\n9 = status code\n10 = url")
     user_input = input()
 
     if user_input == "1":
-        log_cookies(website)
+        print(log_cookies(website))
         
     if user_input == "2":
-        log_encoding(website)
+        print(log_encoding(website))
         
     if user_input == "3":
-        log_headers(website)
+        print(log_headers(website))
 
     if user_input == "4":
-        log_html_code(website)
+        print(log_html_code(website))
 
     if user_input == "5":
-        log_ok(website)
+        print(log_ok(website))
 
     if user_input == "6":
-        log_permanent_redirect(website)
+        print(log_permanent_redirect(website))
             
     if user_input == "7":
-        log_reason(website)
+        print(log_reason(website))
             
     if user_input == "8":
-        log_redirect(website)
+        print(log_redirect(website))
             
     if user_input == "9":
-        log_status_code(website)
+        print(log_status_code(website))
             
     if user_input == "10":
-        log_url(website)
+        print(log_url(website))
 
 def log_cookies(website):
     os.system("clear")
@@ -370,11 +365,12 @@ def log_cookies(website):
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-        
-    file.write("\n\ncookies: " + str(final.cookies))
+
+    result = str(final.cookies)
+    file.write("\n\ncookies: " + result + "\n\n")
     final.close()
     file.close()
-    return final.cookis
+    return result
     
 def log_encoding(website):
     os.system("clear")
@@ -385,11 +381,12 @@ def log_encoding(website):
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-        
-    file.write("\n\nencoding: " + str(final.encoding))
+
+    result = str(final.encoding)
+    file.write("\n\nencoding: " + result + "\n\n")
     final.close()
     file.close()
-    return final.encoding
+    return result
     
 def log_headers(website):
     os.system("clear")
@@ -400,11 +397,12 @@ def log_headers(website):
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-        
-    file.write("\n\nheaders: " + str(final.headers))
+
+    result = str(final.headers)
+    file.write("\n\nheaders: " + result + "\n\n")
     final.close()
     file.close()
-    return final.headers
+    return result
     
 def log_html_code(website):
     os.system("clear")
@@ -416,10 +414,11 @@ def log_html_code(website):
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
 
-    file.write("\n\nhtml code: " + str(final.text))
+    result = str(final.text)
+    file.write("\n\nhtml code: " + result + "\n\n")
     final.close()
     file.close()
-    return final.text
+    return result
     
 def log_ok(website):
     os.system("clear")
@@ -430,11 +429,12 @@ def log_ok(website):
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-        
-    file.write("\n\nok: " + str(final.ok))
+
+    result = str(final.ok) 
+    file.write("\n\nok: " + result + "\n\n")
     final.close()
     file.close()
-    return final.ok
+    return result
     
 def log_permanent_redirect(website):
     os.system("clear")
@@ -445,11 +445,12 @@ def log_permanent_redirect(website):
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-        
-    file.write("\n\npermanent redirect: " + str(final.is_permanent_redirect))
+
+    result = str(final.is_permanent_redirect)
+    file.write("\n\npermanent redirect: " + result + "\n\n")
     final.close()
     file.close()
-    return final.is_permanent_redirect
+    return result
     
 def log_reason(website):
     os.system("clear")
@@ -460,11 +461,12 @@ def log_reason(website):
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-        
-    file.write("\n\nreason: " + str(final.reason))
+
+    result = str(final.reason)
+    file.write("\n\nreason: " + result + "\n\n")
     final.close()
     file.close()
-    return final.reason
+    return result
     
 def log_redirect(website):
     os.system("clear")
@@ -475,11 +477,12 @@ def log_redirect(website):
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-        
-    file.write("\n\nredirect: " + str(final.is_redirect))
+
+    result = str(final.is_redirect)
+    file.write("\n\nredirect: " + result + "\n\n")
     final.close()
     file.close()
-    return final.is_redirect
+    return result
 
 def log_status_code(website):
     os.system("clear")
@@ -490,11 +493,12 @@ def log_status_code(website):
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-        
-    file.write("\n\nstatus code: " + str(final.status_code))
+
+    result = str(final.status_code)
+    file.write("\n\nstatus code: " + result + "\n\n")
     final.close()
     file.close
-    return final.status_code
+    return result
     
 def log_url(website):
     os.system("clear")
@@ -505,11 +509,12 @@ def log_url(website):
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-        
-    file.write("\n\nurl: " + str(final.url) + "\n\n")
+
+    result = str(final.url)
+    file.write("\n\nurl: " + result + "\n\n")
     final.close()
     file.close()
-    return final.url
+    return result
     
 def image():
     secure = ""
