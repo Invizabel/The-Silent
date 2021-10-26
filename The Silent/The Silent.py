@@ -204,8 +204,7 @@ def no_log_cookies(website):
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-
-    final.close()
+        
     return final.cookies
 
 def no_log_encoding(website):
@@ -218,10 +217,8 @@ def no_log_encoding(website):
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
 
-    final.close()
     return final.encoding
-    
-    
+
 def no_log_headers(website):
     os.system("clear")
     output = https_string + website
@@ -232,7 +229,6 @@ def no_log_headers(website):
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
         
-    final.close()
     return final.headers
     
 def no_log_html_code(website):
@@ -245,7 +241,6 @@ def no_log_html_code(website):
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
         
-    final.close()
     return final.text
     
 def no_log_ok(website):
@@ -258,7 +253,6 @@ def no_log_ok(website):
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
         
-    final.close()
     return final.ok
     
 def no_log_permanent_redirect(website):
@@ -271,7 +265,6 @@ def no_log_permanent_redirect(website):
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
         
-    final.close()
     return final.is_permanent_redirect
 
 def no_log_reason(website):
@@ -284,7 +277,6 @@ def no_log_reason(website):
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
         
-    final.close()
     return final.reason
 
 def no_log_redirect(website):
@@ -297,7 +289,6 @@ def no_log_redirect(website):
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
         
-    final.close()
     return final.is_redirect
     
 def no_log_status_code(website):
@@ -310,7 +301,6 @@ def no_log_status_code(website):
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
         
-    final.close()
     return final.status_code
     
 def no_log_url(website):
@@ -323,7 +313,6 @@ def no_log_url(website):
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
         
-    final.close()
     return final.url
 
 def log():
