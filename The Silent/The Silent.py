@@ -11,6 +11,7 @@
 #https://content-blockchain.org/research/testing-different-image-hash-functions/
 #https://pypi.org/project/ImageHash/
 
+from hashlib import sha256
 from PIL import Image
 import imagehash
 import os
@@ -1244,7 +1245,7 @@ while True:
         os.system("sudo service tor start")
     
     os.system("clear")
-    user_input = input("0 = security\n1 = data no log\n2 = data log\n3 = file\n4 = password generator\n5 = brute force (dictionary)\n6 = perceptual hash\n7 = exit\n")
+    user_input = input("0 = security\n1 = data no log\n2 = data log\n3 = file\n4 = password generator\n5 = brute force (dictionary)\n6 = perceptual hash\n7 = generate password hash\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -1288,4 +1289,10 @@ while True:
         pause = input()
 
     if user_input == "7":
+        os.system("clear")
+        password = input("password: ")
+        result = sha256(password.encode("utf-8")).hexdigest()
+        print(result)
+
+    if user_input == "e":
         exit()
