@@ -8,7 +8,11 @@
 #https://stackoverflow.com/questions/7935972/writing-to-a-new-directory-in-python-without-changing-directory
 #https://medium.com/@jasonrigden/using-tor-with-the-python-request-library-79015b2606cb
 #https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
+#https://content-blockchain.org/research/testing-different-image-hash-functions/
+#https://pypi.org/project/ImageHash/
 
+from PIL import Image
+import imagehash
 import os
 import random
 import re
@@ -147,6 +151,14 @@ def security():
             os.system("clear")
             print("removing tor")
             os.system("sudo dnf remove tor")
+
+def perceptual_hash(file_1, file_2):
+    first_hash = imagehash.phash(Image.open(file_1))
+    second_hash = imagehash.phash(Image.open(file_2))
+    equal = str(first_hash == second_hash)
+    hamming_distance = str(first_hash - second_hash)
+    result = "equal: " + equal + "\nhamming distance: " + hamming_distance
+    return result
             
 def no_log():
     global website
@@ -1232,7 +1244,7 @@ while True:
         os.system("sudo service tor start")
     
     os.system("clear")
-    user_input = input("0 = security\n1 = data no log\n2 = data log\n3 = file\n4 = password generator\n5 = brute force (dictionary)\n6 = exit\n")
+    user_input = input("0 = security\n1 = data no log\n2 = data log\n3 = file\n4 = password generator\n5 = brute force (dictionary)\n6 = perceptual hash\n7 = exit\n")
 
     if user_input == "0":
         security()
@@ -1269,4 +1281,11 @@ while True:
         brute_force_dictionary()
 
     if user_input == "6":
+        os.system("clear")
+        file_1 = input("name of file 1: ")
+        file_2 = input("name of file 2: ")
+        print(perceptual_hash(file_1, file_2))
+        pause = input()
+
+    if user_input == "7":
         exit()
