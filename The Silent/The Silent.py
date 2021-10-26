@@ -157,33 +157,43 @@ def no_log():
     
     if user_input == "1":
         print(no_log_cookies(website))
+        pause = input()
 
     if user_input == "2":
         print(no_log_encoding(website))
+        pause = input()
 
     if user_input == "3":
         print(no_log_headers(website))
+        pause = input()
 
     if user_input == "4":
         print(no_log_html_code(website))
+        pause = input()
 
     if user_input == "5":
         print(no_log_ok(website))
+        pause = input()
 
     if user_input == "6":
         print(no_log_permanent_redirect(website))
+        pause = input()
 
     if user_input == "7":
         print(no_log_reason(website))
+        pause = input()
 
     if user_input == "8":
         print(no_log_redirect(website))
+        pause = input()
 
     if user_input == "9":
         print(no_log_status_code(website))
+        pause = input()
 
     if user_input == "10":
         print(no_log_url(website))
+        pause = input()
 
 def no_log_cookies(website):
     os.system("clear")
@@ -328,33 +338,43 @@ def log():
 
     if user_input == "1":
         print(log_cookies(website))
+        pause = input()
         
     if user_input == "2":
         print(log_encoding(website))
+        pause = input()
         
     if user_input == "3":
         print(log_headers(website))
+        pause = input()
 
     if user_input == "4":
         print(log_html_code(website))
+        pause = input()
 
     if user_input == "5":
         print(log_ok(website))
+        pause = input()
 
     if user_input == "6":
         print(log_permanent_redirect(website))
+        pause = input()
             
     if user_input == "7":
         print(log_reason(website))
+        pause = input()
             
     if user_input == "8":
         print(log_redirect(website))
+        pause = input()
             
     if user_input == "9":
         print(log_status_code(website))
+        pause = input()
             
     if user_input == "10":
         print(log_url(website))
+        pause = input()
 
 def log_cookies(website):
     os.system("clear")
