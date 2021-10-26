@@ -157,7 +157,7 @@ def perceptual_hash(file_1, file_2):
     second_hash = imagehash.phash(Image.open(file_2))
     equal = str(first_hash == second_hash)
     hamming_distance = str(first_hash - second_hash)
-    result = "equal: " + equal + "\nhamming distance: " + hamming_distance
+    result = "equal: " + equal + "\nhamming distance: " + hamming_distance + "\nfile 1 hash: " + first_hash + "\nfile 2 hash: " + second_hash
     return result
             
 def no_log():
