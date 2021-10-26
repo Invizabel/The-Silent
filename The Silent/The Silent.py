@@ -538,20 +538,13 @@ def log_url(website):
     
 def image():
     secure = ""
-
     global website
-    
     os.system("clear")
-
     website = input("enter website:\n")
-
     os.system("clear")
-    
     name = input("enter desired name:\n")
-    
     os.system("clear")
     print("Downloading!")
-
     start = time.time()
 
     if https == True:
@@ -575,27 +568,18 @@ def image():
 
     end = time.time()
     print("\nTime: " + str(end - start) + " seconds.")
-
     data.close()
-
-    the_silent()
+    pause = input()
 
 def pdf():
     secure = ""
-    
     global website
-    
     os.system("clear")
-
     website = input("enter website:\n")
-
     os.system("clear")
-    
     name = input("enter desired name:\n")
-    
     os.system("clear")
     print("Downloading!")
-
     start = time.time()
 
     if https == True:
@@ -605,7 +589,6 @@ def pdf():
         secure = "http://"
     
     output = secure + website
-
     pdf = output
 
     if tor_boolean == True:
@@ -623,24 +606,16 @@ def pdf():
 
     end = time.time()
     print("\nTime: " + str(end - start) + " seconds.")
-
     data.close()
-
-    the_silent()
+    pause = input()
 
 def html():
     secure = ""
-    
     global website
-    
     os.system("clear")
-
     website = input("enter website:\n")
-
     os.system("clear")
-    
     print("Downloading!")
-
     start = time.time()
 
     if https == True:
@@ -659,32 +634,21 @@ def html():
 
     file = open(os.path.join("data/html", website + ".html"), "w+")
     file.write(final.text)
-
     final.close()
     file.close()
-
     end = time.time()
     print("\nTime: " + str(end - start) + " seconds.")
-
-    the_silent()
+    pause = input()
 
 def all_images():
     secure = ""
-    
     count = 0
-    
     global website
-    
     os.system("clear")
-
     website = input("enter website:\n")
-
     os.system("clear")
-    
     print("Downloading!")
-
     start = time.time()
-
     if https == True:
         secure = "https://"
 
@@ -703,6 +667,10 @@ def all_images():
     web_list = find_url(out)
 
     for i in web_list:
+        if change_tor_boolean == True:
+            os.system("sudo service tor stop")
+            os.system("sudo service tor start")
+        
         jpeg = ".jpeg" in i
         jpg = ".jpg" in i
         png = ".png" in i
@@ -710,82 +678,65 @@ def all_images():
 
         if jpeg == True and y == True:
             count += 1
-
             picture = str(i)
-            data = requests.get(picture, verify = valid_certificate)
+            data = requests.get(picture, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jpeg == True and y == False:
             count += 1
-
             picture = secure + str(i)
-            data = requests.get(picture, verify = valid_certificate)
+            data = requests.get(picture, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jpg == True and y == True:
             count += 1
-
             picture = str(i)
-            data = requests.get(picture, verify = valid_certificate)
+            data = requests.get(picture, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
                 file_writer.write(data.content)
                 
         if jpg == True and y == False:
             count += 1
-
             picture = secure + str(i)
-            data = requests.get(picture, verify = valid_certificate)
+            data = requests.get(picture, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if png == True and y == True:
             count += 1
-
             picture = str(i)
-            data = requests.get(picture, verify = valid_certificate)
+            data = requests.get(picture, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if png == True and y == False:
             count += 1
-
             picture = secure + str(i)
-            data = requests.get(picture, verify = valid_certificate)
+            data = requests.get(picture, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
                 file_writer.write(data.content)
 
     end = time.time()
     print("\nTime: " + str(end - start) + " seconds.")
-
     url.close()
-
     pause = input()
-
-    the_silent()
 
 def all_data():
     secure = ""
-
     count = 0
-    
     global website
-    
     os.system("clear")
-
     website = input("enter website:\n")
-
     os.system("clear")
-    
     print("Downloading!")
-
     start = time.time()
 
     if https == True:
@@ -804,14 +755,16 @@ def all_data():
         
     out = str(url.text)
     web_list = find_url(out)
-
     file = open(os.path.join("data/all data", website + ".html"), "w+")
     file.write(url.text)
-
     url.close()
     file.close()
 
     for i in web_list:
+        if change_tor_boolean == True:
+            os.system("sudo service tor stop")
+            os.system("sudo service tor start")
+        
         app = ".app" in i
         avi = ".avi" in i
         bat = ".bat" in i
@@ -840,16 +793,14 @@ def all_data():
 
         if app == True and y == True:
             count += 1
-
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate)
+            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".app"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if app == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -858,7 +809,6 @@ def all_data():
 
         if avi == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -867,7 +817,6 @@ def all_data():
 
         if avi == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -876,7 +825,6 @@ def all_data():
 
         if bat == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -885,7 +833,6 @@ def all_data():
 
         if bat == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -894,7 +841,6 @@ def all_data():
 
         if cmd == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -903,7 +849,6 @@ def all_data():
 
         if cmd == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -912,7 +857,6 @@ def all_data():
 
         if css == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -921,7 +865,6 @@ def all_data():
 
         if css == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -930,7 +873,6 @@ def all_data():
 
         if doc == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -939,7 +881,6 @@ def all_data():
 
         if doc == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -948,7 +889,6 @@ def all_data():
 
         if docx == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -957,7 +897,6 @@ def all_data():
 
         if docx == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -966,7 +905,6 @@ def all_data():
 
         if exe == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -975,7 +913,6 @@ def all_data():
 
         if exe == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -984,7 +921,6 @@ def all_data():
 
         if gif == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -993,7 +929,6 @@ def all_data():
 
         if gif == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1002,7 +937,6 @@ def all_data():
 
         if html == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1011,7 +945,6 @@ def all_data():
 
         if html == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1020,7 +953,6 @@ def all_data():
 
         if jar == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1029,7 +961,6 @@ def all_data():
 
         if jar == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1038,7 +969,6 @@ def all_data():
 
         if java == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1047,7 +977,6 @@ def all_data():
 
         if java == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1056,7 +985,6 @@ def all_data():
 
         if jpeg == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1065,7 +993,6 @@ def all_data():
 
         if jpeg == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1074,7 +1001,6 @@ def all_data():
 
         if jpg == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1083,7 +1009,6 @@ def all_data():
 
         if jpg == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1092,7 +1017,6 @@ def all_data():
 
         if jss == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1101,7 +1025,6 @@ def all_data():
 
         if jss == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1110,7 +1033,6 @@ def all_data():
 
         if m4a == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1119,7 +1041,6 @@ def all_data():
 
         if m4a == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1128,7 +1049,6 @@ def all_data():
 
         if mp3 == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1137,7 +1057,6 @@ def all_data():
 
         if mp3 == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1146,7 +1065,6 @@ def all_data():
 
         if mp4 == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1155,7 +1073,6 @@ def all_data():
 
         if mp4 == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1164,7 +1081,6 @@ def all_data():
 
         if pdf == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1173,7 +1089,6 @@ def all_data():
 
         if pdf == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1182,7 +1097,6 @@ def all_data():
 
         if png == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1191,7 +1105,6 @@ def all_data():
 
         if png == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1200,7 +1113,6 @@ def all_data():
 
         if py == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1209,7 +1121,6 @@ def all_data():
 
         if py == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1218,7 +1129,6 @@ def all_data():
 
         if sh == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1227,7 +1137,6 @@ def all_data():
 
         if sh == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1236,7 +1145,6 @@ def all_data():
 
         if txt == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1245,7 +1153,6 @@ def all_data():
 
         if txt == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1254,7 +1161,6 @@ def all_data():
 
         if xml == True and y == True:
             count += 1
-
             data_file = str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1263,7 +1169,6 @@ def all_data():
 
         if xml == True and y == False:
             count += 1
-
             data_file = secure + str(i)
             data = requests.get(data_file, verify = valid_certificate)
 
@@ -1272,12 +1177,8 @@ def all_data():
 
     end = time.time()
     print("\nTime: " + str(end - start) + " seconds.")
-
     url.close()
-
     pause = input()
-
-    the_silent()
 
 def password_generator():
     os.system("clear")
@@ -1302,22 +1203,20 @@ def password_generator():
     print("Password:", output)
 
     pause = input()
-
-    the_silent()
-
+    
 def brute_force_dictionary():
     count = 0
 
     os.system("clear")
     
-    user_input = input("Enter name of list:")
+    user_input = input("Enter name of list: ")
 
     text_file = open(user_input, "r")
     tracker = text_file.readlines()
 
     os.system("clear")
 
-    print("Enter password:")
+    print("Enter password: ")
     key = input()
 
     check = str(key) + "\n"
@@ -1336,7 +1235,7 @@ def brute_force_dictionary():
         if str(tracker[count]) != check and count != len(tracker):
             count += 1
 
-    the_silent()
+    pause = input()
 
 while True:
     if change_tor_boolean == True:
