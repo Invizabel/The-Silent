@@ -1184,14 +1184,11 @@ def all_data():
 
 def password_generator():
     os.system("clear")
-    
     output = ""
-    
     password_storage = [""]
     password_storage.clear()
-    
     password_characters = ["A", "a", "B", "b", "C", "c", "D", "d", "E", "e", "F", "f", "G", "g", "H", "h", "I", "i", "J", "j", "K", "k", "L", "l", "M", "m", "N", "n", "O", "o", "P", "p", "Q", "q", "R", "r", "S", "s", "T", "t", "U", "u", "V", "v", "W", "w", "X", "x", "Y", "y", "Z", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")"]
-    
+
     password_length = int(input("What is the password length?\n"))
 
     for i in range (0,password_length):
@@ -1203,7 +1200,8 @@ def password_generator():
         output += i
 
     print("Password:", output)
-
+    result = sha256(output.encode("utf-8")).hexdigest()
+    print("hashed password: " + result)
     pause = input()
     
 def brute_force_dictionary():
