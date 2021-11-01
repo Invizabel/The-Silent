@@ -154,8 +154,12 @@ def security():
             os.system("sudo dnf remove tor")
 
 def perceptual_hash(file_1, file_2):
-    first_hash = imagehash.phash(Image.open(file_1))
-    second_hash = imagehash.phash(Image.open(file_2))
+    first_hash = Image.open(file_1).convert("L")
+    first_hash.thumbnail((256, 256))
+    first_hash = imagehash.phash(first_hash)
+    second_hash = Image.open(file_2).convert("L")
+    second_hash.thumbnail((256, 256))
+    second_hash = imagehash.phash(second_hash)
     equal = str(first_hash == second_hash)
     hamming_distance = str(first_hash - second_hash)
     result = "equal: " + equal + "\nhamming distance: " + hamming_distance + "\nfile 1 hash: " + str(first_hash) + "\nfile 2 hash: " + str(second_hash)
