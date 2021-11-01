@@ -11,6 +11,7 @@
 #https://content-blockchain.org/research/testing-different-image-hash-functions/
 #https://pypi.org/project/ImageHash/
 
+#import libraries
 from hashlib import sha256
 from PIL import Image
 import imagehash
@@ -21,12 +22,15 @@ import requests
 import time
 import urllib3
 
+#connect to tor
 tor = requests.session()
 tor.proxies = {}
 tor.proxies["https"] = "socks5h://localhost:9050"
 
+#fake user agent
 user_agent = {"User-Agent" : "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36"}
 
+#create data folder variables
 main_folder = "data"
 all_data_folder = "all data"
 html_folder = "html"
@@ -34,41 +38,43 @@ images_folder = "images"
 log_folder = "log"
 pdf_folder = "pdf"
 
+#create data folders
 files = os.path.join(main_folder, all_data_folder)
 os.makedirs(files, exist_ok = True)
-
 files = os.path.join(main_folder, html_folder)
 os.makedirs(files, exist_ok = True)
-
 files = os.path.join(main_folder, images_folder)
 os.makedirs(files, exist_ok = True)
-
 files = os.path.join(main_folder, log_folder)
 os.makedirs(files, exist_ok = True)
-
 files = os.path.join(main_folder, pdf_folder)
 os.makedirs(files, exist_ok = True)
 
+#security variables
 change_tor_boolean = False
 https = True
 https_string = "https://"
 tor_boolean = False
 valid_certificate = True
 
+#increased security
 requests.packages.urllib3.disable_warnings()
 requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ":HIGH:!DH:!aNULL"
 
+#increased security
 try:
     requests.packages.urllib3.contrib.pyopenssl.util.ssl_.DEFAULT_CIPHERS += ":HIGH:!DH:!aNULL"
 
 except AttributeError:
     pass
 
+#find url in a string
 def find_url(string):
 	regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
 	url = re.findall(regex,string)
 	return [x[0] for x in url]
-    
+
+#security settings
 def security():
     global change_tor_boolean
     global https
@@ -153,18 +159,7 @@ def security():
             print("removing tor")
             os.system("sudo dnf remove tor")
 
-def perceptual_hash(file_1, file_2):
-    first_hash = Image.open(file_1).convert("L")
-    first_hash.thumbnail((256, 256))
-    first_hash = imagehash.phash(first_hash)
-    second_hash = Image.open(file_2).convert("L")
-    second_hash.thumbnail((256, 256))
-    second_hash = imagehash.phash(second_hash)
-    equal = str(first_hash == second_hash)
-    hamming_distance = str(first_hash - second_hash)
-    result = "equal: " + equal + "\nhamming distance: " + hamming_distance + "\nfile 1 hash: " + str(first_hash) + "\nfile 2 hash: " + str(second_hash)
-    return result
-            
+#make a request not using a log            
 def no_log():
     global website
     os.system("clear")
@@ -332,6 +327,7 @@ def no_log_url(website):
         
     return final.url
 
+#make a request using a log
 def log():
     global file
     global website
@@ -541,7 +537,8 @@ def log_url(website):
     final.close()
     file.close()
     return result
-    
+
+#download specific image from a website
 def image():
     secure = ""
     global website
@@ -577,6 +574,7 @@ def image():
     data.close()
     pause = input()
 
+#download pdf from a website
 def pdf():
     secure = ""
     global website
@@ -615,6 +613,7 @@ def pdf():
     data.close()
     pause = input()
 
+#download source from a website
 def html():
     secure = ""
     global website
@@ -646,6 +645,7 @@ def html():
     print("\nTime: " + str(end - start) + " seconds.")
     pause = input()
 
+#download all images from a website
 def all_images():
     secure = ""
     count = 0
@@ -735,6 +735,7 @@ def all_images():
     url.close()
     pause = input()
 
+#download all data from a website
 def all_data():
     secure = ""
     count = 0
@@ -1186,6 +1187,7 @@ def all_data():
     url.close()
     pause = input()
 
+#password generator
 def password_generator():
     os.system("clear")
     output = ""
@@ -1207,7 +1209,8 @@ def password_generator():
     result = sha256(output.encode("utf-8")).hexdigest()
     print("hashed password: " + result)
     pause = input()
-    
+
+#brute force password using dictionary method    
 def brute_force_dictionary():
     count = 0
 
@@ -1241,13 +1244,27 @@ def brute_force_dictionary():
 
     pause = input()
 
+#compare perceptual hashes
+def compare_perceptual_hash(file_1, file_2):
+    first_hash = Image.open(file_1).convert("L")
+    first_hash.thumbnail((256, 256))
+    first_hash = imagehash.phash(first_hash)
+    second_hash = Image.open(file_2).convert("L")
+    second_hash.thumbnail((256, 256))
+    second_hash = imagehash.phash(second_hash)
+    equal = str(first_hash == second_hash)
+    hamming_distance = str(first_hash - second_hash)
+    result = "equal: " + equal + "\nhamming distance: " + hamming_distance + "\nfile 1 hash: " + str(first_hash) + "\nfile 2 hash: " + str(second_hash)
+    return result
+
+#mainloop
 while True:
     if change_tor_boolean == True:
         os.system("sudo service tor stop")
         os.system("sudo service tor start")
     
     os.system("clear")
-    user_input = input("0 = security\n1 = data no log\n2 = data log\n3 = file\n4 = password generator\n5 = brute force (dictionary)\n6 = perceptual hash\n7 = generate password hash\ne = exit\n")
+    user_input = input("0 = security\n1 = data no log\n2 = data log\n3 = file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -1287,7 +1304,7 @@ while True:
         os.system("clear")
         file_1 = input("name of file 1: ")
         file_2 = input("name of file 2: ")
-        print(perceptual_hash(file_1, file_2))
+        print(compare_perceptual_hash(file_1, file_2))
         pause = input()
 
     if user_input == "7":
