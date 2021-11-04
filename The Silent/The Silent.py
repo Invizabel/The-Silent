@@ -19,6 +19,7 @@
 #import libraries
 from hashlib import sha256
 from PIL import Image
+import codecs
 import math
 import os
 import random
@@ -1274,6 +1275,12 @@ def data_recovery(partition):
     os.system("clear")
     os.system("sudo dd if=" + partition + " | strings > data.txt")
 
+def hex_editor(file):
+    os.system("clear")
+    with open(file, "rb") as f:
+        for chunk in iter(lambda: f.read(32), b""):
+            print(codecs.encode(chunk, "hex"))
+            
 #mainloop
 while True:
     if change_tor_boolean == True:
@@ -1281,7 +1288,7 @@ while True:
         os.system("sudo service tor start")
     
     os.system("clear")
-    user_input = input("0 = security\n1 = request no log\n2 = request log\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\ne = exit\n")
+    user_input = input("0 = security\n1 = request no log\n2 = request log\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -1341,6 +1348,11 @@ while True:
         os.system("clear")
         partition = input("partition: ")
         data_recovery(partition)
+
+    if user_input == "10":
+        os.system("clear")
+        file = input("enter file name: ")
+        hex_editor(file)
 
     if user_input == "e":
         exit()
