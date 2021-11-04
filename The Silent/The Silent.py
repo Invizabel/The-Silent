@@ -10,11 +10,16 @@
 #https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
 #https://content-blockchain.org/research/testing-different-image-hash-functions/
 #https://pypi.org/project/ImageHash/
+#Notes:
+#https://www.geeksforgeeks.org/python-os-statvfs-method/
+#https://www.geeksforgeeks.org/shutil-module-in-python/
+#https://www.quora.com/How-to-recover-deleted-files-using-a-C++-or-Python-Program?share=1
+
 
 #import libraries
 from hashlib import sha256
 from PIL import Image
-import imagehash
+import math
 import os
 import random
 import re
@@ -1246,6 +1251,7 @@ def brute_force_dictionary():
 
 #compare perceptual hashes
 def compare_perceptual_hash(file_1, file_2):
+    import imagehash
     first_hash = Image.open(file_1).convert("L")
     first_hash.thumbnail((256, 256))
     first_hash = imagehash.phash(first_hash)
@@ -1257,6 +1263,13 @@ def compare_perceptual_hash(file_1, file_2):
     result = "equal: " + equal + "\nhamming distance: " + hamming_distance + "\nfile 1 hash: " + str(first_hash) + "\nfile 2 hash: " + str(second_hash)
     return result
 
+def device_storage(directory):
+    stats = os.statvfs(directory)
+    block_size = stats.f_bsize
+    free_blocks = stats.f_bfree
+    free_space = math.floor(free_blocks * block_size / 1000000000)
+    return "block size: " + str(block_size) + "\nfree blocks: " + str(free_blocks) + "\nfree space: " + str(free_space) + " GB"
+
 #mainloop
 while True:
     if change_tor_boolean == True:
@@ -1264,7 +1277,7 @@ while True:
         os.system("sudo service tor start")
     
     os.system("clear")
-    user_input = input("0 = security\n1 = data no log\n2 = data log\n3 = file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\ne = exit\n")
+    user_input = input("0 = security\n1 = request no log\n2 = request log\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -1312,6 +1325,12 @@ while True:
         password = input("password: ")
         result = sha256(password.encode("utf-8")).hexdigest()
         print(result)
+        pause = input()
+
+    if user_input == "8":
+        os.system("clear")
+        directory = input("directory: ")
+        print(device_storage(directory))
         pause = input()
 
     if user_input == "e":
