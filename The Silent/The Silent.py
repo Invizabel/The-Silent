@@ -1353,6 +1353,7 @@ while True:
         os.system("clear")
         file = input("enter file name: ")
         hex_editor(file)
+        pause = input()
 
     if user_input == "e":
         exit()
