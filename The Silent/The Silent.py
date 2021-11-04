@@ -14,7 +14,7 @@
 #https://www.geeksforgeeks.org/python-os-statvfs-method/
 #https://www.geeksforgeeks.org/shutil-module-in-python/
 #https://www.quora.com/How-to-recover-deleted-files-using-a-C++-or-Python-Program?share=1
-
+#https://www.reddit.com/r/Python/comments/qe1ovu/recover_deleted_and_overwritten_files_with/
 
 #import libraries
 from hashlib import sha256
@@ -1270,6 +1270,10 @@ def device_storage(directory):
     free_space = math.floor(free_blocks * block_size / 1000000000)
     return "block size: " + str(block_size) + "\nfree blocks: " + str(free_blocks) + "\nfree space: " + str(free_space) + " GB"
 
+def data_recovery(partition):
+    os.system("clear")
+    os.system("sudo dd if=" + partition + " | strings > data.txt")
+
 #mainloop
 while True:
     if change_tor_boolean == True:
@@ -1277,7 +1281,7 @@ while True:
         os.system("sudo service tor start")
     
     os.system("clear")
-    user_input = input("0 = security\n1 = request no log\n2 = request log\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\ne = exit\n")
+    user_input = input("0 = security\n1 = request no log\n2 = request log\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -1332,6 +1336,11 @@ while True:
         directory = input("directory: ")
         print(device_storage(directory))
         pause = input()
+
+    if user_input == "9":
+        os.system("clear")
+        partition = input("partition: ")
+        data_recovery(partition)
 
     if user_input == "e":
         exit()
