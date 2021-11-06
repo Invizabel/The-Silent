@@ -15,6 +15,8 @@
 #https://www.geeksforgeeks.org/shutil-module-in-python/
 #https://www.quora.com/How-to-recover-deleted-files-using-a-C++-or-Python-Program?share=1
 #https://www.reddit.com/r/Python/comments/qe1ovu/recover_deleted_and_overwritten_files_with/
+#https://stackoverflow.com/questions/443967/how-to-create-python-bytes-object-from-long-hex-string
+#https://stackoverflow.com/questions/15374969/determining-if-a-string-contains-a-word
 
 #import libraries
 from hashlib import sha256
@@ -1269,11 +1271,60 @@ def device_storage(directory):
     block_size = stats.f_bsize
     free_blocks = stats.f_bfree
     free_space = math.floor(free_blocks * block_size / 1000000000)
-    return "block size: " + str(block_size) + "\nfree blocks: " + str(free_blocks) + "\nfree space: " + str(free_space) + " GB"
 
-def data_recovery(partition):
-    os.system("clear")
-    os.system("sudo dd if=" + partition + " | strings > data.txt")
+    file_count = 0
+    directory_count = 0
+    os.chdir(directory)
+
+    for root, dirs, files in os.walk(".", topdown = False):
+       for name in files:
+          file_count += 1
+
+       for name in dirs:
+          directory_count += 1
+
+    return "block size: " + str(block_size) + "\nfree blocks: " + str(free_blocks) + "\nfree space: " + str(free_space) + " GB" + "\nFiles: " + str(file_count) + "\nDirectories: " + str(directory_count)
+
+def data_recovery(image):
+    png_header = "89504e470d0a1a0a"
+    png_footer = "49454e44ae426082"
+
+    code = ""
+    hex_boolean = False
+    png_count = 0
+    hex_code_list = []
+
+    with open(image, "rb") as f:
+        for chunk in iter(lambda: f.read(32), b""):
+            hex_code = str(codecs.encode(chunk, "hex"))
+            
+            if png_header in hex_code:
+                print("head!")
+                hex_boolean = True
+
+            if png_footer in hex_code:
+                print("foot!")
+                png_count += 1
+
+                for i in hex_code_list:
+                    code = str(code + i)
+                    clean_1 = code.replace("'b'", "")
+                    clean_2 = clean_1.replace("b'", "")
+                    clean_3 = clean_2.replace("'", "")
+                    result = clean_3.replace("\n", "")
+                    
+                png_extract = bytes.fromhex(result)
+
+                with open("image " + str(png_count) + ".png", "wb") as file:
+                    file.write(png_extract)
+
+                hex_boolean = False
+                hex_code_list.clear()
+                #temporary exit
+                exit()
+
+            if hex_boolean == True:
+                hex_code_list.append(str(hex_code))
 
 def hex_editor(file):
     os.system("clear")
@@ -1346,12 +1397,12 @@ while True:
 
     if user_input == "9":
         os.system("clear")
-        partition = input("partition: ")
-        data_recovery(partition)
+        image = input("disk image: ")
+        data_recovery(image)
 
     if user_input == "10":
         os.system("clear")
-        file = input("enter file name: ")
+        file = input("file name: ")
         hex_editor(file)
         pause = input()
 
