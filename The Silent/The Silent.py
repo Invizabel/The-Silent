@@ -20,7 +20,6 @@
 
 #import libraries
 from hashlib import sha256
-from PIL import Image
 import codecs
 import math
 import os
@@ -1254,6 +1253,7 @@ def brute_force_dictionary():
 
 #compare perceptual hashes
 def compare_perceptual_hash(file_1, file_2):
+    from PIL import Image
     import imagehash
     first_hash = Image.open(file_1).convert("L")
     first_hash.thumbnail((256, 256))
