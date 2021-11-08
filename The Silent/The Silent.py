@@ -247,8 +247,12 @@ def no_log_headers(website):
         
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
-        
-    return final.headers
+
+    result = list(final.headers.items())
+    result.sort()
+
+    for i in result:
+        print(i)
     
 def no_log_html_code(website):
     os.system("clear")
@@ -427,11 +431,15 @@ def log_headers(website):
     if tor_boolean == False:
         final = requests.get(output, verify = valid_certificate, headers = user_agent)
 
-    result = str(final.headers)
+    result = list(final.headers.items())
+    result.sort()
+
+    for i in result:
+        print(i)
+        
     file.write("\n\nheaders: " + result + "\n\n")
     final.close()
     file.close()
-    return result
     
 def log_html_code(website):
     os.system("clear")
