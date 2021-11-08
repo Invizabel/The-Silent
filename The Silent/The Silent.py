@@ -436,8 +436,8 @@ def log_headers(website):
 
     for i in result:
         print(i)
-        
-    file.write("\n\nheaders: " + result + "\n\n")
+        file.write("\n\nheaders: " + str(i) + "\n\n")
+
     final.close()
     file.close()
     
