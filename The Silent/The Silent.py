@@ -10,13 +10,14 @@
 #https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
 #https://content-blockchain.org/research/testing-different-image-hash-functions/
 #https://pypi.org/project/ImageHash/
-#Notes:
 #https://www.geeksforgeeks.org/python-os-statvfs-method/
 #https://www.geeksforgeeks.org/shutil-module-in-python/
 #https://www.quora.com/How-to-recover-deleted-files-using-a-C++-or-Python-Program?share=1
 #https://www.reddit.com/r/Python/comments/qe1ovu/recover_deleted_and_overwritten_files_with/
 #https://stackoverflow.com/questions/443967/how-to-create-python-bytes-object-from-long-hex-string
 #https://stackoverflow.com/questions/15374969/determining-if-a-string-contains-a-word
+#Notes:
+#close connection in no log (work on)
 
 #import libraries
 from hashlib import sha256
@@ -33,6 +34,9 @@ import urllib3
 tor = requests.session()
 tor.proxies = {}
 tor.proxies["https"] = "socks5h://localhost:9050"
+
+#create sessions object
+web_session = requests.Session()
 
 #fake user agent
 user_agent = {"User-Agent" : "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36"}
@@ -172,7 +176,7 @@ def no_log():
     os.system("clear")
     website = input("enter website:\n")
     os.system("clear")
-    user_input = input("1 = cookies\n2 = encoding\n3 = headers\n4 = html code\n5 = ok\n6 = permanent redirect\n7 = reason\n8 = redirect\n9 = status code\n10 = url\n")
+    user_input = input("1 = cookies\n2 = encoding\n3 = headers\n4 = html code\n5 = ok\n6 = permanent redirect\n7 = reason\n8 = redirect\n9 = status code\n10 = url\n11 = server stats\n")
     
     if user_input == "1":
         print(no_log_cookies(website))
@@ -183,7 +187,7 @@ def no_log():
         pause = input()
 
     if user_input == "3":
-        print(no_log_headers(website))
+        no_log_headers(website)
         pause = input()
 
     if user_input == "4":
@@ -214,6 +218,10 @@ def no_log():
         print(no_log_url(website))
         pause = input()
 
+    if user_input == "11":
+        no_log_server_stats(website)
+        pause = input
+
 def no_log_cookies(website):
     os.system("clear")
     output = https_string + website
@@ -222,7 +230,7 @@ def no_log_cookies(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
         
     return final.cookies
 
@@ -234,7 +242,7 @@ def no_log_encoding(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     return final.encoding
 
@@ -246,7 +254,7 @@ def no_log_headers(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = list(final.headers.items())
     result.sort()
@@ -262,7 +270,7 @@ def no_log_html_code(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
         
     return final.text
     
@@ -274,7 +282,7 @@ def no_log_ok(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
         
     return final.ok
     
@@ -286,7 +294,7 @@ def no_log_permanent_redirect(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
         
     return final.is_permanent_redirect
 
@@ -298,7 +306,7 @@ def no_log_reason(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
         
     return final.reason
 
@@ -310,7 +318,7 @@ def no_log_redirect(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
         
     return final.is_redirect
     
@@ -322,7 +330,7 @@ def no_log_status_code(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
         
     return final.status_code
     
@@ -334,9 +342,34 @@ def no_log_url(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
         
     return final.url
+
+def no_log_server_stats(website):
+    os.system("clear")
+    output = https_string + website
+
+    if tor_boolean == True:
+        url = tor.get(output, verify = valid_certificate, headers = user_agent)
+        
+    if tor_boolean == False:
+        url = web_session.get(output, verify = valid_certificate, headers = user_agent)
+        
+    web = list(url.headers.items())
+    web.sort()
+
+    for i in web:
+        request_string = str(i)
+        clean_1 = request_string.replace("(", "")
+        clean_2 = clean_1.replace(")", "")
+        clean_3 = clean_2.replace(",", ":")
+        result = clean_3.replace("'", "")
+
+        if "Server" in result:
+            print(result)
+
+    url.close()
 
 #make a request using a log
 def log():
@@ -346,8 +379,7 @@ def log():
     os.system("clear")
     website = input("enter website:\n")
     os.system("clear")
-    print("1 = cookies\n2 = encoding\n3 = headers\n4 = html code\n5 = ok\n6 = permanent redirect\n7 = reason\n8 = redirect\n9 = status code\n10 = url")
-    user_input = input()
+    user_input = input("1 = cookies\n2 = encoding\n3 = headers\n4 = html code\n5 = ok\n6 = permanent redirect\n7 = reason\n8 = redirect\n9 = status code\n10 = url\n11 = server stats\n")
 
     if user_input == "1":
         print(log_cookies(website))
@@ -358,7 +390,7 @@ def log():
         pause = input()
         
     if user_input == "3":
-        print(log_headers(website))
+        log_headers(website)
         pause = input()
 
     if user_input == "4":
@@ -389,6 +421,9 @@ def log():
         print(log_url(website))
         pause = input()
 
+    if user_input == "11":
+        log_server_stats(website)
+
 def log_cookies(website):
     os.system("clear")
     output = https_string + website
@@ -397,7 +432,7 @@ def log_cookies(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.cookies)
     file.write("\n\ncookies: " + result + "\n\n")
@@ -413,7 +448,7 @@ def log_encoding(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.encoding)
     file.write("\n\nencoding: " + result + "\n\n")
@@ -429,7 +464,7 @@ def log_headers(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = list(final.headers.items())
     result.sort()
@@ -449,7 +484,7 @@ def log_html_code(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.text)
     file.write("\n\nhtml code: " + result + "\n\n")
@@ -465,7 +500,7 @@ def log_ok(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.ok) 
     file.write("\n\nok: " + result + "\n\n")
@@ -481,7 +516,7 @@ def log_permanent_redirect(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.is_permanent_redirect)
     file.write("\n\npermanent redirect: " + result + "\n\n")
@@ -497,7 +532,7 @@ def log_reason(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.reason)
     file.write("\n\nreason: " + result + "\n\n")
@@ -513,7 +548,7 @@ def log_redirect(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.is_redirect)
     file.write("\n\nredirect: " + result + "\n\n")
@@ -529,7 +564,7 @@ def log_status_code(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.status_code)
     file.write("\n\nstatus code: " + result + "\n\n")
@@ -545,13 +580,39 @@ def log_url(website):
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.url)
     file.write("\n\nurl: " + result + "\n\n")
     final.close()
     file.close()
     return result
+
+def log_server_stats(website):
+    os.system("clear")
+    output = https_string + website
+
+    if tor_boolean == True:
+        url = tor.get(output, verify = valid_certificate, headers = user_agent)
+        
+    if tor_boolean == False:
+        url = web_session.get(output, verify = valid_certificate, headers = user_agent)
+        
+    web = list(url.headers.items())
+    web.sort()
+
+    for i in web:
+        request_string = str(i)
+        clean_1 = request_string.replace("(", "")
+        clean_2 = clean_1.replace(")", "")
+        clean_3 = clean_2.replace(",", ":")
+        result = clean_3.replace("'", "")
+
+        if "Server" in result:
+            print(result)
+            file.write("\n\n" + result + "\n\n")
+
+    url.close()
 
 #download specific image from a website
 def image():
@@ -579,7 +640,7 @@ def image():
         data = tor.get(picture, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        data = requests.get(picture, verify = valid_certificate, headers = user_agent)
+        data = web_session.get(picture, verify = valid_certificate, headers = user_agent)
         
     with open(os.path.join("data/images", name), "wb") as file_writer:
         file_writer.write(data.content)
@@ -614,7 +675,7 @@ def pdf():
         data = tor.get(pdf, stream = True, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        data = requests.get(pdf, stream = True, verify = valid_certificate, headers = user_agent)
+        data = web_session.get(pdf, stream = True, verify = valid_certificate, headers = user_agent)
 
     data = requests.get(pdf, stream = True, verify = valid_certificate)
 
@@ -650,7 +711,7 @@ def html():
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = requests.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     file = open(os.path.join("data/html", website + ".html"), "w+")
     file.write(final.text)
@@ -682,7 +743,7 @@ def all_images():
         url = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        url = requests.get(output, verify = valid_certificate, headers = user_agent)
+        url = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     out = str(url.text)
     web_list = find_url(out)
@@ -700,7 +761,7 @@ def all_images():
         if jpeg == True and y == True:
             count += 1
             picture = str(i)
-            data = requests.get(picture, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(picture, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -708,7 +769,7 @@ def all_images():
         if jpeg == True and y == False:
             count += 1
             picture = secure + str(i)
-            data = requests.get(picture, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(picture, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -716,7 +777,7 @@ def all_images():
         if jpg == True and y == True:
             count += 1
             picture = str(i)
-            data = requests.get(picture, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(picture, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -724,7 +785,7 @@ def all_images():
         if jpg == True and y == False:
             count += 1
             picture = secure + str(i)
-            data = requests.get(picture, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(picture, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -732,7 +793,7 @@ def all_images():
         if png == True and y == True:
             count += 1
             picture = str(i)
-            data = requests.get(picture, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(picture, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -740,7 +801,7 @@ def all_images():
         if png == True and y == False:
             count += 1
             picture = secure + str(i)
-            data = requests.get(picture, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(picture, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -773,7 +834,7 @@ def all_data():
         url = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        url = requests.get(output, verify = valid_certificate, headers = user_agent)
+        url = web_session.get(output, verify = valid_certificate, headers = user_agent)
         
     out = str(url.text)
     web_list = find_url(out)
@@ -816,7 +877,7 @@ def all_data():
         if app == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".app"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -824,7 +885,7 @@ def all_data():
         if app == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data","file " + str(count)  + ".app"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -832,7 +893,7 @@ def all_data():
         if avi == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".avi"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -840,7 +901,7 @@ def all_data():
         if avi == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".avi"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -848,7 +909,7 @@ def all_data():
         if bat == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".bat"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -856,7 +917,7 @@ def all_data():
         if bat == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".bat"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -864,7 +925,7 @@ def all_data():
         if cmd == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".cmd"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -872,7 +933,7 @@ def all_data():
         if cmd == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".cmd"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -880,7 +941,7 @@ def all_data():
         if css == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".css"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -888,7 +949,7 @@ def all_data():
         if css == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".css"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -896,7 +957,7 @@ def all_data():
         if doc == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".doc"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -904,7 +965,7 @@ def all_data():
         if doc == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".doc"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -912,7 +973,7 @@ def all_data():
         if docx == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".docx"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -920,7 +981,7 @@ def all_data():
         if docx == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".docx"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -928,7 +989,7 @@ def all_data():
         if exe == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".exe"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -936,7 +997,7 @@ def all_data():
         if exe == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".exe"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -944,7 +1005,7 @@ def all_data():
         if gif == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".gif"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -952,7 +1013,7 @@ def all_data():
         if gif == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".gif"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -960,7 +1021,7 @@ def all_data():
         if html == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".html"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -968,7 +1029,7 @@ def all_data():
         if html == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".html"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -976,7 +1037,7 @@ def all_data():
         if jar == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jar"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -984,7 +1045,7 @@ def all_data():
         if jar == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jar"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -992,7 +1053,7 @@ def all_data():
         if java == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".java"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1000,7 +1061,7 @@ def all_data():
         if java == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".java"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1008,7 +1069,7 @@ def all_data():
         if jpeg == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1016,7 +1077,7 @@ def all_data():
         if jpeg == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1024,7 +1085,7 @@ def all_data():
         if jpg == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jpg"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1032,7 +1093,7 @@ def all_data():
         if jpg == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jpg"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1040,7 +1101,7 @@ def all_data():
         if jss == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jss"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1048,7 +1109,7 @@ def all_data():
         if jss == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jss"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1056,7 +1117,7 @@ def all_data():
         if m4a == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".m4a"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1064,7 +1125,7 @@ def all_data():
         if m4a == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".m4a"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1072,7 +1133,7 @@ def all_data():
         if mp3 == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".mp3"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1080,7 +1141,7 @@ def all_data():
         if mp3 == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".mp3"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1088,7 +1149,7 @@ def all_data():
         if mp4 == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".mp4"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1096,7 +1157,7 @@ def all_data():
         if mp4 == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".mp4"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1104,7 +1165,7 @@ def all_data():
         if pdf == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".pdf"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1112,7 +1173,7 @@ def all_data():
         if pdf == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".pdf"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1120,7 +1181,7 @@ def all_data():
         if png == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".png"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1128,7 +1189,7 @@ def all_data():
         if png == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".png"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1136,7 +1197,7 @@ def all_data():
         if py == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".py"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1144,7 +1205,7 @@ def all_data():
         if py == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".py"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1152,7 +1213,7 @@ def all_data():
         if sh == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".sh"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1160,7 +1221,7 @@ def all_data():
         if sh == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".sh"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1168,7 +1229,7 @@ def all_data():
         if txt == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".txt"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1176,7 +1237,7 @@ def all_data():
         if txt == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".txt"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1184,7 +1245,7 @@ def all_data():
         if xml == True and y == True:
             count += 1
             data_file = str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".xml"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1192,7 +1253,7 @@ def all_data():
         if xml == True and y == False:
             count += 1
             data_file = secure + str(i)
-            data = requests.get(data_file, verify = valid_certificate, headers = user_agent)
+            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".xml"), "wb") as file_writer:
                 file_writer.write(data.content)
@@ -1347,7 +1408,7 @@ while True:
         os.system("sudo service tor start")
     
     os.system("clear")
-    user_input = input("0 = security\n1 = request no log\n2 = request log\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\ne = exit\n")
+    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\ne = exit\n")
 
     if user_input == "0":
         security()
