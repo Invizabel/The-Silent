@@ -614,6 +614,7 @@ def log_server_stats(website):
             file.write("\n\n" + result + "\n\n")
 
     url.close()
+    file.close
 
 #download specific image from a website
 def image():
