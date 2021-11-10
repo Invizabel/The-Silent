@@ -220,6 +220,7 @@ def no_log():
 
     if user_input == "11":
         no_log_server_stats(website)
+        pause = input()
 
 def no_log_cookies(website):
     os.system("clear")
@@ -369,7 +370,6 @@ def no_log_server_stats(website):
             print(result)
             
     url.close()
-    pause = input
 
 #make a request using a log
 def log():
@@ -423,6 +423,7 @@ def log():
 
     if user_input == "11":
         log_server_stats(website)
+        pause = input()
 
 def log_cookies(website):
     os.system("clear")
@@ -613,7 +614,6 @@ def log_server_stats(website):
             file.write("\n\n" + result + "\n\n")
 
     url.close()
-    pause = input
 
 #download specific image from a website
 def image():
