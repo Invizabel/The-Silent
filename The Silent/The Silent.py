@@ -20,7 +20,7 @@
 #close connection in no log (work on)
 
 #import libraries
-from hashlib import sha256
+from hashlib import *
 import codecs
 import math
 import os
@@ -220,7 +220,6 @@ def no_log():
 
     if user_input == "11":
         no_log_server_stats(website)
-        pause = input
 
 def no_log_cookies(website):
     os.system("clear")
@@ -368,8 +367,9 @@ def no_log_server_stats(website):
 
         if "Server" in result:
             print(result)
-
+            
     url.close()
+    pause = input
 
 #make a request using a log
 def log():
@@ -613,6 +613,7 @@ def log_server_stats(website):
             file.write("\n\n" + result + "\n\n")
 
     url.close()
+    pause = input
 
 #download specific image from a website
 def image():
