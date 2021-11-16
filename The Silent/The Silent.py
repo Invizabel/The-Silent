@@ -31,7 +31,7 @@ import time
 import urllib3
 
 #connect to tor
-tor = requests.session()
+tor = requests.Session()
 tor.proxies = {}
 tor.proxies["https"] = "socks5h://localhost:9050"
 
@@ -365,8 +365,9 @@ def no_log_server_stats(website):
         clean_2 = clean_1.replace(")", "")
         clean_3 = clean_2.replace(",", ":")
         result = clean_3.replace("'", "")
+        result = result.lower()
 
-        if "Server" in result:
+        if "server:" in result:
             print(result)
             
     url.close()
@@ -608,8 +609,9 @@ def log_server_stats(website):
         clean_2 = clean_1.replace(")", "")
         clean_3 = clean_2.replace(",", ":")
         result = clean_3.replace("'", "")
+        result = result.lower()
 
-        if "Server" in result:
+        if "server:" in result:
             print(result)
             file.write("\n\n" + result + "\n\n")
 
