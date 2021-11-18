@@ -16,12 +16,14 @@
 #https://www.reddit.com/r/Python/comments/qe1ovu/recover_deleted_and_overwritten_files_with/
 #https://stackoverflow.com/questions/443967/how-to-create-python-bytes-object-from-long-hex-string
 #https://stackoverflow.com/questions/15374969/determining-if-a-string-contains-a-word
-#Notes:
-#close connection in no log (work on)
+#https://www.geeksforgeeks.org/python-itertools-combinations_with_replacement/
 
 #import libraries
 from hashlib import *
+from itertools import *
+
 import codecs
+import Dynamic_Threading
 import math
 import os
 import random
@@ -1290,7 +1292,22 @@ def password_generator():
     print("hashed password: " + result)
     pause = input()
 
-#brute force password using dictionary method    
+#brute force classic
+def brute_force_classic(password, length):
+    dictionary = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()"
+    maximum = int(length) + 1
+
+    for i in range (1, maximum):
+        for ii in combinations_with_replacement(dictionary, i):
+            compute_1 = ''.join(ii)
+            compute_2 = compute_1[::-1]
+
+            if compute_1 == password or compute_2 == password:
+                break
+
+    return "password: " + password
+
+#brute force password using dictionary method
 def brute_force_dictionary():
     count = 0
 
@@ -1326,17 +1343,22 @@ def brute_force_dictionary():
 
 #compare perceptual hashes
 def compare_perceptual_hash(file_1, file_2):
-    from PIL import Image
-    import imagehash
-    first_hash = Image.open(file_1).convert("L")
-    first_hash.thumbnail((256, 256))
-    first_hash = imagehash.phash(first_hash)
-    second_hash = Image.open(file_2).convert("L")
-    second_hash.thumbnail((256, 256))
-    second_hash = imagehash.phash(second_hash)
-    equal = str(first_hash == second_hash)
-    hamming_distance = str(first_hash - second_hash)
-    result = "equal: " + equal + "\nhamming distance: " + hamming_distance + "\nfile 1 hash: " + str(first_hash) + "\nfile 2 hash: " + str(second_hash)
+    try:
+        from PIL import Image
+        import imagehash
+        first_hash = Image.open(file_1).convert("L")
+        first_hash.thumbnail((256, 256))
+        first_hash = imagehash.phash(first_hash)
+        second_hash = Image.open(file_2).convert("L")
+        second_hash.thumbnail((256, 256))
+        second_hash = imagehash.phash(second_hash)
+        equal = str(first_hash == second_hash)
+        hamming_distance = str(first_hash - second_hash)
+        result = "equal: " + equal + "\nhamming distance: " + hamming_distance + "\nfile 1 hash: " + str(first_hash) + "\nfile 2 hash: " + str(second_hash)
+
+    except:
+        result = "image hash library not found"
+        
     return result
 
 def device_storage(directory):
@@ -1412,7 +1434,7 @@ while True:
         os.system("sudo service tor start")
     
     os.system("clear")
-    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\ne = exit\n")
+    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -1477,6 +1499,12 @@ while True:
         os.system("clear")
         file = input("file name: ")
         hex_editor(file)
+        pause = input()
+
+    if user_input == "11":
+        password = input("enter password: ")
+        password_length = input("enter length of password: ")
+        print(brute_force_classic(password, password_length))
         pause = input()
 
     if user_input == "e":
