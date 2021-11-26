@@ -695,6 +695,31 @@ def log_server_stats(website):
     url.close()
     file.close
 
+#port scanner
+def port_scanner(website, minimum, maximum):
+    os.system("clear")
+    result = []
+
+    for i in range(minimum, maximum):
+        output = https_string + website + ":" + str(i)
+
+        try:
+            if tor_boolean == True:
+                final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 0.25)
+
+            if tor_boolean == False:
+                final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 0.25)
+
+            request = final.status_code
+
+            if request == 200:
+                result.append(i)
+
+        except:
+            pass
+
+    return result
+
 #download specific image from a website
 def image():
     secure = ""
@@ -1509,7 +1534,7 @@ while True:
         os.system("sudo service tor start")
     
     os.system("clear")
-    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\ne = exit\n")
+    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -1581,6 +1606,12 @@ while True:
         password_length = input("enter length of password: ")
         print(brute_force_classic(password, password_length))
         pause = input()
+
+    if user_input == "12":
+        website = input("website: ")
+        minimum = int(input("mimimum port number: "))
+        maximum = int(input("maximum port number: "))
+        print(port_scanner(website, minimum, maximum))
 
     if user_input == "e":
         exit()
