@@ -227,153 +227,228 @@ def no_log():
 def no_log_cookies(website):
     os.system("clear")
     output = https_string + website
+    result = ""
+    
+    try:
+        if tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+            
+        if tor_boolean == False:
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
-    if tor_boolean == True:
-        final = tor.get(output, verify = valid_certificate, headers = user_agent)
-        
-    if tor_boolean == False:
-        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
-        
-    return final.cookies
+        result = final.cookies
+
+    except requests.exceptions.SSLError:
+      result = str("invalid certificate")
+
+    return result
 
 def no_log_encoding(website):
     os.system("clear")
     output = https_string + website
+    result = ""
 
-    if tor_boolean == True:
-        final = tor.get(output, verify = valid_certificate, headers = user_agent)
-        
-    if tor_boolean == False:
-        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
+    try:
+        if tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+            
+        if tor_boolean == False:
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
-    return final.encoding
+        result = final.encoding
+
+    except requests.exceptions.SSLError:
+      result = str("invalid certificate")
+
+    return result
 
 def no_log_headers(website):
     os.system("clear")
     output = https_string + website
-    
-    if tor_boolean == True:
-        final = tor.get(output, verify = valid_certificate, headers = user_agent)
-        
-    if tor_boolean == False:
-        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
+    result = ""
 
-    result = list(final.headers.items())
-    result.sort()
+    try:
+        if tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+            
+        if tor_boolean == False:
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
-    for i in result:
-        print(i)
+        result = list(final.headers.items())
+        result.sort()
+
+        for i in result:
+            print(i)
+
+    except requests.exceptions.SSLError:
+      result = str("invalid certificate")
+      print(result)
     
 def no_log_html_code(website):
     os.system("clear")
     output = https_string + website
-    
-    if tor_boolean == True:
-        final = tor.get(output, verify = valid_certificate, headers = user_agent)
-        
-    if tor_boolean == False:
-        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
-        
-    return final.text
+    result = ""
+
+    try:
+        if tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+            
+        if tor_boolean == False:
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
+
+        result = final.text
+
+    except requests.exceptions.SSLError:
+      result = str("invalid certificate")
+
+    return result
     
 def no_log_ok(website):
     os.system("clear")
     output = https_string + website
-    
-    if tor_boolean == True:
-        final = tor.get(output, verify = valid_certificate, headers = user_agent)
-        
-    if tor_boolean == False:
-        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
-        
-    return final.ok
+    result = ""
+
+    try:
+        if tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+            
+        if tor_boolean == False:
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
+
+        result = final.ok
+
+    except requests.exceptions.SSLError:
+      result = str("invalid certificate")
+
+    return result
     
 def no_log_permanent_redirect(website):
     os.system("clear")
     output = https_string + website
-    
-    if tor_boolean == True:
-        final = tor.get(output, verify = valid_certificate, headers = user_agent)
-        
-    if tor_boolean == False:
-        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
-        
-    return final.is_permanent_redirect
+    result = ""
+
+    try:
+        if tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+            
+        if tor_boolean == False:
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
+
+        result = final.is_permanent_redirect
+
+    except requests.exceptions.SSLError:
+      result = str("invalid certificate")
+
+    return result
 
 def no_log_reason(website):
     os.system("clear")
     output = https_string + website
-    
-    if tor_boolean == True:
-        final = tor.get(output, verify = valid_certificate, headers = user_agent)
-        
-    if tor_boolean == False:
-        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
-        
-    return final.reason
+    result = ""
+
+    try:
+        if tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+            
+        if tor_boolean == False:
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
+
+        result = final.reason
+
+    except requests.exceptions.SSLError:
+      result = str("invalid certificate")
+
+    return result
 
 def no_log_redirect(website):
     os.system("clear")
     output = https_string + website
-    
-    if tor_boolean == True:
-        final = tor.get(output, verify = valid_certificate, headers = user_agent)
-        
-    if tor_boolean == False:
-        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
-        
-    return final.is_redirect
+    result = ""
+
+    try:
+        if tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+            
+        if tor_boolean == False:
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
+
+        result = final.is_redirect
+
+    except requests.exceptions.SSLError:
+      result = str("invalid certificate")
+
+    return result
     
 def no_log_status_code(website):
     os.system("clear")
     output = https_string + website
-    
-    if tor_boolean == True:
-        final = tor.get(output, verify = valid_certificate, headers = user_agent)
-        
-    if tor_boolean == False:
-        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
-        
-    return final.status_code
+    result = ""
+
+    try:
+        if tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+            
+        if tor_boolean == False:
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
+
+        result = final.status_code
+
+    except requests.exceptions.SSLError:
+      result = str("invalid certificate")
+
+    return result
     
 def no_log_url(website):
     os.system("clear")
     output = https_string + website
-    
-    if tor_boolean == True:
-        final = tor.get(output, verify = valid_certificate, headers = user_agent)
-        
-    if tor_boolean == False:
-        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
-        
-    return final.url
+    result = ""
+
+    try:
+        if tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+            
+        if tor_boolean == False:
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
+
+        result = final.url
+
+    except requests.exceptions.SSLError:
+      result = str("invalid certificate")
+
+    return result
 
 def no_log_server_stats(website):
     os.system("clear")
     output = https_string + website
+    result = ""
 
-    if tor_boolean == True:
-        url = tor.get(output, verify = valid_certificate, headers = user_agent)
-        
-    if tor_boolean == False:
-        url = web_session.get(output, verify = valid_certificate, headers = user_agent)
-        
-    web = list(url.headers.items())
-    web.sort()
-
-    for i in web:
-        request_string = str(i)
-        clean_1 = request_string.replace("(", "")
-        clean_2 = clean_1.replace(")", "")
-        clean_3 = clean_2.replace(",", ":")
-        result = clean_3.replace("'", "")
-        result = result.lower()
-
-        if "server:" in result:
-            print(result)
+    try:
+        if tor_boolean == True:
+            url = tor.get(output, verify = valid_certificate, headers = user_agent)
             
-    url.close()
+        if tor_boolean == False:
+            url = web_session.get(output, verify = valid_certificate, headers = user_agent)
+            
+        web = list(url.headers.items())
+        web.sort()
 
+        for i in web:
+            request_string = str(i)
+            clean_1 = request_string.replace("(", "")
+            clean_2 = clean_1.replace(")", "")
+            clean_3 = clean_2.replace(",", ":")
+            result = clean_3.replace("'", "")
+            result = result.lower()
+
+            if "server:" in result:
+                print(result)
+
+        url.close()
+
+    except requests.exceptions.SSLError:
+      result = str("invalid certificate")
+      print(result)
+      
 #make a request using a log
 def log():
     global file
