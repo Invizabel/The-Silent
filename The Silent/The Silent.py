@@ -1602,16 +1602,19 @@ while True:
         pause = input()
 
     if user_input == "11":
+        os.system("clear")
         password = input("enter password: ")
         password_length = input("enter length of password: ")
         print(brute_force_classic(password, password_length))
         pause = input()
 
     if user_input == "12":
+        os.system("clear")
         website = input("website: ")
         minimum = int(input("mimimum port number: "))
         maximum = int(input("maximum port number: "))
         print(port_scanner(website, minimum, maximum))
+        pause = input()
 
     if user_input == "e":
         exit()
