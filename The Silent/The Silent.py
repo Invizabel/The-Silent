@@ -24,6 +24,7 @@ from itertools import *
 
 import codecs
 import Dynamic_Threading
+import hashlib
 import math
 import os
 import random
@@ -1471,7 +1472,7 @@ def device_storage(directory):
     directory_count = 0
     os.chdir(directory)
 
-    for root, dirs, files in os.walk(".", topdown = False):
+    for root, dirs, files in os.walk(".", topdown = True):
        for name in files:
           file_count += 1
 
@@ -1526,7 +1527,81 @@ def hex_editor(file):
     with open(file, "rb") as f:
         for chunk in iter(lambda: f.read(32), b""):
             print(codecs.encode(chunk, "hex"))
-            
+
+#file finder finds files based on hash signatures
+def file_finder(file, directory):
+    os.system("clear")
+
+    size = 1000000
+    hash_file = hashlib.sha512()
+
+    with open(file, 'rb') as f:
+        data = f.read(size)
+
+        while len(data) > 0:
+            hash_file.update(data)
+            data = f.read(size)
+
+    display_progress = 0
+    errors = 0
+    file_count = 0
+    file_list = []
+    progress = 0
+
+    stats = os.statvfs(directory)
+    os.chdir(directory)
+
+    for root, dirs, files in os.walk(".", topdown = True):
+       for name in files:
+          file_count += 1
+
+    total_progress = math.ceil(file_count / 100 )
+
+    for (root, dirs, files) in os.walk(".", topdown = True):
+       for name in files:
+          progress = progress + 1
+          size = 1000000
+          file_hash = hashlib.sha512()
+          clean = root.replace("./", "")
+          result = os.path.join(directory, clean, name)
+          file_exists = os.path.isfile(result)
+
+          if progress == total_progress:
+             display_progress = display_progress + 1
+             progress = 0
+             print(str(display_progress) + "%")
+
+          try:
+             file_has_data = os.stat(result).st_size == 0
+
+          except:
+             continue
+
+          if file_exists == True and file_has_data == False:
+             try:
+                with open(result, 'rb') as f:
+                   data = f.read(size)
+
+                   while len(data) > 0:
+                      file_hash.update(data)
+                      data = f.read(size)
+
+                if file_hash.hexdigest() == "":
+                   continue
+
+             except:
+                continue
+
+          else:
+             errors = errors + 1
+             continue
+
+          if file_hash.hexdigest() == hash_file.hexdigest():
+            file_list.append(result)
+
+    os.system("clear")
+    return str("errors = " + str(errors) + "\n" + "\n" + "files found: " + str(file_list))
+          
 #mainloop
 while True:
     if change_tor_boolean == True:
@@ -1534,7 +1609,7 @@ while True:
         os.system("sudo service tor start")
     
     os.system("clear")
-    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\ne = exit\n")
+    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -1616,5 +1691,12 @@ while True:
         print(port_scanner(website, minimum, maximum))
         pause = input()
 
+    if user_input == "13":
+        os.system("clear")
+        file = input("file to find: ")
+        directory = input("directory to search: ")
+        print(file_finder(file, directory))
+        pause = input()
+    
     if user_input == "e":
         exit()
