@@ -701,25 +701,76 @@ def port_scanner(website, minimum, maximum):
     os.system("clear")
     result = []
 
-    for i in range(minimum, maximum):
-        output = https_string + website + ":" + str(i)
+    try:
+        for i in range(minimum, maximum):
+            output = https_string + website + ":" + str(i)
 
-        try:
-            if tor_boolean == True:
-                final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 0.25)
+            try:
+                if tor_boolean == True:
+                    final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
 
-            if tor_boolean == False:
-                final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 0.25)
+                if tor_boolean == False:
+                    final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
 
-            request = final.status_code
+                if change_tor_boolean == True:
+                    os.system("sudo service tor stop")
+                    os.system("sudo service tor start")
 
-            if request == 200:
-                result.append(i)
+                request = final.status_code
 
-        except:
-            pass
+                if request == 200:
+                    result.append(i)
+
+            except:
+                continue
+
+    except requests.exceptions.SSLError:
+        result = str("invalid certificate")
 
     return result
+
+#search engine
+def search_engine(url, maximum):
+    output = https_string + url
+    total_web_list = []
+
+    try:
+        for i in range(0, maximum):
+            if tor_boolean == True:
+                final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
+        
+            if tor_boolean == False:
+                final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
+
+            if change_tor_boolean == True:
+                os.system("sudo service tor stop")
+                os.system("sudo service tor start")
+
+            try:
+                result = str(final.text)
+                web_list = find_url(result)
+                web_list = set(web_list)
+
+            except:
+                print("ERROR!")
+
+            for j in web_list:
+                total_web_list.append(j)
+
+            set(total_web_list)
+            total_web_list.sort
+
+            url = total_web_list[i]
+            print(url)
+
+    except requests.exceptions.SSLError:
+        total_web_list = str("invalid certificate")
+
+    os.system("clear")
+    set(total_web_list)
+    total_web_list.sort
+    
+    return total_web_list
 
 #download specific image from a website
 def image():
@@ -852,6 +903,10 @@ def all_images():
     if tor_boolean == False:
         url = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
+    if change_tor_boolean == True:
+        os.system("sudo service tor stop")
+        os.system("sudo service tor start")
+
     out = str(url.text)
     web_list = find_url(out)
 
@@ -942,7 +997,11 @@ def all_data():
         
     if tor_boolean == False:
         url = web_session.get(output, verify = valid_certificate, headers = user_agent)
-        
+
+    if change_tor_boolean == True:
+        os.system("sudo service tor stop")
+        os.system("sudo service tor start")
+    
     out = str(url.text)
     web_list = find_url(out)
     file = open(os.path.join("data/all data", website + ".html"), "w+")
@@ -1609,7 +1668,7 @@ while True:
         os.system("sudo service tor start")
     
     os.system("clear")
-    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\ne = exit\n")
+    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = search engine\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -1696,6 +1755,13 @@ while True:
         file = input("file to find: ")
         directory = input("directory to search: ")
         print(file_finder(file, directory))
+        pause = input()
+
+    if user_input == "14":
+        os.system("clear")
+        url = input("url: ")
+        maximum = int(input("maximum links to search: "))
+        print(search_engine(url, maximum))
         pause = input()
     
     if user_input == "e":
