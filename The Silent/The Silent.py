@@ -731,6 +731,7 @@ def port_scanner(website, minimum, maximum):
 
 #search engine
 def search_engine(url, maximum):
+    original_url = url
     output = https_string + url
     total_web_list = []
 
@@ -755,7 +756,10 @@ def search_engine(url, maximum):
                 print("ERROR!")
 
             for j in web_list:
-                total_web_list.append(j)
+                domain_name = str(original_url) in j
+
+                if domain_name == True:
+                    total_web_list.append(j)
 
             set(total_web_list)
             total_web_list.sort
