@@ -730,13 +730,16 @@ def port_scanner(website, minimum, maximum):
     return result
 
 #search engine
-def search_engine(url, maximum):
+def search_engine(url):
+    i = -1
     original_url = url
     output = https_string + url
     total_web_list = []
 
-    try:
-        for i in range(0, maximum):
+    while True:
+        try:
+            i = i + 1
+
             if tor_boolean == True:
                 final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
         
@@ -759,20 +762,20 @@ def search_engine(url, maximum):
                 domain_name = str(original_url) in j
 
                 if domain_name == True:
+                    total_web_list = list(dict.fromkeys(total_web_list))
                     total_web_list.append(j)
-
-            set(total_web_list)
-            total_web_list.sort
-
+                    
             url = total_web_list[i]
             print(url)
 
-    except requests.exceptions.SSLError:
-        total_web_list = str("invalid certificate")
+        except requests.exceptions.SSLError:
+            break
+            
+        except IndexError:
+            break
 
     os.system("clear")
-    set(total_web_list)
-    total_web_list.sort
+    total_web_list = list(dict.fromkeys(total_web_list))
     
     return total_web_list
 
@@ -1764,8 +1767,7 @@ while True:
     if user_input == "14":
         os.system("clear")
         url = input("url: ")
-        maximum = int(input("maximum links to search: "))
-        print(search_engine(url, maximum))
+        print(search_engine(url))
         pause = input()
     
     if user_input == "e":
