@@ -17,8 +17,11 @@
 #https://stackoverflow.com/questions/443967/how-to-create-python-bytes-object-from-long-hex-string
 #https://stackoverflow.com/questions/15374969/determining-if-a-string-contains-a-word
 #https://www.geeksforgeeks.org/python-itertools-combinations_with_replacement/
+#https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/
+#https://stackoverflow.com/questions/67423037/python-extract-email-address-from-a-huge-string
 
 #import libraries
+from collections import *
 from hashlib import *
 from itertools import *
 
@@ -83,10 +86,24 @@ except AttributeError:
     pass
 
 #find url in a string
+#source code taken from geeksforgeeks.org
 def find_url(string):
 	regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
 	url = re.findall(regex,string)
 	return [x[0] for x in url]
+
+#source code taken from geeksforgeeks.org
+def find_email(email):
+    result = False
+    regex = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
+
+    if(re.fullmatch(regex, email)):
+        result = True
+ 
+    else:
+        result = False
+
+    return result
 
 #security settings
 def security():
@@ -729,8 +746,9 @@ def port_scanner(website, minimum, maximum):
 
     return result
 
-#search engine
-def search_engine(url):
+#scans for hyperlinks
+def link_scanner(url):
+    #variables
     i = -1
     original_url = url
     output = https_string + url
@@ -741,7 +759,7 @@ def search_engine(url):
             i = i + 1
 
             if tor_boolean == True:
-                final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
+                final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
         
             if tor_boolean == False:
                 final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
@@ -788,6 +806,79 @@ def search_engine(url):
     total_web_list.sort
     
     return total_web_list
+
+#scans for emails on website
+def email_scanner(url):
+    #variables
+    email_list = []
+    i = -1
+    original_url = url
+    output = https_string + url
+    super_result = []
+    total_web_list = []
+
+    while True:
+        try:
+            i = i + 1
+
+            if tor_boolean == True:
+                final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
+        
+            if tor_boolean == False:
+                final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
+
+            if change_tor_boolean == True:
+                os.system("sudo service tor stop")
+                os.system("sudo service tor start")
+
+            try:
+                result = str(final.text)
+                web_list = find_url(result)
+                web_list = set(web_list)
+                
+            except:
+                print("ERROR!")
+
+            for j in web_list:
+                domain_name = str(original_url) in j
+
+                if domain_name == True:
+                    total_web_list = list(dict.fromkeys(total_web_list))
+                    total_web_list.append(j)
+
+                    email_result = re.findall(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+", result)
+
+                    if email_result != "":
+                        email_list.append(email_result)
+                    
+            url = total_web_list[i]
+
+        except requests.exceptions.SSLError:
+            print("ERROR: invalid certificate!")
+            break
+
+        except requests.exceptions.ConnectTimeout:
+            print("ERROR: connect timeout!")
+            continue
+
+        except requests.exceptions.ReadTimeout:
+            print("ERROR: read timeout!")
+            continue
+            
+        except IndexError:
+            break
+
+    os.system("clear")
+    total_web_list = list(dict.fromkeys(total_web_list))
+    total_web_list.sort
+
+    for i in email_list:
+        if i not in super_result:
+            super_result.append(i)
+
+    super_result.sort
+    
+    return super_result
 
 #download specific image from a website
 def image():
@@ -1685,7 +1776,7 @@ while True:
         os.system("sudo service tor start")
     
     os.system("clear")
-    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = search engine\ne = exit\n")
+    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -1777,7 +1868,13 @@ while True:
     if user_input == "14":
         os.system("clear")
         url = input("url: ")
-        print(search_engine(url))
+        print(link_scanner(url))
+        pause = input()
+
+    if user_input == "15":
+        os.system("clear")
+        url = input("url: ")
+        print(email_scanner(url))
         pause = input()
     
     if user_input == "e":
