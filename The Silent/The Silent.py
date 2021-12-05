@@ -772,8 +772,12 @@ def search_engine(url):
             print("ERROR: invalid certificate!")
             break
 
+        except requests.exceptions.ConnectTimeout:
+            print("ERROR: connect timeout!")
+            continue
+
         except requests.exceptions.ReadTimeout:
-            print("ERROR: timeout!")
+            print("ERROR: read timeout!")
             continue
             
         except IndexError:
