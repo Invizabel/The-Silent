@@ -710,7 +710,7 @@ def port_scanner(website, minimum, maximum):
                     final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
 
                 if tor_boolean == False:
-                    final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
+                    final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
 
                 if change_tor_boolean == True:
                     os.system("sudo service tor stop")
@@ -744,7 +744,7 @@ def search_engine(url):
                 final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
         
             if tor_boolean == False:
-                final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
+                final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             if change_tor_boolean == True:
                 os.system("sudo service tor stop")
@@ -769,13 +769,19 @@ def search_engine(url):
             print(url)
 
         except requests.exceptions.SSLError:
+            print("ERROR: invalid certificate!")
             break
+
+        except requests.exceptions.ReadTimeout:
+            print("ERROR: timeout!")
+            continue
             
         except IndexError:
             break
 
     os.system("clear")
     total_web_list = list(dict.fromkeys(total_web_list))
+    total_web_list.sort
     
     return total_web_list
 
