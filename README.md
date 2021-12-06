@@ -1,2 +1,2 @@
 # The-Silent
-# Python hacking script!
+# Python penetration testing multi tool!
