@@ -815,7 +815,9 @@ def email_scanner(url):
     original_url = url
     output = https_string + url
     super_result = []
+    super_web_result = []
     total_web_list = []
+    web_result = []
 
     while True:
         try:
@@ -846,10 +848,13 @@ def email_scanner(url):
                     total_web_list = list(dict.fromkeys(total_web_list))
                     total_web_list.append(j)
 
+                    #checks wether there are emails in url or not
                     email_result = re.findall(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+", result)
+                    #print(str(email_result))
 
-                    if email_result != "":
+                    if len(email_result) != 0:
                         email_list.append(email_result)
+                        web_result.append(url)
                     
             url = total_web_list[i]
 
@@ -876,9 +881,14 @@ def email_scanner(url):
         if i not in super_result:
             super_result.append(i)
 
+    for i in web_result:
+        if i not in super_web_result:
+            super_web_result.append(i)
+
     super_result.sort
+    super_web_result.sort
     
-    return super_result
+    return str(super_result) + "\n\n" + str(super_web_result)
 
 #download specific image from a website
 def image():
