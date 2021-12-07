@@ -854,7 +854,8 @@ def email_scanner(url):
 
                     if len(email_result) != 0:
                         email_list.append(email_result)
-                        web_result.append(url)
+                        final_result = str(email_result) + " === " + str(url)
+                        web_result.append(final_result)
                     
             url = total_web_list[i]
 
