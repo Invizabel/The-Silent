@@ -720,6 +720,7 @@ def port_scanner(website, minimum, maximum):
 
     try:
         for i in range(minimum, maximum):
+            print("checking port: " + str(i))
             output = https_string + website + ":" + str(i)
 
             try:
@@ -727,7 +728,7 @@ def port_scanner(website, minimum, maximum):
                     final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
 
                 if tor_boolean == False:
-                    final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
+                    final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
 
                 if change_tor_boolean == True:
                     os.system("sudo service tor stop")
@@ -737,12 +738,15 @@ def port_scanner(website, minimum, maximum):
 
                 if request == 200:
                     result.append(i)
+                    print(True)
 
             except:
                 continue
 
     except requests.exceptions.SSLError:
         result = str("invalid certificate")
+
+    os.system("clear")
 
     return result
 
@@ -856,6 +860,8 @@ def email_scanner(url):
                         email_list.append(email_result)
                         final_result = str(email_result) + " === " + str(url)
                         web_result.append(final_result)
+
+                        print(str(email_result) + " === " + str(url))
                     
             url = total_web_list[i]
 
