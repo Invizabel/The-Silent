@@ -852,16 +852,16 @@ def email_scanner(url):
                     total_web_list = list(dict.fromkeys(total_web_list))
                     total_web_list.append(j)
 
-                    #checks wether there are emails in url or not
-                    email_result = re.findall(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+", result)
-                    #print(str(email_result))
+            #checks wether there are emails in url or not
+            email_result = re.findall(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+", result)
+            #print(str(email_result))
 
-                    if len(email_result) != 0:
-                        email_list.append(email_result)
-                        final_result = str(email_result) + " === " + str(url)
-                        web_result.append(final_result)
+            if len(email_result) != 0:
+                email_list.append(email_result)
+                final_result = str(email_result) + " === " + str(url)
+                web_result.append(final_result)
 
-                        print(str(email_result) + " === " + str(url))
+                print(final_result)
                     
             url = total_web_list[i]
 
