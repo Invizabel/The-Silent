@@ -1030,25 +1030,16 @@ def all_images():
     print("Downloading!")
 
     for i in website:
-        
-        if "https" in i:
-            extract_https = i.split("https://")
-            result = secure + extract_https[0] 
-            print(result)
-
-        if "http" in i:
-            extract_https = i.split("http://")
-            result = secure + extract_https[0] 
-            print(result)
-
         if "im.vsco.co" in i:
             removal = ".jpg"
-            
             extract_special = i.split("im.vsco.co")
             result = secure + "im.vsco.co" + extract_special[1]
             result = result[:result.index(removal) + len(removal)]
             print(result)
-            
+
+        else:
+            result = i
+            print(result)
             
         try:
             if change_tor_boolean == True:
