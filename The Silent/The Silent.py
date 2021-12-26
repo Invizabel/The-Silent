@@ -19,6 +19,7 @@
 #https://www.geeksforgeeks.org/python-itertools-combinations_with_replacement/
 #https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/
 #https://stackoverflow.com/questions/67423037/python-extract-email-address-from-a-huge-string
+#https://www.geeksforgeeks.org/python-remove-after-substring-in-string/
 
 #import libraries
 from collections import *
@@ -784,6 +785,7 @@ def link_scanner(url):
 
                 if domain_name == True:
                     total_web_list = list(dict.fromkeys(total_web_list))
+                    
                     total_web_list.append(j)
                     
             url = total_web_list[i]
@@ -806,6 +808,8 @@ def link_scanner(url):
 
     os.system("clear")
     total_web_list = list(dict.fromkeys(total_web_list))
+
+    total_web_list.append(url)
     total_web_list.sort
     
     return total_web_list
@@ -1026,21 +1030,39 @@ def all_images():
     print("Downloading!")
 
     for i in website:
-        print(i)
+        
+        if "https" in i:
+            extract_https = i.split("https://")
+            result = secure + extract_https[0] 
+            print(result)
 
+        if "http" in i:
+            extract_https = i.split("http://")
+            result = secure + extract_https[0] 
+            print(result)
+
+        if "im.vsco.co" in i:
+            removal = ".jpg"
+            
+            extract_special = i.split("im.vsco.co")
+            result = secure + "im.vsco.co" + extract_special[1]
+            result = result[:result.index(removal) + len(removal)]
+            print(result)
+            
+            
         try:
             if change_tor_boolean == True:
                 os.system("sudo service tor stop")
                 os.system("sudo service tor start")
             
-            jpeg = ".jpeg" in i
-            jpg = ".jpg" in i
-            png = ".png" in i
-            y = "http" in i
+            jpeg = ".jpeg" in result
+            jpg = ".jpg" in result
+            png = ".png" in result
+            y = "http" in result
 
             if jpeg == True and y == True:
                 count += 1
-                picture = str(i)
+                picture = str(result)
                 data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
 
                 with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
@@ -1048,7 +1070,7 @@ def all_images():
 
             if jpeg == True and y == False:
                 count += 1
-                picture = secure + str(i)
+                picture = secure + str(result)
                 data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
 
                 with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
@@ -1056,7 +1078,7 @@ def all_images():
 
             if jpg == True and y == True:
                 count += 1
-                picture = str(i)
+                picture = str(result)
                 data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
 
                 with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
@@ -1064,7 +1086,7 @@ def all_images():
                     
             if jpg == True and y == False:
                 count += 1
-                picture = secure + str(i)
+                picture = secure + str(result)
                 data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
 
                 with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
@@ -1072,7 +1094,7 @@ def all_images():
 
             if png == True and y == True:
                 count += 1
-                picture = str(i)
+                picture = str(result)
                 data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
 
                 with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
@@ -1080,7 +1102,7 @@ def all_images():
 
             if png == True and y == False:
                 count += 1
-                picture = secure + str(i)
+                picture = secure + str(result)
                 data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
 
                 with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
@@ -1100,6 +1122,10 @@ def all_images():
         
         except requests.exceptions.InvalidSchema:
             print("ERROR: invalid schema!")
+            continue
+
+        except requests.exceptions.InvalidURL:
+            print("ERROR: invalid url!")
             continue
 
         except requests.exceptions.MissingSchema:
