@@ -26,7 +26,6 @@ from hashlib import *
 from itertools import *
 
 import codecs
-import Dynamic_Threading
 import hashlib
 import math
 import os
@@ -920,10 +919,10 @@ def image():
     picture = str(output)
 
     if tor_boolean == True:
-        data = tor.get(picture, verify = valid_certificate, headers = user_agent)
+        data = tor.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
         
     if tor_boolean == False:
-        data = web_session.get(picture, verify = valid_certificate, headers = user_agent)
+        data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
         
     with open(os.path.join("data/images", name), "wb") as file_writer:
         file_writer.write(data.content)
@@ -955,10 +954,10 @@ def pdf():
     pdf = output
 
     if tor_boolean == True:
-        data = tor.get(pdf, stream = True, verify = valid_certificate, headers = user_agent)
+        data = tor.get(pdf, stream = True, verify = valid_certificate, headers = user_agent, timeout = 5)
         
     if tor_boolean == False:
-        data = web_session.get(pdf, stream = True, verify = valid_certificate, headers = user_agent)
+        data = web_session.get(pdf, stream = True, verify = valid_certificate, headers = user_agent, timeout = 5)
 
     data = requests.get(pdf, stream = True, verify = valid_certificate)
 
@@ -991,10 +990,10 @@ def html():
     output = secure + website
 
     if tor_boolean == True:
-        final = tor.get(output, verify = valid_certificate, headers = user_agent)
+        final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
         
     if tor_boolean == False:
-        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
 
     file = open(os.path.join("data/html", website + ".html"), "w+")
     file.write(final.text)
@@ -1010,92 +1009,109 @@ def all_images():
     count = 0
     global website
     os.system("clear")
-    website = input("enter website:\n")
+    url = input("enter website:\n")
     os.system("clear")
-    print("Downloading!")
+    print("Scanning links!")
     start = time.time()
+
     if https == True:
         secure = "https://"
 
     if https == False:
         secure = "http://"
-    
-    output = secure + website
 
-    if tor_boolean == True:
-        url = tor.get(output, verify = valid_certificate, headers = user_agent)
+    website = link_scanner(url)
+
+    os.system("clear")
+    print("Downloading!")
+
+    for i in website:
+        print(i)
+
+        try:
+            if change_tor_boolean == True:
+                os.system("sudo service tor stop")
+                os.system("sudo service tor start")
+            
+            jpeg = ".jpeg" in i
+            jpg = ".jpg" in i
+            png = ".png" in i
+            y = "http" in i
+
+            if jpeg == True and y == True:
+                count += 1
+                picture = str(i)
+                data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+
+                with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
+                    file_writer.write(data.content)
+
+            if jpeg == True and y == False:
+                count += 1
+                picture = secure + str(i)
+                data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+
+                with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
+                    file_writer.write(data.content)
+
+            if jpg == True and y == True:
+                count += 1
+                picture = str(i)
+                data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+
+                with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
+                    file_writer.write(data.content)
+                    
+            if jpg == True and y == False:
+                count += 1
+                picture = secure + str(i)
+                data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+
+                with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
+                    file_writer.write(data.content)
+
+            if png == True and y == True:
+                count += 1
+                picture = str(i)
+                data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+
+                with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
+                    file_writer.write(data.content)
+
+            if png == True and y == False:
+                count += 1
+                picture = secure + str(i)
+                data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+
+                with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
+                    file_writer.write(data.content)
+
+        except requests.exceptions.SSLError:
+            print("ERROR: invalid certificate!")
+            break
+
+        except requests.exceptions.ConnectTimeout:
+            print("ERROR: connect timeout!")
+            continue
+
+        except requests.exceptions.ConnectionError:
+            print("ERROR: connection error!")
+            continue
         
-    if tor_boolean == False:
-        url = web_session.get(output, verify = valid_certificate, headers = user_agent)
+        except requests.exceptions.InvalidSchema:
+            print("ERROR: invalid schema!")
+            continue
 
-    if change_tor_boolean == True:
-        os.system("sudo service tor stop")
-        os.system("sudo service tor start")
+        except requests.exceptions.MissingSchema:
+            print("ERROR: missing schema!")
+            continue
 
-    out = str(url.text)
-    web_list = find_url(out)
-
-    for i in web_list:
-        if change_tor_boolean == True:
-            os.system("sudo service tor stop")
-            os.system("sudo service tor start")
-        
-        jpeg = ".jpeg" in i
-        jpg = ".jpg" in i
-        png = ".png" in i
-        y = "http" in i
-
-        if jpeg == True and y == True:
-            count += 1
-            picture = str(i)
-            data = web_session.get(picture, verify = valid_certificate, headers = user_agent)
-
-            with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
-                file_writer.write(data.content)
-
-        if jpeg == True and y == False:
-            count += 1
-            picture = secure + str(i)
-            data = web_session.get(picture, verify = valid_certificate, headers = user_agent)
-
-            with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
-                file_writer.write(data.content)
-
-        if jpg == True and y == True:
-            count += 1
-            picture = str(i)
-            data = web_session.get(picture, verify = valid_certificate, headers = user_agent)
-
-            with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
-                file_writer.write(data.content)
-                
-        if jpg == True and y == False:
-            count += 1
-            picture = secure + str(i)
-            data = web_session.get(picture, verify = valid_certificate, headers = user_agent)
-
-            with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
-                file_writer.write(data.content)
-
-        if png == True and y == True:
-            count += 1
-            picture = str(i)
-            data = web_session.get(picture, verify = valid_certificate, headers = user_agent)
-
-            with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
-                file_writer.write(data.content)
-
-        if png == True and y == False:
-            count += 1
-            picture = secure + str(i)
-            data = web_session.get(picture, verify = valid_certificate, headers = user_agent)
-
-            with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
-                file_writer.write(data.content)
+        except requests.exceptions.ReadTimeout:
+            print("ERROR: read timeout!")
+            continue
 
     end = time.time()
     print("\nTime: " + str(end - start) + " seconds.")
-    url.close()
     pause = input()
 
 #download all data from a website
