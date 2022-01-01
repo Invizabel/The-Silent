@@ -1710,13 +1710,21 @@ def data_recovery(image):
     with open(image, "rb") as f:
         for chunk in iter(lambda: f.read(32), b""):
             hex_code = str(codecs.encode(chunk, "hex"))
+
+            if hex_boolean == True:
+                hex_code_list.append(str(hex_code))
+
+            if hex_boolean == False:
+                hex_code_list.clear()
             
             if png_header in hex_code:
-                print("head!")
                 hex_boolean = True
+                hex_code_list.clear()
+                hex_code_list.append(str(hex_code))
 
             if png_footer in hex_code:
-                print("foot!")
+                hex_code_list.append(str(hex_code))
+                hex_boolean = False
                 png_count += 1
 
                 for i in hex_code_list:
@@ -1725,19 +1733,16 @@ def data_recovery(image):
                     clean_2 = clean_1.replace("b'", "")
                     clean_3 = clean_2.replace("'", "")
                     result = clean_3.replace("\n", "")
-                    
-                png_extract = bytes.fromhex(result)
 
-                with open("image " + str(png_count) + ".png", "wb") as file:
+                try:
+                    png_extract = bytes.fromhex(result)
+
+                except:
+                    print("ERROR!")
+                    continue
+
+                with open(os.path.join("data/images", "image " + str(png_count) + ".png"), "wb") as file:
                     file.write(png_extract)
-
-                hex_boolean = False
-                hex_code_list.clear()
-                #temporary exit
-                exit()
-
-            if hex_boolean == True:
-                hex_code_list.append(str(hex_code))
 
 def hex_editor(file):
     os.system("clear")
@@ -1884,7 +1889,7 @@ while True:
 
     if user_input == "9":
         os.system("clear")
-        image = input("disk image: ")
+        image = input("device name: ")
         data_recovery(image)
 
     if user_input == "10":
