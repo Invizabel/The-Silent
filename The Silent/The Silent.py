@@ -1679,6 +1679,7 @@ def compare_perceptual_hash(file_1, file_2):
         
     return result
 
+#display stats about device storage
 def device_storage(directory):
     stats = os.statvfs(directory)
     block_size = stats.f_bsize
@@ -1698,6 +1699,7 @@ def device_storage(directory):
 
     return "block size: " + str(block_size) + "\nfree blocks: " + str(free_blocks) + "\nfree space: " + str(free_space) + " GB" + "\nFiles: " + str(file_count) + "\nDirectories: " + str(directory_count)
 
+#recover deleted data
 def data_recovery(image):
     png_header = "89504e470d0a1a0a"
     png_footer = "49454e44ae426082"
@@ -1707,9 +1709,25 @@ def data_recovery(image):
     png_count = 0
     hex_code_list = []
 
+    #progress bar
+    stat = str(shutil.disk_usage(image))
+    stat = stat.split("usage(total=")
+    result = stat[1]
+    result = int(result[:result.index(",") + len("")])
+    progress = math.floor(result / 100)
+    progress_count = 0
+    total_progress = 0
+
     with open(image, "rb") as f:
         for chunk in iter(lambda: f.read(32), b""):
             hex_code = str(codecs.encode(chunk, "hex"))
+
+            progress_count = progress_count + 32
+
+            if progress_count >= progress:
+                progress_count = 0
+                total_progress = total_progress + 1
+                print(str(total_progress) + "%")
 
             if hex_boolean == True:
                 hex_code_list.append(str(hex_code))
