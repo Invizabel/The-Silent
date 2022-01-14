@@ -1255,9 +1255,9 @@ def all_images():
             with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
                 
-        end = time.time()
-        print("\nTime: " + str(end - start) + " seconds.")
-        pause = input()
+    end = time.time()
+    print("\nTime: " + str(end - start) + " seconds.")
+    pause = input()
 
 #download all data from a website
 def all_data():
