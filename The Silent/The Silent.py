@@ -800,6 +800,9 @@ def link_scanner(url):
             print("ERROR: connect timeout!")
             continue
 
+        except requests.exceptions.MissingSchema:
+            print("ERROR: missing schema!")
+
         except requests.exceptions.ReadTimeout:
             print("ERROR: read timeout!")
             continue
@@ -810,7 +813,7 @@ def link_scanner(url):
     os.system("clear")
     total_web_list = list(dict.fromkeys(total_web_list))
 
-    total_web_list.append(url)
+    total_web_list.append("https://" + url)
     total_web_list.sort
     
     return total_web_list
@@ -1116,6 +1119,10 @@ def all_images():
             print("ERROR: invalid schema!")
             continue
 
+        except requests.exceptions.MissingSchema:
+            print("ERROR: missing schema!")
+            continue
+
         except requests.exceptions.InvalidURL:
             print("ERROR: invalid url!")
             continue
@@ -1128,9 +1135,126 @@ def all_images():
             print("ERROR: read timeout!")
             continue
 
-    end = time.time()
-    print("\nTime: " + str(end - start) + " seconds.")
-    pause = input()
+    
+    sources_boolean = False
+    sources_list = []
+    sources_string = ""
+
+    super_sources_list = []
+
+    for j in website:
+        try:
+            print(j)
+            final = web_session.get(j, headers = user_agent, timeout = 5)
+            html = final.text
+            words = re.findall(r"\w+", html)
+
+            for i in words:
+                if i == "jpg" or i == "jpeg" or i == "png":
+                    sources_boolean = False
+                    sources_string += "." + i
+                    result = url + sources_string
+                    sources_list.append("https://" + result)
+                    sources_string = ""
+                    print(sources_list)
+
+                if sources_boolean == True:
+                    sources_string = sources_string + "/" + i
+                
+                if i == "src":
+                    sources_boolean = True
+                    sources_string = ""
+                
+        except requests.exceptions.SSLError:
+            print("ERROR: invalid certificate!")
+            break
+
+        except requests.exceptions.ConnectTimeout:
+            print("ERROR: connect timeout!")
+            continue
+
+        except requests.exceptions.ConnectionError:
+            print("ERROR: connection error!")
+            continue
+        
+        except requests.exceptions.InvalidSchema:
+            print("ERROR: invalid schema!")
+            continue
+
+        except requests.exceptions.InvalidURL:
+            print("ERROR: invalid url!")
+            continue
+
+        except requests.exceptions.MissingSchema:
+            print("ERROR: missing schema!")
+            continue
+
+        except requests.exceptions.ReadTimeout:
+            print("ERROR: read timeout!")
+            continue
+
+    for i in sources_list:
+        try:
+            final = web_session.get(i, headers = user_agent, timeout = 5)
+            file_found = final.status_code
+
+            if file_found == 200:
+                super_sources_list.append(i)
+
+        except requests.exceptions.SSLError:
+            print("ERROR: invalid certificate!")
+            break
+
+        except requests.exceptions.ConnectTimeout:
+            print("ERROR: connect timeout!")
+            continue
+
+        except requests.exceptions.ConnectionError:
+            print("ERROR: connection error!")
+            continue
+        
+        except requests.exceptions.InvalidSchema:
+            print("ERROR: invalid schema!")
+            continue
+
+        except requests.exceptions.InvalidURL:
+            print("ERROR: invalid url!")
+            continue
+
+        except requests.exceptions.MissingSchema:
+            print("ERROR: missing schema!")
+            continue
+
+        except requests.exceptions.ReadTimeout:
+            print("ERROR: read timeout!")
+            continue
+
+    for i in super_sources_list:
+        jpeg = ".jpeg" in i
+        jpg = ".jpg" in i
+        png = ".png" in i
+
+        if jpeg == True:
+            count += 1
+            data = web_session.get(i, verify = valid_certificate, headers = user_agent, timeout = 5)
+            with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
+                file_writer.write(data.content)
+
+        if jpg == True:
+            count += 1
+            data = web_session.get(i, verify = valid_certificate, headers = user_agent, timeout = 5)
+            with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
+                file_writer.write(data.content)
+
+        if png == True:
+            count += 1
+            data = web_session.get(i, verify = valid_certificate, headers = user_agent, timeout = 5)
+            with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
+                file_writer.write(data.content)
+                
+        end = time.time()
+        print("\nTime: " + str(end - start) + " seconds.")
+        pause = input()
 
 #download all data from a website
 def all_data():
