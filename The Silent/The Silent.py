@@ -1156,7 +1156,6 @@ def all_images():
                     result = url + sources_string
                     sources_list.append("https://" + result)
                     sources_string = ""
-                    print(sources_list)
 
                 if sources_boolean == True:
                     sources_string = sources_string + "/" + i
@@ -1233,6 +1232,8 @@ def all_images():
         jpeg = ".jpeg" in i
         jpg = ".jpg" in i
         png = ".png" in i
+
+        print(i)
 
         if jpeg == True:
             count += 1
