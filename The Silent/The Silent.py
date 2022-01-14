@@ -1228,6 +1228,8 @@ def all_images():
             print("ERROR: read timeout!")
             continue
 
+    super_sources_list = list(dict.fromkeys(super_sources_list))
+
     for i in super_sources_list:
         jpeg = ".jpeg" in i
         jpg = ".jpg" in i
