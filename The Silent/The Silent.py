@@ -25,8 +25,6 @@
 from collections import *
 from hashlib import *
 from itertools import *
-from stem import *
-from stem.control import *
 
 import codecs
 import hashlib
