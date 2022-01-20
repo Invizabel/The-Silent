@@ -2082,9 +2082,13 @@ def file_finder(file, directory):
           
 #mainloop
 while True:
-    if change_tor_boolean == True:
+    if change_tor_boolean == True and tor_boolean == True and termux_tor_boolean == False:
         os.system("sudo service tor stop")
         os.system("sudo service tor start")
+
+    if change_tor_boolean == True and termux_tor_boolean == True and tor_boolean == False:
+        os.system("sv-disable tor")
+        os.system("sv-enable tor")
     
     os.system("clear")
     user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\ne = exit\n")
