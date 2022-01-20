@@ -42,7 +42,7 @@ tor = requests.Session()
 tor.proxies = {}
 tor.proxies["https"] = "socks5h://localhost:9050"
 
-tor_proxy = {"http": "socks5h://localhost:9050", "https": "socks5h://localhost:9050"}
+tor_proxy = {"https": "socks5h://localhost:9050"}
 
 #create sessions object
 web_session = requests.Session()
@@ -303,7 +303,7 @@ def no_log_encoding(website):
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
-        if tor_boolean == False:
+        if tor_boolean == False and termux_tor_boolean == False:
             final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.encoding
@@ -499,7 +499,7 @@ def no_log_server_stats(website):
 
     try:
         if termux_tor_boolean == True:
-            final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
+            url = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
         
         if tor_boolean == True:
             url = tor.get(output, verify = valid_certificate, headers = user_agent)
@@ -584,11 +584,14 @@ def log():
 def log_cookies(website):
     os.system("clear")
     output = https_string + website
+
+    if termux_tor_boolean == True:
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
     
     if tor_boolean == True:
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
-    if tor_boolean == False:
+    if tor_boolean == False and termux_tor_boolean == False:
         final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.cookies)
@@ -600,11 +603,14 @@ def log_cookies(website):
 def log_encoding(website):
     os.system("clear")
     output = https_string + website
+
+    if termux_tor_boolean == True:
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
     
     if tor_boolean == True:
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
-    if tor_boolean == False:
+    if tor_boolean == False and termux_tor_boolean == False:
         final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.encoding)
@@ -616,11 +622,14 @@ def log_encoding(website):
 def log_headers(website):
     os.system("clear")
     output = https_string + website
+
+    if termux_tor_boolean == True:
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
     
     if tor_boolean == True:
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
-    if tor_boolean == False:
+    if tor_boolean == False and termux_tor_boolean == False:
         final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = list(final.headers.items())
@@ -636,11 +645,14 @@ def log_headers(website):
 def log_html_code(website):
     os.system("clear")
     output = https_string + website
+
+    if termux_tor_boolean == True:
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
     
     if tor_boolean == True:
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
-    if tor_boolean == False:
+    if tor_boolean == False and termux_tor_boolean == False:
         final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.text)
@@ -652,11 +664,14 @@ def log_html_code(website):
 def log_ok(website):
     os.system("clear")
     output = https_string + website
+
+    if termux_tor_boolean == True:
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
     
     if tor_boolean == True:
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
-    if tor_boolean == False:
+    if tor_boolean == False and termux_tor_boolean == False:
         final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.ok) 
@@ -668,11 +683,14 @@ def log_ok(website):
 def log_permanent_redirect(website):
     os.system("clear")
     output = https_string + website
+
+    if termux_tor_boolean == True:
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
     
     if tor_boolean == True:
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
-    if tor_boolean == False:
+    if tor_boolean == False and termux_tor_boolean == False:
         final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.is_permanent_redirect)
@@ -684,11 +702,14 @@ def log_permanent_redirect(website):
 def log_reason(website):
     os.system("clear")
     output = https_string + website
+
+    if termux_tor_boolean == True:
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
     
     if tor_boolean == True:
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
-    if tor_boolean == False:
+    if tor_boolean == False and termux_tor_boolean == False:
         final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.reason)
@@ -700,11 +721,14 @@ def log_reason(website):
 def log_redirect(website):
     os.system("clear")
     output = https_string + website
+
+    if termux_tor_boolean == True:
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
     
     if tor_boolean == True:
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
-    if tor_boolean == False:
+    if tor_boolean == False and termux_tor_boolean == False:
         final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.is_redirect)
@@ -716,11 +740,14 @@ def log_redirect(website):
 def log_status_code(website):
     os.system("clear")
     output = https_string + website
+
+    if termux_tor_boolean == True:
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
     
     if tor_boolean == True:
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
-    if tor_boolean == False:
+    if tor_boolean == False and termux_tor_boolean == False:
         final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.status_code)
@@ -732,11 +759,14 @@ def log_status_code(website):
 def log_url(website):
     os.system("clear")
     output = https_string + website
+
+    if termux_tor_boolean == True:
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
     
     if tor_boolean == True:
         final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
-    if tor_boolean == False:
+    if tor_boolean == False and termux_tor_boolean == False:
         final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.url)
@@ -749,10 +779,13 @@ def log_server_stats(website):
     os.system("clear")
     output = https_string + website
 
+    if termux_tor_boolean == True:
+        url = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
+
     if tor_boolean == True:
         url = tor.get(output, verify = valid_certificate, headers = user_agent)
         
-    if tor_boolean == False:
+    if tor_boolean == False and termux_tor_boolean == False:
         url = web_session.get(output, verify = valid_certificate, headers = user_agent)
         
     web = list(url.headers.items())
@@ -784,10 +817,13 @@ def port_scanner(website, minimum, maximum):
             output = https_string + website + ":" + str(i)
 
             try:
+                if termux_tor_boolean == True:
+                    final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 1)
+                
                 if tor_boolean == True:
                     final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
 
-                if tor_boolean == False:
+                if tor_boolean == False and termux_tor_boolean == False:
                     final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
 
                 if change_tor_boolean == True:
@@ -822,10 +858,13 @@ def link_scanner(url):
         try:
             i = i + 1
 
+            if termux_tor_boolean == True:
+                final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+            
             if tor_boolean == True:
                 final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
         
-            if tor_boolean == False:
+            if tor_boolean == False and termux_tor_boolean == False:
                 final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             if change_tor_boolean == True:
@@ -893,10 +932,13 @@ def email_scanner(url):
         try:
             i = i + 1
 
+            if termux_tor_boolean == True:
+                final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+
             if tor_boolean == True:
                 final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
         
-            if tor_boolean == False:
+            if tor_boolean == False and termux_tor_boolean == False:
                 final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             if change_tor_boolean == True:
@@ -985,10 +1027,13 @@ def image():
 
     picture = str(output)
 
+    if termux_tor_boolean == True:
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
+
     if tor_boolean == True:
         data = tor.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
         
-    if tor_boolean == False:
+    if tor_boolean == False and termux_tor_boolean == False:
         data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
         
     with open(os.path.join("data/images", name), "wb") as file_writer:
@@ -1020,10 +1065,13 @@ def pdf():
     output = secure + website
     pdf = output
 
+    if termux_tor_boolean == True:
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
+
     if tor_boolean == True:
         data = tor.get(pdf, stream = True, verify = valid_certificate, headers = user_agent, timeout = 5)
         
-    if tor_boolean == False:
+    if tor_boolean == False and termux_tor_boolean == False:
         data = web_session.get(pdf, stream = True, verify = valid_certificate, headers = user_agent, timeout = 5)
 
     data = requests.post(pdf, stream = True, verify = valid_certificate, headers = user_agent, timeout = 5)
@@ -1056,10 +1104,13 @@ def html():
     
     output = secure + website
 
+    if termux_tor_boolean == True:
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
+
     if tor_boolean == True:
         final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
         
-    if tor_boolean == False:
+    if tor_boolean == False and termux_tor_boolean == False:
         final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
 
     file = open(os.path.join("data/html", website + ".html"), "w+")
@@ -1117,7 +1168,15 @@ def all_images():
             if jpeg == True and y == True:
                 count += 1
                 picture = str(result)
-                data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+
+                if termux_tor_boolean == True:
+                    data = web_session.get(picture, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                
+                if tor_boolean == True:
+                    data = tor.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+                    
+                if tor_boolean == False and termux_tor_boolean == False:
+                    data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
 
                 with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
                     file_writer.write(data.content)
@@ -1125,7 +1184,15 @@ def all_images():
             if jpeg == True and y == False:
                 count += 1
                 picture = secure + str(result)
-                data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+
+                if termux_tor_boolean == True:
+                    data = web_session.get(picture, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+        
+                if tor_boolean == True:
+                    data = tor.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+                    
+                if tor_boolean == False and termux_tor_boolean == False:
+                    data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
 
                 with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
                     file_writer.write(data.content)
@@ -1133,7 +1200,15 @@ def all_images():
             if jpg == True and y == True:
                 count += 1
                 picture = str(result)
-                data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+
+                if termux_tor_boolean == True:
+                    data = web_session.get(picture, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                
+                if tor_boolean == True:
+                    data = tor.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+                    
+                if tor_boolean == False and termux_tor_boolean == False:
+                    data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
 
                 with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
                     file_writer.write(data.content)
@@ -1141,7 +1216,15 @@ def all_images():
             if jpg == True and y == False:
                 count += 1
                 picture = secure + str(result)
-                data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+
+                if termux_tor_boolean == True:
+                    data = web_session.get(picture, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                
+                if tor_boolean == True:
+                    data = tor.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+                    
+                if tor_boolean == False and termux_tor_boolean == False:
+                    data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
 
                 with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
                     file_writer.write(data.content)
@@ -1149,7 +1232,15 @@ def all_images():
             if png == True and y == True:
                 count += 1
                 picture = str(result)
-                data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+
+                if termux_tor_boolean == True:
+                    data = web_session.get(picture, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                
+                if tor_boolean == True:
+                    data = tor.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+                    
+                if tor_boolean == False and termux_tor_boolean == False:
+                    data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
 
                 with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
                     file_writer.write(data.content)
@@ -1157,7 +1248,15 @@ def all_images():
             if png == True and y == False:
                 count += 1
                 picture = secure + str(result)
-                data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+
+                if termux_tor_boolean == True:
+                    data = web_session.get(picture, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                
+                if tor_boolean == True:
+                    data = tor.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
+                    
+                if tor_boolean == False and termux_tor_boolean == False:
+                    data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
 
                 with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
                     file_writer.write(data.content)
@@ -1204,7 +1303,16 @@ def all_images():
     for j in website:
         try:
             print(j)
-            final = web_session.get(j, headers = user_agent, timeout = 5)
+
+            if termux_tor_boolean == True:
+                final = web_session.get(j, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+
+            if tor_boolean == True:
+                final = tor.get(j, verify = valid_certificate, headers = user_agent, timeout = 5)
+                    
+            if tor_boolean == False and termux_tor_boolean == False:
+                final = web_session.get(j, verify = valid_certificate, headers = user_agent, timeout = 5)
+                
             html = final.text
             words = re.findall(r"\w+", html)
 
@@ -1296,21 +1404,27 @@ def all_images():
 
         print(i)
 
+        if termux_tor_boolean == True:
+            data = web_session.get(i, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+
+        if tor_boolean == True:
+            data = tor.get(i, verify = valid_certificate, headers = user_agent, timeout = 5)
+                    
+        if tor_boolean == False and termux_tor_boolean == False:
+            data = web_session.get(i, verify = valid_certificate, headers = user_agent, timeout = 5)
+
         if jpeg == True:
             count += 1
-            data = web_session.get(i, verify = valid_certificate, headers = user_agent, timeout = 5)
             with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jpg == True:
             count += 1
-            data = web_session.get(i, verify = valid_certificate, headers = user_agent, timeout = 5)
             with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if png == True:
             count += 1
-            data = web_session.get(i, verify = valid_certificate, headers = user_agent, timeout = 5)
             with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
                 
