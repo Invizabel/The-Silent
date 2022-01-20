@@ -42,7 +42,7 @@ tor = requests.Session()
 tor.proxies = {}
 tor.proxies["https"] = "socks5h://localhost:9050"
 
-tor_proxy = {"https": "socks5h://localhost:9050"}
+tor_proxy = {"http": "socks5h://localhost:9050", "https": "socks5h://localhost:9050"}
 
 #create sessions object
 web_session = requests.Session()
