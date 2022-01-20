@@ -273,12 +273,15 @@ def no_log_cookies(website):
     result = ""
     
     try:
+        if termux_tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+        
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
         if tor_boolean == False:
             final = web_session.get(output, verify = valid_certificate, headers = user_agent)
-
+            
         result = final.cookies
 
     except requests.exceptions.SSLError:
@@ -292,6 +295,9 @@ def no_log_encoding(website):
     result = ""
 
     try:
+        if termux_tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+        
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
@@ -311,6 +317,9 @@ def no_log_headers(website):
     result = ""
 
     try:
+        if termux_tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+        
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
@@ -333,6 +342,9 @@ def no_log_html_code(website):
     result = ""
 
     try:
+        if termux_tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+        
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
@@ -352,6 +364,9 @@ def no_log_ok(website):
     result = ""
 
     try:
+        if termux_tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+        
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
@@ -371,6 +386,9 @@ def no_log_permanent_redirect(website):
     result = ""
 
     try:
+        if termux_tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+        
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
@@ -390,6 +408,9 @@ def no_log_reason(website):
     result = ""
 
     try:
+        if termux_tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+        
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
@@ -409,6 +430,9 @@ def no_log_redirect(website):
     result = ""
 
     try:
+        if termux_tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+        
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
@@ -428,6 +452,9 @@ def no_log_status_code(website):
     result = ""
 
     try:
+        if termux_tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+        
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
@@ -447,6 +474,9 @@ def no_log_url(website):
     result = ""
 
     try:
+        if termux_tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+        
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
@@ -466,6 +496,9 @@ def no_log_server_stats(website):
     result = ""
 
     try:
+        if termux_tor_boolean == True:
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
+        
         if tor_boolean == True:
             url = tor.get(output, verify = valid_certificate, headers = user_agent)
             
