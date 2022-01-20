@@ -1,5 +1,6 @@
 import os
 
+os.system("apt update")
 os.system("apt install termux-services")
 os.system("apt install tor")
 
