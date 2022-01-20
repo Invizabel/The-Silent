@@ -274,10 +274,10 @@ def no_log_cookies(website):
     
     try:
         if tor_boolean == True:
-            final = tor.post(output, verify = valid_certificate, headers = user_agent)
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
         if tor_boolean == False:
-            final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.cookies
 
@@ -293,10 +293,10 @@ def no_log_encoding(website):
 
     try:
         if tor_boolean == True:
-            final = tor.post(output, verify = valid_certificate, headers = user_agent)
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
         if tor_boolean == False:
-            final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.encoding
 
@@ -312,10 +312,10 @@ def no_log_headers(website):
 
     try:
         if tor_boolean == True:
-            final = tor.post(output, verify = valid_certificate, headers = user_agent)
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
         if tor_boolean == False:
-            final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = list(final.headers.items())
         result.sort()
@@ -334,10 +334,10 @@ def no_log_html_code(website):
 
     try:
         if tor_boolean == True:
-            final = tor.post(output, verify = valid_certificate, headers = user_agent)
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
         if tor_boolean == False:
-            final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.text
 
@@ -353,10 +353,10 @@ def no_log_ok(website):
 
     try:
         if tor_boolean == True:
-            final = tor.post(output, verify = valid_certificate, headers = user_agent)
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
         if tor_boolean == False:
-            final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.ok
 
@@ -372,10 +372,10 @@ def no_log_permanent_redirect(website):
 
     try:
         if tor_boolean == True:
-            final = tor.post(output, verify = valid_certificate, headers = user_agent)
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
         if tor_boolean == False:
-            final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.is_permanent_redirect
 
@@ -391,10 +391,10 @@ def no_log_reason(website):
 
     try:
         if tor_boolean == True:
-            final = tor.post(output, verify = valid_certificate, headers = user_agent)
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
         if tor_boolean == False:
-            final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.reason
 
@@ -410,10 +410,10 @@ def no_log_redirect(website):
 
     try:
         if tor_boolean == True:
-            final = tor.post(output, verify = valid_certificate, headers = user_agent)
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
         if tor_boolean == False:
-            final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.is_redirect
 
@@ -429,10 +429,10 @@ def no_log_status_code(website):
 
     try:
         if tor_boolean == True:
-            final = tor.post(output, verify = valid_certificate, headers = user_agent)
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
         if tor_boolean == False:
-            final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.status_code
 
@@ -448,10 +448,10 @@ def no_log_url(website):
 
     try:
         if tor_boolean == True:
-            final = tor.post(output, verify = valid_certificate, headers = user_agent)
+            final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
         if tor_boolean == False:
-            final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+            final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.url
 
@@ -467,10 +467,10 @@ def no_log_server_stats(website):
 
     try:
         if tor_boolean == True:
-            url = tor.post(output, verify = valid_certificate, headers = user_agent)
+            url = tor.get(output, verify = valid_certificate, headers = user_agent)
             
         if tor_boolean == False:
-            url = web_session.post(output, verify = valid_certificate, headers = user_agent)
+            url = web_session.get(output, verify = valid_certificate, headers = user_agent)
             
         web = list(url.headers.items())
         web.sort()
@@ -551,10 +551,10 @@ def log_cookies(website):
     output = https_string + website
     
     if tor_boolean == True:
-        final = tor.post(output, verify = valid_certificate, headers = user_agent)
+        final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.cookies)
     file.write("\n\ncookies: " + result + "\n\n")
@@ -567,10 +567,10 @@ def log_encoding(website):
     output = https_string + website
     
     if tor_boolean == True:
-        final = tor.post(output, verify = valid_certificate, headers = user_agent)
+        final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.encoding)
     file.write("\n\nencoding: " + result + "\n\n")
@@ -583,10 +583,10 @@ def log_headers(website):
     output = https_string + website
     
     if tor_boolean == True:
-        final = tor.post(output, verify = valid_certificate, headers = user_agent)
+        final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = list(final.headers.items())
     result.sort()
@@ -603,10 +603,10 @@ def log_html_code(website):
     output = https_string + website
     
     if tor_boolean == True:
-        final = tor.post(output, verify = valid_certificate, headers = user_agent)
+        final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.text)
     file.write("\n\nhtml code: " + result + "\n\n")
@@ -619,10 +619,10 @@ def log_ok(website):
     output = https_string + website
     
     if tor_boolean == True:
-        final = tor.post(output, verify = valid_certificate, headers = user_agent)
+        final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.ok) 
     file.write("\n\nok: " + result + "\n\n")
@@ -635,10 +635,10 @@ def log_permanent_redirect(website):
     output = https_string + website
     
     if tor_boolean == True:
-        final = tor.post(output, verify = valid_certificate, headers = user_agent)
+        final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.is_permanent_redirect)
     file.write("\n\npermanent redirect: " + result + "\n\n")
@@ -651,10 +651,10 @@ def log_reason(website):
     output = https_string + website
     
     if tor_boolean == True:
-        final = tor.post(output, verify = valid_certificate, headers = user_agent)
+        final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.reason)
     file.write("\n\nreason: " + result + "\n\n")
@@ -667,10 +667,10 @@ def log_redirect(website):
     output = https_string + website
     
     if tor_boolean == True:
-        final = tor.post(output, verify = valid_certificate, headers = user_agent)
+        final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.is_redirect)
     file.write("\n\nredirect: " + result + "\n\n")
@@ -683,10 +683,10 @@ def log_status_code(website):
     output = https_string + website
     
     if tor_boolean == True:
-        final = tor.post(output, verify = valid_certificate, headers = user_agent)
+        final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.status_code)
     file.write("\n\nstatus code: " + result + "\n\n")
@@ -699,10 +699,10 @@ def log_url(website):
     output = https_string + website
     
     if tor_boolean == True:
-        final = tor.post(output, verify = valid_certificate, headers = user_agent)
+        final = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        final = web_session.post(output, verify = valid_certificate, headers = user_agent)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
     result = str(final.url)
     file.write("\n\nurl: " + result + "\n\n")
@@ -715,10 +715,10 @@ def log_server_stats(website):
     output = https_string + website
 
     if tor_boolean == True:
-        url = tor.post(output, verify = valid_certificate, headers = user_agent)
+        url = tor.get(output, verify = valid_certificate, headers = user_agent)
         
     if tor_boolean == False:
-        url = web_session.post(output, verify = valid_certificate, headers = user_agent)
+        url = web_session.get(output, verify = valid_certificate, headers = user_agent)
         
     web = list(url.headers.items())
     web.sort()
@@ -750,10 +750,10 @@ def port_scanner(website, minimum, maximum):
 
             try:
                 if tor_boolean == True:
-                    final = tor.post(output, verify = valid_certificate, headers = user_agent, timeout = 1)
+                    final = tor.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
 
                 if tor_boolean == False:
-                    final = web_session.post(output, verify = valid_certificate, headers = user_agent, timeout = 1)
+                    final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
 
                 if change_tor_boolean == True:
                     os.system("sudo service tor stop")
