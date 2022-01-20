@@ -38,10 +38,6 @@ import time
 import urllib3
 
 #connect to tor
-tor = requests.Session()
-tor.proxies = {}
-tor.proxies["https"] = "socks5h://localhost:9050"
-
 tor_proxy = {"https": "socks5h://localhost:9050"}
 
 #create sessions object
@@ -217,7 +213,7 @@ def security():
             print("removing tor")
             os.system("apt remove tor")
 
-#make a request not using a log            
+#make a request not using a log
 def no_log():
     global website
     os.system("clear")
@@ -747,6 +743,14 @@ def port_scanner(website, minimum, maximum):
 
     try:
         for i in range(minimum, maximum):
+            if change_tor_boolean == True and tor_boolean == True and termux_tor_boolean == False:
+                os.system("sudo service tor stop")
+                os.system("sudo service tor start")
+
+            if change_tor_boolean == True and termux_tor_boolean == True and tor_boolean == False:
+                os.system("sv-disable tor")
+                os.system("sv-enable tor")
+            
             print("checking port: " + str(i))
             output = https_string + website + ":" + str(i)
 
@@ -756,10 +760,6 @@ def port_scanner(website, minimum, maximum):
 
                 if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
                     final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
-
-                if change_tor_boolean == True:
-                    os.system("sudo service tor stop")
-                    os.system("sudo service tor start")
 
                 request = final.status_code
 
@@ -786,6 +786,14 @@ def link_scanner(url):
     total_web_list = []
 
     while True:
+        if change_tor_boolean == True and tor_boolean == True and termux_tor_boolean == False:
+            os.system("sudo service tor stop")
+            os.system("sudo service tor start")
+
+        if change_tor_boolean == True and termux_tor_boolean == True and tor_boolean == False:
+            os.system("sv-disable tor")
+            os.system("sv-enable tor")
+            
         try:
             i = i + 1
 
@@ -794,10 +802,6 @@ def link_scanner(url):
         
             if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
                 final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
-
-            if change_tor_boolean == True:
-                os.system("sudo service tor stop")
-                os.system("sudo service tor start")
 
             try:
                 result = str(final.text)
@@ -857,6 +861,14 @@ def email_scanner(url):
     web_result = []
 
     while True:
+        if change_tor_boolean == True and tor_boolean == True and termux_tor_boolean == False:
+            os.system("sudo service tor stop")
+            os.system("sudo service tor start")
+
+        if change_tor_boolean == True and termux_tor_boolean == True and tor_boolean == False:
+            os.system("sv-disable tor")
+            os.system("sv-enable tor")
+            
         try:
             i = i + 1
 
@@ -865,10 +877,6 @@ def email_scanner(url):
         
             if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
                 final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
-
-            if change_tor_boolean == True:
-                os.system("sudo service tor stop")
-                os.system("sudo service tor start")
 
             try:
                 result = str(final.text)
@@ -885,7 +893,7 @@ def email_scanner(url):
                     total_web_list = list(dict.fromkeys(total_web_list))
                     total_web_list.append(j)
 
-            #checks wether there are emails in url or not
+            #checks wether there are emails in html code or not
             email_result = re.findall(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+", result)
             #print(str(email_result))
 
@@ -1060,6 +1068,14 @@ def all_images():
     print("Downloading!")
 
     for i in website:
+        if change_tor_boolean == True and tor_boolean == True and termux_tor_boolean == False:
+            os.system("sudo service tor stop")
+            os.system("sudo service tor start")
+
+        if change_tor_boolean == True and termux_tor_boolean == True and tor_boolean == False:
+            os.system("sv-disable tor")
+            os.system("sv-enable tor")
+                    
         if "im.vsco.co" in i:
             removal = ".jpg"
             extract_special = i.split("im.vsco.co")
@@ -1199,6 +1215,14 @@ def all_images():
     super_sources_list = []
 
     for j in website:
+        if change_tor_boolean == True and tor_boolean == True and termux_tor_boolean == False:
+            os.system("sudo service tor stop")
+            os.system("sudo service tor start")
+
+        if change_tor_boolean == True and termux_tor_boolean == True and tor_boolean == False:
+            os.system("sv-disable tor")
+            os.system("sv-enable tor")
+        
         try:
             print(j)
 
@@ -1255,6 +1279,14 @@ def all_images():
             continue
 
     for i in sources_list:
+        if change_tor_boolean == True and tor_boolean == True and termux_tor_boolean == False:
+            os.system("sudo service tor stop")
+            os.system("sudo service tor start")
+
+        if change_tor_boolean == True and termux_tor_boolean == True and tor_boolean == False:
+            os.system("sv-disable tor")
+            os.system("sv-enable tor")
+        
         try:
             if termux_tor_boolean == True or tor_boolean == True:
                 final = web_session.get(i, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
@@ -1298,6 +1330,14 @@ def all_images():
     super_sources_list = list(dict.fromkeys(super_sources_list))
 
     for i in super_sources_list:
+        if change_tor_boolean == True and tor_boolean == True and termux_tor_boolean == False:
+            os.system("sudo service tor stop")
+            os.system("sudo service tor start")
+
+        if change_tor_boolean == True and termux_tor_boolean == True and tor_boolean == False:
+            os.system("sv-disable tor")
+            os.system("sv-enable tor")
+        
         jpeg = ".jpeg" in i
         jpg = ".jpg" in i
         png = ".png" in i
