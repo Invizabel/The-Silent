@@ -73,6 +73,7 @@ change_tor_boolean = False
 https = True
 https_string = "https://"
 tor_boolean = False
+termux_tor_boolean = False
 valid_certificate = True
 
 #increased security
@@ -112,13 +113,14 @@ def security():
     global https
     global https_string
     global tor_boolean
+    global termux_tor_boolean
     global valid_certificate
     os.system("clear")
     user_input = input("1 = security status\n2 = edit security\n3 = install tor\n4 = remove tor\n")
 
     if user_input == "1":
         os.system("clear")
-        print("https =", https, "\nvalid certificate =", valid_certificate, "\ntor =", tor_boolean, "\nchange tor circuit with each request =", change_tor_boolean)
+        print("https =", https, "\nvalid certificate =", valid_certificate, "\ntor (non termux users) =", tor_boolean, "\ntor (termux users) =", termux_tor_boolean, "\nchange tor circuit with each request =", change_tor_boolean)
         pause = input()
 
     if user_input == "2":
@@ -143,7 +145,7 @@ def security():
             valid_certificate = False
 
         os.system("clear")
-        user_tor = input("tor? y/n\n")
+        user_tor = input("tor (non termux users)? y/n\n")
 
         if user_tor == "y":
             tor_boolean = True
@@ -152,6 +154,17 @@ def security():
         if user_tor == "n":
             tor_boolean = False
             os.system("sudo service tor stop")
+
+        os.system("clear")
+        user_tor = input("tor (termux users)? y/n\n")
+
+        if user_tor == "y":
+            termux_tor_boolean = True
+            os.system("sv-enable tor")
+
+        if user_tor == "n":
+            termux_tor_boolean = False
+            os.system("sv-disable tor")
 
         os.system("clear")
         user_change_tor = input("change tor circuit with each request? y/n\n")
@@ -164,7 +177,7 @@ def security():
 
     if user_input == "3":
         os.system("clear")
-        user_tor = input("1 = debian\n2 = fedora\n")
+        user_tor = input("1 = debian\n2 = fedora\n3 = termux\n")
 
         if user_tor == "1":
             os.system("clear")
@@ -177,9 +190,15 @@ def security():
             print("installing tor")
             os.system("sudo dnf install tor")
 
+        if user_tor == "3":
+            os.system("clear")
+            print("installing tor")
+            os.system("apt update")
+            os.system("apt install tor")
+
     if user_input == "4":
         os.system("clear")
-        user_tor = input("1 = debian\n2 = fedora\n")
+        user_tor = input("1 = debian\n2 = fedora\n3 = termux\n")
 
         if user_tor == "1":
             os.system("clear")
@@ -190,6 +209,11 @@ def security():
             os.system("clear")
             print("removing tor")
             os.system("sudo dnf remove tor")
+
+        if user_tor == "3":
+            os.system("clear")
+            print("removing tor")
+            os.system("apt remove tor")
 
 #make a request not using a log            
 def no_log():
