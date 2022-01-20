@@ -281,7 +281,7 @@ def no_log_cookies(website):
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
-        if tor_boolean == False:
+        if tor_boolean == False and termux_tor_boolean == False:
             final = web_session.get(output, verify = valid_certificate, headers = user_agent)
             
         result = final.cookies
@@ -325,7 +325,7 @@ def no_log_headers(website):
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
-        if tor_boolean == False:
+        if tor_boolean == False and termux_tor_boolean == False:
             final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = list(final.headers.items())
@@ -350,7 +350,7 @@ def no_log_html_code(website):
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
-        if tor_boolean == False:
+        if tor_boolean == False and termux_tor_boolean == False:
             final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.text
@@ -372,7 +372,7 @@ def no_log_ok(website):
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
-        if tor_boolean == False:
+        if tor_boolean == False and termux_tor_boolean == False:
             final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.ok
@@ -394,7 +394,7 @@ def no_log_permanent_redirect(website):
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
-        if tor_boolean == False:
+        if tor_boolean == False and termux_tor_boolean == False:
             final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.is_permanent_redirect
@@ -416,7 +416,7 @@ def no_log_reason(website):
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
-        if tor_boolean == False:
+        if tor_boolean == False and termux_tor_boolean == False:
             final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.reason
@@ -438,7 +438,7 @@ def no_log_redirect(website):
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
-        if tor_boolean == False:
+        if tor_boolean == False and termux_tor_boolean == False:
             final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.is_redirect
@@ -460,7 +460,7 @@ def no_log_status_code(website):
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
-        if tor_boolean == False:
+        if tor_boolean == False and termux_tor_boolean == False:
             final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.status_code
@@ -482,7 +482,7 @@ def no_log_url(website):
         if tor_boolean == True:
             final = tor.get(output, verify = valid_certificate, headers = user_agent)
             
-        if tor_boolean == False:
+        if tor_boolean == False and termux_tor_boolean == False:
             final = web_session.get(output, verify = valid_certificate, headers = user_agent)
 
         result = final.url
@@ -504,7 +504,7 @@ def no_log_server_stats(website):
         if tor_boolean == True:
             url = tor.get(output, verify = valid_certificate, headers = user_agent)
             
-        if tor_boolean == False:
+        if tor_boolean == False and termux_tor_boolean == False:
             url = web_session.get(output, verify = valid_certificate, headers = user_agent)
             
         web = list(url.headers.items())
