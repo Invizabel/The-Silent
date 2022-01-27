@@ -767,6 +767,8 @@ def link_scanner(url):
     output = https_string + url
     total_web_list = []
 
+    user_input = input("1 = domain links | 2 = all links\n")
+
     while True:
         try:
             i = i + 1
@@ -786,11 +788,15 @@ def link_scanner(url):
                 print("ERROR!")
 
             for j in web_list:
-                domain_name = str(original_url) in j
+                if user_input == "1":
+                    domain_name = str(original_url) in j
 
-                if domain_name == True:
+                    if domain_name == True:
+                        total_web_list = list(dict.fromkeys(total_web_list))
+                        total_web_list.append(j)
+
+                if user_input == "2":
                     total_web_list = list(dict.fromkeys(total_web_list))
-                    
                     total_web_list.append(j)
                     
             url = total_web_list[i]
