@@ -1293,12 +1293,12 @@ def all_images():
 
         if jpg == True:
             count += 1
-            with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
+            with open(os.path.join("data/images","image " + str(count)  + ".jpg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if png == True:
             count += 1
-            with open(os.path.join("data/images","image " + str(count)  + ".jpeg"), "wb") as file_writer:
+            with open(os.path.join("data/images","image " + str(count)  + ".png"), "wb") as file_writer:
                 file_writer.write(data.content)
                 
     end = time.time()
