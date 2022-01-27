@@ -933,7 +933,7 @@ def image():
     picture = str(output)
 
     if termux_tor_boolean == True or tor_boolean == True:
-        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
+        data = web_session.get(picture, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
         
     if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
         data = web_session.get(picture, verify = valid_certificate, headers = user_agent, timeout = 5)
