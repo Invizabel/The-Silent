@@ -34,6 +34,7 @@ import random
 import re
 import requests
 import shutil
+import socket
 import time
 import urllib3
 
@@ -727,37 +728,29 @@ def log_server_stats(website):
     file.close
 
 #port scanner
-def port_scanner(website, minimum, maximum):
-    os.system("clear")
-    result = []
+def port_scanner(host):
+   socket_list = []
+   
+   for i in range(1, 1024):
+      port = i
+      print(port)
 
-    try:
-        for i in range(minimum, maximum):
-            print("checking port: " + str(i))
-            output = https_string + website + ":" + str(i)
+      try:
+         sock = socket.socket()
+         sock.settimeout(1)
+         sock.connect((host, port))
+         sock.close()
+         
+         socket_list.append(port)
+         print(True)
 
-            try:
-                if termux_tor_boolean == True or tor_boolean == True:
-                    final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 1)
+      except TimeoutError:
+         print(False)
+         continue
 
-                if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                    final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 1)
-
-                request = final.status_code
-
-                if request == 200:
-                    result.append(i)
-                    print(True)
-
-            except:
-                continue
-
-    except requests.exceptions.SSLError:
-        result = str("invalid certificate")
-
-    os.system("clear")
-
-    return result
+   os.system("clear")
+      
+   return socket_list
 
 #scans for hyperlinks
 def link_scanner(url):
@@ -2096,9 +2089,7 @@ while True:
     if user_input == "12":
         os.system("clear")
         website = input("website: ")
-        minimum = int(input("mimimum port number: "))
-        maximum = int(input("maximum port number: "))
-        print(port_scanner(website, minimum, maximum))
+        print(port_scanner(website))
         pause = input()
 
     if user_input == "13":
