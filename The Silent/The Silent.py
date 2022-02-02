@@ -35,6 +35,7 @@ import re
 import requests
 import shutil
 import socket
+import socks
 import time
 import urllib3
 
@@ -729,28 +730,55 @@ def log_server_stats(website):
 
 #port scanner
 def port_scanner(host):
-   socket_list = []
-   
-   for i in range(1, 1024):
-      port = i
-      print(port)
+    if termux_tor_boolean == True or tor_boolean == True:
+        socket_list = []
+       
+        for i in range(1, 1024):
+            port = i
+            print(port)
 
-      try:
-         sock = socket.socket()
-         sock.settimeout(1)
-         sock.connect((host, port))
-         sock.close()
-         
-         socket_list.append(port)
-         print(True)
+            try:
+                socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, "localhost", 9050, True)
+                sock = socks.socksocket()
+                sock.settimeout(1)
+                sock.connect((host, port))
+                sock.close()
 
-      except TimeoutError:
-         print(False)
-         continue
+                socket_list.append(port)
+                print(True)
 
-   os.system("clear")
+            except TimeoutError:
+                print(False)
+                continue
+
+            except socks.GeneralProxyError:
+                print(False)
+                continue
+        
+    
+    if termux_tor_boolean == False and tor_boolean == False:
+        socket_list = []
+       
+        for i in range(1, 1024):
+            port = i
+            print(port)
+
+            try:
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, port))
+                sock.close()
+
+                socket_list.append(port)
+                print(True)
+
+            except TimeoutError:
+                print(False)
+                continue
+
+    os.system("clear")
       
-   return socket_list
+    return socket_list
 
 #scans for hyperlinks
 def link_scanner(url):
