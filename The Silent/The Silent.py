@@ -2166,6 +2166,7 @@ while True:
         pause = input()
 
     if user_input == "16":
+        os.system("clear")
         print(network_mapper())
     
     if user_input == "e":
