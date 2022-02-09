@@ -793,16 +793,23 @@ def network_mapper():
                 sock.connect((host, 80))
                 sock.close()
 
-                print(host + ": " + str(True))
-                host_list.append(host)
-                
-            except ConnectionRefusedError:
-                print(host + ": " + str(False))
+                output = "http://" + host
 
-            except OSError:
-                print(host + ": " + str(False))
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header))
+
+                host_list.append(host + " === " + str(header))
 
             except TimeoutError:
+                print(host + ": " + str(False))
+
+            except ConnectionRefusedError:
                 print(host + ": " + str(False))
 
     os.system("clear")
