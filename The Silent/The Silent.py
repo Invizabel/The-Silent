@@ -795,11 +795,14 @@ def network_mapper():
 
                 print(host + ": " + str(True))
                 host_list.append(host)
-
-            except TimeoutError:
+                
+            except ConnectionRefusedError:
                 print(host + ": " + str(False))
 
-            except ConnectionRefusedError:
+            except OSError:
+                print(host + ": " + str(False))
+
+            except TimeoutError:
                 print(host + ": " + str(False))
 
     os.system("clear")
