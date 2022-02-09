@@ -806,12 +806,15 @@ def network_mapper():
 
                 host_list.append(host + " === " + str(header))
 
-            except TimeoutError:
-                print(host + ": " + str(False))
-
             except ConnectionRefusedError:
                 print(host + ": " + str(False))
 
+            except OSError:
+                print(host + ": " + str(False))
+
+            except TimeoutError:
+                print(host + ": " + str(False))
+                
     os.system("clear")
 
     return host_list
