@@ -780,6 +780,32 @@ def port_scanner(host):
       
     return socket_list
 
+#scans the local network for web servers
+def network_mapper():
+    host_list = []
+
+    for i in range(0, 100):
+        for j in range(0, 100):
+            try:
+                host = "192.168." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                print(host + ": " + str(True))
+                host_list.append(host)
+
+            except TimeoutError:
+                print(host + ": " + str(False))
+
+            except ConnectionRefusedError:
+                print(host + ": " + str(False))
+
+    os.system("clear")
+
+    return host_list
+
 #scans for hyperlinks
 def link_scanner(url):
     #variables
@@ -2040,7 +2066,7 @@ def file_finder(file, directory):
 #mainloop
 while True:
     os.system("clear")
-    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\ne = exit\n")
+    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -2138,6 +2164,9 @@ while True:
         url = input("url: ")
         print(email_scanner(url))
         pause = input()
+
+    if user_input == "16":
+        print(network_mapper())
     
     if user_input == "e":
         exit()
