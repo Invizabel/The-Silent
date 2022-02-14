@@ -2183,7 +2183,7 @@ while True:
         result = network_mapper()
 
         for i in result:
-            print(i)
+            print(str(i) + "\n")
 
         pause = input()
     
