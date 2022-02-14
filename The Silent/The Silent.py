@@ -2536,7 +2536,7 @@ while True:
         thread_9.join()
         thread_10.join()
 
-        print("\nDone!")
+        print("Done!")
 
         pause = input()
     
