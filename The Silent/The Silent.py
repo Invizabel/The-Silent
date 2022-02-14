@@ -2493,7 +2493,7 @@ while True:
     if user_input == "16":
         os.system("clear")
 
-        print("Scanning...")
+        print("Scanning...\n")
 
         thread_1 = threading.Thread(name = "network_mapper_1", target = network_mapper_1)
         thread_1.start()
@@ -2536,7 +2536,7 @@ while True:
         thread_9.join()
         thread_10.join()
 
-        print("Done!")
+        print("\nDone!")
 
         pause = input()
     
