@@ -2180,7 +2180,11 @@ while True:
 
     if user_input == "16":
         os.system("clear")
-        print(network_mapper())
+        result = network_mapper()
+
+        for i in result:
+            print(i)
+
         pause = input()
     
     if user_input == "e":
