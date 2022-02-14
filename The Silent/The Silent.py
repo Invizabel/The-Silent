@@ -808,19 +808,14 @@ def network_mapper_1():
                 host_list.append(host + " === " + str(header))
 
             except ConnectionRefusedError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except OSError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except TimeoutError:
-                print(host + ": " + str(False) + "\n")
+                continue
                 
-    os.system("clear")
-
-    for i in host_list:
-        print(i + "\n")
-        
 #scans the local network for hosts
 def network_mapper_2():
     host_list = []
@@ -848,19 +843,14 @@ def network_mapper_2():
                 host_list.append(host + " === " + str(header))
 
             except ConnectionRefusedError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except OSError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except TimeoutError:
-                print(host + ": " + str(False) + "\n")
+                continue
                 
-    os.system("clear")
-
-    for i in host_list:
-        print(i + "\n")
-        
 #scans the local network for hosts
 def network_mapper_3():
     host_list = []
@@ -888,19 +878,14 @@ def network_mapper_3():
                 host_list.append(host + " === " + str(header))
 
             except ConnectionRefusedError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except OSError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except TimeoutError:
-                print(host + ": " + str(False) + "\n")
+                continue
                 
-    os.system("clear")
-
-    for i in host_list:
-        print(i + "\n")
-        
 #scans the local network for hosts
 def network_mapper_4():
     host_list = []
@@ -928,19 +913,14 @@ def network_mapper_4():
                 host_list.append(host + " === " + str(header))
 
             except ConnectionRefusedError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except OSError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except TimeoutError:
-                print(host + ": " + str(False) + "\n")
+                continue
                 
-    os.system("clear")
-
-    for i in host_list:
-        print(i + "\n")
-        
 #scans the local network for hosts
 def network_mapper_5():
     host_list = []
@@ -968,19 +948,14 @@ def network_mapper_5():
                 host_list.append(host + " === " + str(header))
 
             except ConnectionRefusedError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except OSError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except TimeoutError:
-                print(host + ": " + str(False) + "\n")
+                continue
                 
-    os.system("clear")
-
-    for i in host_list:
-        print(i + "\n")
-        
 #scans the local network for hosts
 def network_mapper_6():
     host_list = []
@@ -1008,19 +983,14 @@ def network_mapper_6():
                 host_list.append(host + " === " + str(header))
 
             except ConnectionRefusedError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except OSError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except TimeoutError:
-                print(host + ": " + str(False) + "\n")
+                continue
                 
-    os.system("clear")
-
-    for i in host_list:
-        print(i + "\n")
-        
 #scans the local network for hosts
 def network_mapper_7():
     host_list = []
@@ -1048,18 +1018,13 @@ def network_mapper_7():
                 host_list.append(host + " === " + str(header))
 
             except ConnectionRefusedError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except OSError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except TimeoutError:
-                print(host + ": " + str(False) + "\n")
-                
-    os.system("clear")
-
-    for i in host_list:
-        print(i + "\n")
+                continue
         
 #scans the local network for hosts
 def network_mapper_8():
@@ -1088,19 +1053,14 @@ def network_mapper_8():
                 host_list.append(host + " === " + str(header))
 
             except ConnectionRefusedError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except OSError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except TimeoutError:
-                print(host + ": " + str(False) + "\n")
+                continue
                 
-    os.system("clear")
-
-    for i in host_list:
-        print(i + "\n")
-        
 #scans the local network for hosts
 def network_mapper_9():
     host_list = []
@@ -1128,19 +1088,14 @@ def network_mapper_9():
                 host_list.append(host + " === " + str(header))
 
             except ConnectionRefusedError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except OSError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except TimeoutError:
-                print(host + ": " + str(False) + "\n")
+                continue
                 
-    os.system("clear")
-
-    for i in host_list:
-        print(i + "\n")
-
 #scans the local network for hosts
 def network_mapper_10():
     host_list = []
@@ -1168,19 +1123,14 @@ def network_mapper_10():
                 host_list.append(host + " === " + str(header))
 
             except ConnectionRefusedError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except OSError:
-                print(host + ": " + str(False) + "\n")
+                continue
 
             except TimeoutError:
-                print(host + ": " + str(False) + "\n")
+                continue
                 
-    os.system("clear")
-
-    for i in host_list:
-        print(i + "\n")
-
 #scans for hyperlinks
 def link_scanner(url):
     #variables
@@ -2543,6 +2493,8 @@ while True:
     if user_input == "16":
         os.system("clear")
 
+        print("Scanning...")
+
         thread_1 = threading.Thread(name = "network_mapper_1", target = network_mapper_1)
         thread_1.start()
 
@@ -2584,6 +2536,7 @@ while True:
         thread_9.join()
         thread_10.join()
 
+        print("Done!")
 
         pause = input()
     
