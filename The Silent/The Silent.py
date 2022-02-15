@@ -40,9 +40,6 @@ import time
 import threading
 import urllib3
 
-#other libraries
-import twint
-
 #connect to tor
 tor_proxy = {"http": "socks5h://localhost:9050", "https": "socks5h://localhost:9050"}
 
@@ -2545,6 +2542,8 @@ while True:
 
     #uses twint library
     if user_input == "17":
+        import twint
+        
         os.system("clear")
         
         user_name = input("Enter username: ")
