@@ -2391,7 +2391,7 @@ def file_finder(file, directory):
 #mainloop
 while True:
     os.system("clear")
-    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\n17 = twitter\ne = exit\n")
+    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\n17 = twitter\n18 = security questions\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -2557,6 +2557,27 @@ while True:
 
         #run
         twint.run.Search(result)
+
+        pause = input()
+
+    if user_input == "18":
+        import twint
+        
+        os.system("clear")
+        user_name = input("Enter username: ")
+
+        keywords = ["anniversary", "bff", "birthday", "born", "boyfriend", "brother", "cat", "child", "children", "color", "dad", "daughter", "dog", "father", "favorite", "friend", "girlfriend", "husband", "kid", "kitten", "mom", "mother", "pet", "puppy", "sister", "son", "wife"]
+
+        result = twint.Config()
+        result.Username = user_name
+
+        for i in keywords:
+            print("keyword === " + i)
+            result.Search = i
+            twint.run.Search(result)
+            print("")
+
+        print("Done!")
 
         pause = input()
     
