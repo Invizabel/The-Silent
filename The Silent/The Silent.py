@@ -2564,9 +2564,10 @@ while True:
         import twint
         
         os.system("clear")
-        user_name = input("Enter username: ")
+        user_name = input("Enter twitter username: ")
+        print("")
 
-        keywords = ["anniversary", "bff", "birthday", "born", "boyfriend", "brother", "cat", "child", "children", "color", "dad", "daughter", "dog", "father", "favorite", "friend", "girlfriend", "husband", "kid", "kitten", "mom", "mother", "pet", "puppy", "sister", "son", "wife"]
+        keywords = ["anniversary", "bff", "birthday", "born", "boyfriend", "brother", "cat", "child", "children", "college", "color", "dad", "daughter", "dog", "elementary", "father", "favorite", "friend", "girlfriend", "husband", "kid", "kitten", "mom", "mother", "pet", "primary", "puppy", "school", "sister", "son", "wife"]
 
         result = twint.Config()
         result.Username = user_name
