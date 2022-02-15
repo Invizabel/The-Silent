@@ -40,6 +40,9 @@ import time
 import threading
 import urllib3
 
+#other libraries
+import twint
+
 #connect to tor
 tor_proxy = {"http": "socks5h://localhost:9050", "https": "socks5h://localhost:9050"}
 
@@ -2391,7 +2394,7 @@ def file_finder(file, directory):
 #mainloop
 while True:
     os.system("clear")
-    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\ne = exit\n")
+    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\n17 = twitter\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -2537,6 +2540,24 @@ while True:
         thread_10.join()
 
         print("Done!")
+
+        pause = input()
+
+    #uses twint library
+    if user_input == "17":
+        os.system("clear")
+        
+        user_name = input("Enter username: ")
+        keyword = input("Enter keyword: ")
+        print()
+
+        #configure
+        result = twint.Config()
+        result.Username = user_name
+        result.Search = keyword
+
+        #run
+        twint.run.Search(result)
 
         pause = input()
     
