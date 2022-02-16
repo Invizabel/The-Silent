@@ -2153,7 +2153,7 @@ def password_generator():
 
     print("Password:", output)
     result = sha256(output.encode("utf-8")).hexdigest()
-    print("hashed password: " + result)
+    print("hashed password (sha256): " + result)
     pause = input()
 
 #brute force classic
