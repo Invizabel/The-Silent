@@ -2162,6 +2162,8 @@ def brute_force_classic(password, length):
     maximum = int(length) + 1
 
     for i in range (1, maximum):
+        print("attempting length: " + str(i))
+        
         for ii in combinations_with_replacement(dictionary, i):
             compute_1 = ''.join(ii)
             compute_2 = compute_1[::-1]
