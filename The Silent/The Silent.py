@@ -28,6 +28,7 @@ from itertools import *
 
 import codecs
 import hashlib
+import itertools
 import math
 import os
 import random
@@ -2169,7 +2170,7 @@ def brute_force_classic(password):
         
         print("attempting length: " + str(i))
         
-        for ii in combinations_with_replacement(dictionary, i):
+        for ii in itertools.product(dictionary, repeat = i):
             compute_1 = ''.join(ii)
             compute_2 = compute_1[::-1]
             
