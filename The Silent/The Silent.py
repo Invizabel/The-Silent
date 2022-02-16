@@ -2157,18 +2157,24 @@ def password_generator():
     pause = input()
 
 #brute force classic
-def brute_force_classic(password, length):
+def brute_force_classic(password):
     dictionary = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()"
-    maximum = int(length) + 1
+    maximum = 101
+
+    crack_boolean = False
 
     for i in range (1, maximum):
+        if crack_boolean == True:
+            break
+        
         print("attempting length: " + str(i))
         
         for ii in combinations_with_replacement(dictionary, i):
             compute_1 = ''.join(ii)
             compute_2 = compute_1[::-1]
-
+            
             if compute_1 == password or compute_2 == password:
+                crack_boolean = True
                 break
 
     return "password: " + password
@@ -2463,8 +2469,7 @@ while True:
     if user_input == "11":
         os.system("clear")
         password = input("enter password: ")
-        password_length = input("enter length of password: ")
-        print(brute_force_classic(password, password_length))
+        print(brute_force_classic(password))
         pause = input()
 
     if user_input == "12":
