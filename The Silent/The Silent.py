@@ -1139,18 +1139,20 @@ def link_scanner(url):
     original_url = url
     output = https_string + url
     total_web_list = []
+    total_web_list.append(output)
 
     user_input = input("1 = domain links | 2 = all links\n")
 
     while True:
         try:
-            i = i + 1
+            i += 1
+            print(total_web_list[i])
 
             if termux_tor_boolean == True or tor_boolean == True:
-                final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                final = web_session.get(total_web_list[i], verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
         
             if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
+                final = web_session.get(total_web_list[i], verify = valid_certificate, headers = user_agent, timeout = 5)
 
             try:
                 result = str(final.text)
@@ -1172,19 +1174,29 @@ def link_scanner(url):
                     total_web_list = list(dict.fromkeys(total_web_list))
                     total_web_list.append(j)
                     
-            url = total_web_list[i]
-            print(url)
-
         except requests.exceptions.SSLError:
             print("ERROR: invalid certificate!")
             break
+
+        except requests.exceptions.ConnectionError:
+            print("ERROR: connection error!")
+            continue
 
         except requests.exceptions.ConnectTimeout:
             print("ERROR: connect timeout!")
             continue
 
+        except requests.exceptions.InvalidSchema:
+            print("ERROR: invalid schema!")
+            continue
+
+        except requests.exceptions.InvalidURL:
+            print("ERROR: invalid url!")
+            continue
+
         except requests.exceptions.MissingSchema:
             print("ERROR: missing schema!")
+            continue
 
         except requests.exceptions.ReadTimeout:
             print("ERROR: read timeout!")
@@ -1195,8 +1207,7 @@ def link_scanner(url):
 
     os.system("clear")
     total_web_list = list(dict.fromkeys(total_web_list))
-
-    total_web_list.append("https://" + url)
+    
     total_web_list.sort
     
     return total_web_list
