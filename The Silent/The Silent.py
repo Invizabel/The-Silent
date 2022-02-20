@@ -90,10 +90,40 @@ except AttributeError:
 
 #find url in a string
 #source code taken from geeksforgeeks.org
+'''
 def find_url(string):
 	regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
 	url = re.findall(regex,string)
 	return [x[0] for x in url]
+'''
+
+def find_url(string, output):
+    result = string
+    web_list = []
+
+    start_href = "href=\""
+    end_href = "\""
+
+    for i in range(0, len(result)):
+        try:
+            index_1 = result.index(start_href, i, len(result))
+            index_2 = result.index(end_href, (index_1 + 6) , len(result))
+            
+            super_result = result[index_1 + len(start_href) + 0: index_2]
+
+            if "http://" in super_result or "https://" in super_result:
+                web_list.append(super_result)
+
+            else:
+                super_result = output + "/" + super_result
+                web_list.append(super_result)
+
+        except:
+            continue
+
+    web_list = list(dict.fromkeys(web_list))
+
+    return web_list
 
 #source code taken from geeksforgeeks.org
 def find_email(email):
@@ -1156,8 +1186,7 @@ def link_scanner(url):
 
             try:
                 result = str(final.text)
-                web_list = find_url(result)
-                web_list = set(web_list)
+                web_list = find_url(result, output)
 
             except:
                 print("ERROR!")
