@@ -104,24 +104,28 @@ def find_url(string, output):
     start_href = "href=\""
     end_href = "\""
 
-    for i in range(0, len(result)):
-        try:
-            index_1 = result.index(start_href, i, len(result))
-            index_2 = result.index(end_href, (index_1 + 6) , len(result))
-            
-            super_result = result[index_1 + len(start_href) + 0: index_2]
+    if "href=\"" in result:
+        for i in range(0, len(result)):
+            try:
+                index_1 = result.index(start_href, i, len(result))
+                index_2 = result.index(end_href, (index_1 + 6) , len(result))
+                
+                super_result = result[index_1 + len(start_href) + 0: index_2]
 
-            if "http://" in super_result or "https://" in super_result:
-                web_list.append(super_result)
+                if "http://" in super_result or "https://" in super_result:
+                    web_list.append(super_result)
 
-            else:
-                super_result = output + "/" + super_result
-                web_list.append(super_result)
+                else:
+                    super_result = output + "/" + super_result
+                    web_list.append(super_result)
 
-        except:
-            continue
+            except:
+                continue
 
-    web_list = list(dict.fromkeys(web_list))
+        web_list = list(dict.fromkeys(web_list))
+
+    if "href=\"" not in result:
+        print("ERROR: no url found!")
 
     return web_list
 
