@@ -825,7 +825,7 @@ def network_mapper_1(ip):
             try:
                 host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(0.1)
+                sock.settimeout(1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -860,7 +860,7 @@ def network_mapper_2(ip):
             try:
                 host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(0.1)
+                sock.settimeout(1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -895,7 +895,7 @@ def network_mapper_3(ip):
             try:
                 host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(0.1)
+                sock.settimeout(1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -930,7 +930,7 @@ def network_mapper_4(ip):
             try:
                 host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(0.1)
+                sock.settimeout(1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -965,7 +965,7 @@ def network_mapper_5(ip):
             try:
                 host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(0.1)
+                sock.settimeout(1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -1000,7 +1000,7 @@ def network_mapper_6(ip):
             try:
                 host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(0.1)
+                sock.settimeout(1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -1035,7 +1035,7 @@ def network_mapper_7(ip):
             try:
                 host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(0.1)
+                sock.settimeout(1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -1070,7 +1070,7 @@ def network_mapper_8(ip):
             try:
                 host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(0.1)
+                sock.settimeout(1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -1105,7 +1105,7 @@ def network_mapper_9(ip):
             try:
                 host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(0.1)
+                sock.settimeout(1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -1140,7 +1140,7 @@ def network_mapper_10(ip):
             try:
                 host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(0.1)
+                sock.settimeout(1)
                 sock.connect((host, 80))
                 sock.close()
 
