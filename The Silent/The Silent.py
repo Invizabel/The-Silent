@@ -817,15 +817,15 @@ def port_scanner(host):
     return socket_list
 
 #scans the local network for hosts
-def network_mapper_1():
+def network_mapper_1(ip):
     host_list = []
 
     for i in range(0, 25):
         for j in range(0, 256):
             try:
-                host = "192.168." + str(i) + "." + str(j)
+                host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(1)
+                sock.settimeout(0.1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -852,15 +852,15 @@ def network_mapper_1():
                 continue
                 
 #scans the local network for hosts
-def network_mapper_2():
+def network_mapper_2(ip):
     host_list = []
 
     for i in range(25, 50):
         for j in range(0, 256):
             try:
-                host = "192.168." + str(i) + "." + str(j)
+                host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(1)
+                sock.settimeout(0.1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -887,15 +887,15 @@ def network_mapper_2():
                 continue
                 
 #scans the local network for hosts
-def network_mapper_3():
+def network_mapper_3(ip):
     host_list = []
 
     for i in range(50, 75):
         for j in range(0, 256):
             try:
-                host = "192.168." + str(i) + "." + str(j)
+                host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(1)
+                sock.settimeout(0.1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -922,15 +922,15 @@ def network_mapper_3():
                 continue
                 
 #scans the local network for hosts
-def network_mapper_4():
+def network_mapper_4(ip):
     host_list = []
 
     for i in range(75, 100):
         for j in range(0, 256):
             try:
-                host = "192.168." + str(i) + "." + str(j)
+                host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(1)
+                sock.settimeout(0.1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -957,15 +957,15 @@ def network_mapper_4():
                 continue
                 
 #scans the local network for hosts
-def network_mapper_5():
+def network_mapper_5(ip):
     host_list = []
 
     for i in range(100, 125):
         for j in range(0, 256):
             try:
-                host = "192.168." + str(i) + "." + str(j)
+                host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(1)
+                sock.settimeout(0.1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -992,15 +992,15 @@ def network_mapper_5():
                 continue
                 
 #scans the local network for hosts
-def network_mapper_6():
+def network_mapper_6(ip):
     host_list = []
 
     for i in range(125, 150):
         for j in range(0, 256):
             try:
-                host = "192.168." + str(i) + "." + str(j)
+                host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(1)
+                sock.settimeout(0.1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -1027,15 +1027,15 @@ def network_mapper_6():
                 continue
                 
 #scans the local network for hosts
-def network_mapper_7():
+def network_mapper_7(ip):
     host_list = []
 
     for i in range(150, 175):
         for j in range(0, 256):
             try:
-                host = "192.168." + str(i) + "." + str(j)
+                host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(1)
+                sock.settimeout(0.1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -1062,15 +1062,15 @@ def network_mapper_7():
                 continue
         
 #scans the local network for hosts
-def network_mapper_8():
+def network_mapper_8(ip):
     host_list = []
 
     for i in range(175, 200):
         for j in range(0, 256):
             try:
-                host = "192.168." + str(i) + "." + str(j)
+                host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(1)
+                sock.settimeout(0.1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -1097,15 +1097,15 @@ def network_mapper_8():
                 continue
                 
 #scans the local network for hosts
-def network_mapper_9():
+def network_mapper_9(ip):
     host_list = []
 
     for i in range(200, 225):
         for j in range(0, 256):
             try:
-                host = "192.168." + str(i) + "." + str(j)
+                host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(1)
+                sock.settimeout(0.1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -1132,15 +1132,15 @@ def network_mapper_9():
                 continue
                 
 #scans the local network for hosts
-def network_mapper_10():
+def network_mapper_10(ip):
     host_list = []
 
     for i in range(225, 256):
         for j in range(0, 256):
             try:
-                host = "192.168." + str(i) + "." + str(j)
+                host = ip + "." + str(i) + "." + str(j)
                 sock = socket.socket()
-                sock.settimeout(1)
+                sock.settimeout(0.1)
                 sock.connect((host, 80))
                 sock.close()
 
@@ -2545,36 +2545,44 @@ while True:
     if user_input == "16":
         os.system("clear")
 
+        ip = input("Enter first two numbers of ip address (default = 192.168): ")
+
+        if ip == "":
+            ip = ("192.168",)
+
+        else:
+            ip = (ip,)
+
         print("Scanning...\n")
 
-        thread_1 = threading.Thread(name = "network_mapper_1", target = network_mapper_1)
+        thread_1 = threading.Thread(name = "network_mapper_1", target = network_mapper_1, args = ip)
         thread_1.start()
 
-        thread_2 = threading.Thread(name = "network_mapper_2", target = network_mapper_2)
+        thread_2 = threading.Thread(name = "network_mapper_2", target = network_mapper_2, args = ip)
         thread_2.start()
 
-        thread_3 = threading.Thread(name = "network_mapper_3", target = network_mapper_3)
+        thread_3 = threading.Thread(name = "network_mapper_3", target = network_mapper_3, args = ip)
         thread_3.start()
 
-        thread_4 = threading.Thread(name = "network_mapper_4", target = network_mapper_4)
+        thread_4 = threading.Thread(name = "network_mapper_4", target = network_mapper_4, args = ip)
         thread_4.start()
 
-        thread_5 = threading.Thread(name = "network_mapper_5", target = network_mapper_5)
+        thread_5 = threading.Thread(name = "network_mapper_5", target = network_mapper_5, args = ip)
         thread_5.start()
 
-        thread_6 = threading.Thread(name = "network_mapper_6", target = network_mapper_6)
+        thread_6 = threading.Thread(name = "network_mapper_6", target = network_mapper_6, args = ip)
         thread_6.start()
 
-        thread_7 = threading.Thread(name = "network_mapper_7", target = network_mapper_7)
+        thread_7 = threading.Thread(name = "network_mapper_7", target = network_mapper_7, args = ip)
         thread_7.start()
 
-        thread_8 = threading.Thread(name = "network_mapper_8", target = network_mapper_8)
+        thread_8 = threading.Thread(name = "network_mapper_8", target = network_mapper_8, args = ip)
         thread_8.start()
 
-        thread_9 = threading.Thread(name = "network_mapper_9", target = network_mapper_9)
+        thread_9 = threading.Thread(name = "network_mapper_9", target = network_mapper_9, args = ip)
         thread_9.start()
 
-        thread_10 = threading.Thread(name = "network_mapper_10", target = network_mapper_10)
+        thread_10 = threading.Thread(name = "network_mapper_10", target = network_mapper_10, args = ip)
         thread_10.start()
 
         thread_1.join()
