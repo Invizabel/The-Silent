@@ -820,7 +820,7 @@ def port_scanner(host):
 def network_mapper_1(ip):
     host_list = []
 
-    for i in range(0, 25):
+    for i in range(0, 5):
         for j in range(0, 256):
             try:
                 host = ip + "." + str(i) + "." + str(j)
@@ -855,7 +855,7 @@ def network_mapper_1(ip):
 def network_mapper_2(ip):
     host_list = []
 
-    for i in range(25, 50):
+    for i in range(5, 10):
         for j in range(0, 256):
             try:
                 host = ip + "." + str(i) + "." + str(j)
@@ -890,7 +890,7 @@ def network_mapper_2(ip):
 def network_mapper_3(ip):
     host_list = []
 
-    for i in range(50, 75):
+    for i in range(10, 15):
         for j in range(0, 256):
             try:
                 host = ip + "." + str(i) + "." + str(j)
@@ -925,7 +925,7 @@ def network_mapper_3(ip):
 def network_mapper_4(ip):
     host_list = []
 
-    for i in range(75, 100):
+    for i in range(15, 20):
         for j in range(0, 256):
             try:
                 host = ip + "." + str(i) + "." + str(j)
@@ -960,7 +960,7 @@ def network_mapper_4(ip):
 def network_mapper_5(ip):
     host_list = []
 
-    for i in range(100, 125):
+    for i in range(20, 25):
         for j in range(0, 256):
             try:
                 host = ip + "." + str(i) + "." + str(j)
@@ -995,7 +995,7 @@ def network_mapper_5(ip):
 def network_mapper_6(ip):
     host_list = []
 
-    for i in range(125, 150):
+    for i in range(25, 30):
         for j in range(0, 256):
             try:
                 host = ip + "." + str(i) + "." + str(j)
@@ -1030,7 +1030,7 @@ def network_mapper_6(ip):
 def network_mapper_7(ip):
     host_list = []
 
-    for i in range(150, 175):
+    for i in range(30, 35):
         for j in range(0, 256):
             try:
                 host = ip + "." + str(i) + "." + str(j)
@@ -1065,7 +1065,7 @@ def network_mapper_7(ip):
 def network_mapper_8(ip):
     host_list = []
 
-    for i in range(175, 200):
+    for i in range(35, 40):
         for j in range(0, 256):
             try:
                 host = ip + "." + str(i) + "." + str(j)
@@ -1100,7 +1100,7 @@ def network_mapper_8(ip):
 def network_mapper_9(ip):
     host_list = []
 
-    for i in range(200, 225):
+    for i in range(40, 45):
         for j in range(0, 256):
             try:
                 host = ip + "." + str(i) + "." + str(j)
@@ -1135,7 +1135,1442 @@ def network_mapper_9(ip):
 def network_mapper_10(ip):
     host_list = []
 
-    for i in range(225, 256):
+    for i in range(45, 50):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_11(ip):
+    host_list = []
+
+    for i in range(50, 55):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_12(ip):
+    host_list = []
+
+    for i in range(55, 60):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_13(ip):
+    host_list = []
+
+    for i in range(60, 65):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_14(ip):
+    host_list = []
+
+    for i in range(65, 70):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_15(ip):
+    host_list = []
+
+    for i in range(70, 75):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_16(ip):
+    host_list = []
+
+    for i in range(75, 80):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_17(ip):
+    host_list = []
+
+    for i in range(80, 85):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_18(ip):
+    host_list = []
+
+    for i in range(85, 90):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_19(ip):
+    host_list = []
+
+    for i in range(90, 95):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_20(ip):
+    host_list = []
+
+    for i in range(95, 100):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_21(ip):
+    host_list = []
+
+    for i in range(100, 105):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_22(ip):
+    host_list = []
+
+    for i in range(105, 110):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_23(ip):
+    host_list = []
+
+    for i in range(110, 115):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_24(ip):
+    host_list = []
+
+    for i in range(115, 120):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_25(ip):
+    host_list = []
+
+    for i in range(120, 125):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_26(ip):
+    host_list = []
+
+    for i in range(125, 130):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_27(ip):
+    host_list = []
+
+    for i in range(130, 135):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_28(ip):
+    host_list = []
+
+    for i in range(135, 140):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_29(ip):
+    host_list = []
+
+    for i in range(140, 145):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_30(ip):
+    host_list = []
+
+    for i in range(145, 150):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_31(ip):
+    host_list = []
+
+    for i in range(150, 155):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_32(ip):
+    host_list = []
+
+    for i in range(155, 160):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_33(ip):
+    host_list = []
+
+    for i in range(160, 165):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_34(ip):
+    host_list = []
+
+    for i in range(165, 170):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_35(ip):
+    host_list = []
+
+    for i in range(170, 175):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_36(ip):
+    host_list = []
+
+    for i in range(175, 180):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_37(ip):
+    host_list = []
+
+    for i in range(180, 185):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_38(ip):
+    host_list = []
+
+    for i in range(185, 190):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_39(ip):
+    host_list = []
+
+    for i in range(190, 195):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_40(ip):
+    host_list = []
+
+    for i in range(195, 200):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_41(ip):
+    host_list = []
+
+    for i in range(200, 205):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_42(ip):
+    host_list = []
+
+    for i in range(205, 210):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_43(ip):
+    host_list = []
+
+    for i in range(210, 215):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_44(ip):
+    host_list = []
+
+    for i in range(215, 220):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_45(ip):
+    host_list = []
+
+    for i in range(220, 225):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_46(ip):
+    host_list = []
+
+    for i in range(225, 230):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_47(ip):
+    host_list = []
+
+    for i in range(230, 235):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_48(ip):
+    host_list = []
+
+    for i in range(235, 240):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_49(ip):
+    host_list = []
+
+    for i in range(240, 245):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_50(ip):
+    host_list = []
+
+    for i in range(245, 250):
+        for j in range(0, 256):
+            try:
+                host = ip + "." + str(i) + "." + str(j)
+                sock = socket.socket()
+                sock.settimeout(1)
+                sock.connect((host, 80))
+                sock.close()
+
+                output = "http://" + host
+
+                url = requests.get(output, verify = False)
+        
+                header = list(url.headers.items())
+                header.sort()
+
+                url.close()
+
+                print(host + " === " + str(header) + "\n")
+
+                host_list.append(host + " === " + str(header))
+
+            except ConnectionRefusedError:
+                continue
+
+            except OSError:
+                continue
+
+            except TimeoutError:
+                continue
+
+#scans the local network for hosts
+def network_mapper_51(ip):
+    host_list = []
+
+    for i in range(250, 256):
         for j in range(0, 256):
             try:
                 host = ip + "." + str(i) + "." + str(j)
@@ -2585,6 +4020,129 @@ while True:
         thread_10 = threading.Thread(name = "network_mapper_10", target = network_mapper_10, args = ip)
         thread_10.start()
 
+        thread_11 = threading.Thread(name = "network_mapper_11", target = network_mapper_11, args = ip)
+        thread_11.start()
+
+        thread_12 = threading.Thread(name = "network_mapper_12", target = network_mapper_12, args = ip)
+        thread_12.start()
+
+        thread_13 = threading.Thread(name = "network_mapper_13", target = network_mapper_13, args = ip)
+        thread_13.start()
+
+        thread_14 = threading.Thread(name = "network_mapper_14", target = network_mapper_14, args = ip)
+        thread_14.start()
+
+        thread_15 = threading.Thread(name = "network_mapper_15", target = network_mapper_15, args = ip)
+        thread_15.start()
+
+        thread_16 = threading.Thread(name = "network_mapper_16", target = network_mapper_16, args = ip)
+        thread_16.start()
+
+        thread_17 = threading.Thread(name = "network_mapper_17", target = network_mapper_17, args = ip)
+        thread_17.start()
+
+        thread_18 = threading.Thread(name = "network_mapper_18", target = network_mapper_18, args = ip)
+        thread_18.start()
+
+        thread_19 = threading.Thread(name = "network_mapper_19", target = network_mapper_19, args = ip)
+        thread_19.start()
+
+        thread_20 = threading.Thread(name = "network_mapper_20", target = network_mapper_20, args = ip)
+        thread_20.start()
+
+        thread_21 = threading.Thread(name = "network_mapper_21", target = network_mapper_21, args = ip)
+        thread_21.start()
+
+        thread_22 = threading.Thread(name = "network_mapper_22", target = network_mapper_22, args = ip)
+        thread_22.start()
+
+        thread_23 = threading.Thread(name = "network_mapper_23", target = network_mapper_23, args = ip)
+        thread_23.start()
+
+        thread_24 = threading.Thread(name = "network_mapper_24", target = network_mapper_24, args = ip)
+        thread_24.start()
+
+        thread_25 = threading.Thread(name = "network_mapper_25", target = network_mapper_25, args = ip)
+        thread_25.start()
+
+        thread_26 = threading.Thread(name = "network_mapper_26", target = network_mapper_26, args = ip)
+        thread_26.start()
+
+        thread_27 = threading.Thread(name = "network_mapper_27", target = network_mapper_27, args = ip)
+        thread_27.start()
+
+        thread_28 = threading.Thread(name = "network_mapper_28", target = network_mapper_28, args = ip)
+        thread_28.start()
+
+        thread_29 = threading.Thread(name = "network_mapper_29", target = network_mapper_29, args = ip)
+        thread_29.start()
+
+        thread_30 = threading.Thread(name = "network_mapper_30", target = network_mapper_30, args = ip)
+        thread_30.start()
+
+        thread_31 = threading.Thread(name = "network_mapper_31", target = network_mapper_31, args = ip)
+        thread_31.start()
+
+        thread_32 = threading.Thread(name = "network_mapper_32", target = network_mapper_32, args = ip)
+        thread_32.start()
+
+        thread_33 = threading.Thread(name = "network_mapper_33", target = network_mapper_33, args = ip)
+        thread_33.start()
+
+        thread_34 = threading.Thread(name = "network_mapper_34", target = network_mapper_34, args = ip)
+        thread_34.start()
+
+        thread_35 = threading.Thread(name = "network_mapper_35", target = network_mapper_35, args = ip)
+        thread_35.start()
+
+        thread_36 = threading.Thread(name = "network_mapper_36", target = network_mapper_36, args = ip)
+        thread_36.start()
+
+        thread_37 = threading.Thread(name = "network_mapper_37", target = network_mapper_37, args = ip)
+        thread_37.start()
+
+        thread_38 = threading.Thread(name = "network_mapper_38", target = network_mapper_38, args = ip)
+        thread_38.start()
+
+        thread_39 = threading.Thread(name = "network_mapper_39", target = network_mapper_39, args = ip)
+        thread_39.start()
+
+        thread_40 = threading.Thread(name = "network_mapper_40", target = network_mapper_40, args = ip)
+        thread_40.start()
+
+        thread_41 = threading.Thread(name = "network_mapper_41", target = network_mapper_41, args = ip)
+        thread_41.start()
+
+        thread_42 = threading.Thread(name = "network_mapper_42", target = network_mapper_42, args = ip)
+        thread_42.start()
+
+        thread_43 = threading.Thread(name = "network_mapper_43", target = network_mapper_43, args = ip)
+        thread_43.start()
+
+        thread_44 = threading.Thread(name = "network_mapper_44", target = network_mapper_44, args = ip)
+        thread_44.start()
+
+        thread_45 = threading.Thread(name = "network_mapper_45", target = network_mapper_45, args = ip)
+        thread_45.start()
+
+        thread_46 = threading.Thread(name = "network_mapper_46", target = network_mapper_46, args = ip)
+        thread_46.start()
+
+        thread_47 = threading.Thread(name = "network_mapper_47", target = network_mapper_47, args = ip)
+        thread_47.start()
+
+        thread_48 = threading.Thread(name = "network_mapper_48", target = network_mapper_48, args = ip)
+        thread_48.start()
+
+        thread_49 = threading.Thread(name = "network_mapper_49", target = network_mapper_49, args = ip)
+        thread_49.start()
+
+        thread_50 = threading.Thread(name = "network_mapper_50", target = network_mapper_50, args = ip)
+        thread_50.start()
+
+        thread_51 = threading.Thread(name = "network_mapper_51", target = network_mapper_51, args = ip)
+        thread_51.start()
+        
         thread_1.join()
         thread_2.join()
         thread_3.join()
@@ -2595,6 +4153,47 @@ while True:
         thread_8.join()
         thread_9.join()
         thread_10.join()
+        thread_11.join()
+        thread_12.join()
+        thread_13.join()
+        thread_14.join()
+        thread_15.join()
+        thread_16.join()
+        thread_17.join()
+        thread_18.join()
+        thread_19.join()
+        thread_20.join()
+        thread_21.join()
+        thread_22.join()
+        thread_23.join()
+        thread_24.join()
+        thread_25.join()
+        thread_26.join()
+        thread_27.join()
+        thread_28.join()
+        thread_29.join()
+        thread_30.join()
+        thread_31.join()
+        thread_32.join()
+        thread_33.join()
+        thread_34.join()
+        thread_35.join()
+        thread_36.join()
+        thread_37.join()
+        thread_38.join()
+        thread_39.join()
+        thread_40.join()
+        thread_41.join()
+        thread_42.join()
+        thread_43.join()
+        thread_44.join()
+        thread_45.join()
+        thread_46.join()
+        thread_47.join()
+        thread_48.join()
+        thread_49.join()
+        thread_50.join()
+        thread_51.join()
 
         print("Done!")
 
