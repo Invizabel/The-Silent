@@ -30,6 +30,8 @@ import codecs
 import hashlib
 import itertools
 import math
+import matplotlib.pyplot as plt
+import numpy as np
 import os
 import random
 import re
@@ -763,6 +765,48 @@ def log_server_stats(website):
 
     url.close()
     file.close
+
+#generates list of server names
+def generate_server_list(maximum):
+    os.system("clear")
+
+    domain_list = [".co.uk", ".com", ".es", ".fr", ".gov", ".net", ".onion", ".org", ".tv"]
+    server_list = []
+    
+    dictionary = "0123456789abcdefghijklmnopqrstuvwxyz"
+
+    for i in range (1, maximum):
+        for ii in itertools.product(dictionary, repeat = i):
+            compute = ''.join(ii)
+            for iii in domain_list:
+                output = "https://" + compute + iii
+
+                print(output)
+            
+                try:
+                    url = web_session.get(output, verify = False, headers = user_agent, proxies = tor_proxy, timeout = 5)
+
+                    web = list(url.headers.items())
+                    web.sort()
+
+                    for i in web:
+                        request_string = str(i)
+                        clean_1 = request_string.replace("(", "")
+                        clean_2 = clean_1.replace(")", "")
+                        clean_3 = clean_2.replace(",", ":")
+                        result = clean_3.replace("'", "")
+                        result = result.lower()
+
+                        if "server:" in result:
+                            print(result)
+                            server_list.append(result)
+
+                    url.close()
+
+                except:
+                    continue
+
+    return server_list
 
 #port scanner
 def port_scanner(host):
@@ -3879,7 +3923,7 @@ def file_finder(file, directory):
 #mainloop
 while True:
     os.system("clear")
-    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\n17 = twitter\n18 = security questions\ne = exit\n")
+    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\n17 = twitter\n18 = security questions\n19 = generate list of server names\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -4240,6 +4284,45 @@ while True:
         print("Done!")
 
         pause = input()
+
+    if user_input == "19":
+        os.system("clear")
+
+        length = int(input("Enter length of domain: "))
+
+        apple = 0
+        debian = 0
+        freebsd = 0
+        microsoft = 0
+        openbsd = 0
+        ubuntu = 0
+
+        my_list = generate_server_list(length + 1)
+        print(my_list)
+
+        for i in my_list:
+            if "apple" in i:
+                apple += 1
+
+            if "debian" in i:
+                debian += 1
+
+            if "freebsd" in i:
+                freebsd += 1
+
+            if "microsoft" in i:
+                microsoft += 1
+
+            if "openbsd" in i:
+                openbsd += 1
+
+            if "ubuntu" in i:
+                ubuntu += 1
+
+        graph = np.array([apple,debian,freebsd,microsoft,openbsd,ubuntu])
+        my_label = ["apple","debian","freebsd","microsoft","openbsd","ubuntu"]          
+        plt.pie(graph, labels = my_label)
+        plt.savefig("graph.png")
     
     if user_input == "e":
         exit()
