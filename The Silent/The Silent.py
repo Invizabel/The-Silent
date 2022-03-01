@@ -30,8 +30,6 @@ import codecs
 import hashlib
 import itertools
 import math
-import matplotlib.pyplot as plt
-import numpy as np
 import os
 import random
 import re
@@ -4286,6 +4284,9 @@ while True:
         pause = input()
 
     if user_input == "19":
+        import matplotlib.pyplot as plt
+        import numpy as np
+        
         os.system("clear")
 
         length = int(input("Enter length of domain: "))
