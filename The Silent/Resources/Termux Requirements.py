@@ -13,4 +13,6 @@ os.system("pip3 install -r twint.txt")
 os.system("pip install requests")
 os.system("pip install pysocks")
 
+os.system("pip install matplotlib")
+os.system("pip install pandas")
 os.system("pip install imagehash")
