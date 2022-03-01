@@ -784,7 +784,7 @@ def generate_server_list(maximum):
                 print(output)
             
                 try:
-                    url = web_session.get(output, verify = False, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                    url = web_session.get(output, verify = False, headers = user_agent, proxies = tor_proxy, timeout = 1)
 
                     web = list(url.headers.items())
                     web.sort()
