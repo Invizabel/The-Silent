@@ -4289,20 +4289,30 @@ while True:
         length = int(input("Enter length of domain: "))
 
         apple = 0
+        centos = 0
         debian = 0
+        fedora = 0
         freebsd = 0
         microsoft = 0
         openbsd = 0
+        rhel = 0
         ubuntu = 0
 
         my_list = generate_server_list(length + 1)
+        my_list.sort()
 
         for i in my_list:
             if "apple" in i:
                 apple += 1
 
+            if "centos" in i:
+                centos += 1
+
             if "debian" in i:
                 debian += 1
+
+            if "fedora" in i:
+                fedora += 1
 
             if "freebsd" in i:
                 freebsd += 1
@@ -4313,24 +4323,33 @@ while True:
             if "openbsd" in i:
                 openbsd += 1
 
+            if "red hat enterprise linux" in i:
+                rhel += 1
+
             if "ubuntu" in i:
                 ubuntu += 1
 
-        total_length = apple + debian + freebsd + microsoft + openbsd + ubuntu
+        total_length = apple + centos + debian + fedora + freebsd + microsoft + openbsd + rhel + ubuntu
 
         total_apple = (apple / total_length) * 100
+        total_centos = (centos / total_length) * 100
         total_debian = (debian / total_length) * 100
+        total_fedora = (fedora / total_length) * 100
         total_freebsd = (freebsd / total_length) * 100
         total_microsoft = (microsoft / total_length) * 100
         total_openbsd = (openbsd / total_length) * 100
+        total_rhel = (rhel / total_length) * 100
         total_ubuntu = (ubuntu / total_length) * 100
         
         os.system("clear")
         print("apple: " + str(total_apple) + "%")
+        print("centos: " + str(total_centos) + "%")
         print("debian: " + str(total_debian) + "%")
+        print("fedora: " + str(total_fedora) + "%")
         print("freebsd: " + str(total_freebsd) + "%")
         print("microsoft: " + str(total_microsoft) + "%")
         print("openbsd: " + str(total_openbsd) + "%")
+        print("red hat enterprise linux: " + str(total_rhel) + "%")
         print("ubuntu: " + str(total_ubuntu) + "%")
 
         pause = input()
