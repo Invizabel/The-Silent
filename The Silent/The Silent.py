@@ -4284,9 +4284,6 @@ while True:
         pause = input()
 
     if user_input == "19":
-        import matplotlib.pyplot as plt
-        import numpy as np
-        
         os.system("clear")
 
         length = int(input("Enter length of domain: "))
@@ -4299,7 +4296,6 @@ while True:
         ubuntu = 0
 
         my_list = generate_server_list(length + 1)
-        print(my_list)
 
         for i in my_list:
             if "apple" in i:
@@ -4320,10 +4316,24 @@ while True:
             if "ubuntu" in i:
                 ubuntu += 1
 
-        graph = np.array([apple,debian,freebsd,microsoft,openbsd,ubuntu])
-        my_label = ["apple","debian","freebsd","microsoft","openbsd","ubuntu"]          
-        plt.pie(graph, labels = my_label)
-        plt.savefig("graph.png")
+        total_length = apple + debian + freebsd + microsoft + openbsd + ubuntu
+
+        total_apple = apple / total_length
+        total_debian = debian / total_length
+        total_freebsd = freebsd / total_length
+        total_microsoft = microsoft / total_length
+        total_openbsd = openbsd / total_length
+        total_ubuntu = ubuntu / total_length
+        
+        
+        print("apple: " + str(total_apple) + "%")
+        print("debian: " + str(total_debian) + "%")
+        print("freebsd: " + str(total_freebsd) + "%")
+        print("microsoft: " + str(total_microsoft) + "%")
+        print("openbsd: " + str(total_openbsd) + "%")
+        print("ubuntu: " + str(total_ubuntu) + "%")
+
+        pause = input()
     
     if user_input == "e":
         exit()
