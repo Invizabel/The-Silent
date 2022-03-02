@@ -4318,14 +4318,14 @@ while True:
 
         total_length = apple + debian + freebsd + microsoft + openbsd + ubuntu
 
-        total_apple = apple / total_length
-        total_debian = debian / total_length
-        total_freebsd = freebsd / total_length
-        total_microsoft = microsoft / total_length
-        total_openbsd = openbsd / total_length
-        total_ubuntu = ubuntu / total_length
+        total_apple = (apple / total_length) * 100
+        total_debian = (debian / total_length) * 100
+        total_freebsd = (freebsd / total_length) * 100
+        total_microsoft = (microsoft / total_length) * 100
+        total_openbsd = (openbsd / total_length) * 100
+        total_ubuntu = (ubuntu / total_length) * 100
         
-        
+        os.system("clear")
         print("apple: " + str(total_apple) + "%")
         print("debian: " + str(total_debian) + "%")
         print("freebsd: " + str(total_freebsd) + "%")
