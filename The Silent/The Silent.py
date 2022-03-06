@@ -97,53 +97,37 @@ def find_url(string):
 	return [x[0] for x in url]
 '''
 
-def find_url(string, output):
-    result = string
+def find_url(result):
     web_list = []
 
-    start_http = "http://"
-    start_https = "https://"
-    end_url = "\""
+    https = "https://"
+    end_double = "\""
 
-    if "http://" in result:
+    if https in result and len(result) <= 1000000:
         for i in range(0, len(result)):
             try:
-                index_1 = result.index(start_http, i, len(result))
-                index_2 = result.index(end_url, (index_1 + 6) , len(result))
+                #print(i)
+                index_1 = result.index(https, i, len(result))
+                index_2 = result.index(end_double, (index_1 + 9) , len(result))
                 
-                super_result = result[index_1 + len(start_http) + 0: index_2]
+                super_result = result[index_1 + len(https) + 0: index_2]
 
-                if "http://" in super_result or "http://" in super_result:
-                    web_list.append(super_result)
+                x = super_result.split(" ", 1)
 
-                else:
-                    super_result = output + "/" + super_result
-                    web_list.append(super_result)
+                if len(x) > 1:
+                    for i in len(1, x):
+                        x.pop(i)
+                        x[0].replace("'","")
+                        x[0].replace("<","")
 
-            except:
-                continue
-
-    if "https://" in result:
-        for i in range(0, len(result)):
-            try:
-                index_1 = result.index(start_https, i, len(result))
-                index_2 = result.index(end_url, (index_1 + 6) , len(result))
-                
-                super_result = result[index_1 + len(start_https) + 0: index_2]
-
-                if "https://" in super_result or "https://" in super_result:
-                    web_list.append(super_result)
-
-                else:
-                    super_result = output + "/" + super_result
-                    web_list.append(super_result)
+                web_list.append("https://" + x[0])
 
             except:
                 continue
 
         web_list = list(dict.fromkeys(web_list))
 
-    if "http://" not in result and "https://" not in result:
+    if "https://" not in result and len(result) <= 1000000:
         print("ERROR: no url found!")
 
     return web_list
@@ -2689,7 +2673,7 @@ def link_scanner(url):
 
             try:
                 result = str(final.text)
-                web_list = find_url(result, output)
+                web_list = find_url(result)
 
             except:
                 print("ERROR!")
@@ -2715,7 +2699,7 @@ def link_scanner(url):
                     
         except requests.exceptions.SSLError:
             print("ERROR: invalid certificate!")
-            break
+            continue
 
         except requests.exceptions.ConnectionError:
             print("ERROR: connection error!")
@@ -2891,7 +2875,7 @@ def pdf():
     pdf = output
 
     if termux_tor_boolean == True or tor_boolean == True:
-        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
         
     if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
         data = web_session.get(pdf, stream = True, verify = valid_certificate, headers = user_agent, timeout = 5)
@@ -2927,7 +2911,7 @@ def html():
     output = secure + website
 
     if termux_tor_boolean == True or tor_boolean == True:
-        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy)
+        final = web_session.get(output, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
         
     if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
         final = web_session.get(output, verify = valid_certificate, headers = user_agent, timeout = 5)
@@ -3111,7 +3095,7 @@ def all_images():
             words = re.findall(r"\w+", html)
 
             for i in words:
-                if i == "jpg" or i == "jpeg" or i == "png":
+                if i == "jpg" or i == "jpeg" or i == "png" and sources_boolean == True:
                     sources_boolean = False
                     sources_string += "." + i
                     result = url + sources_string
