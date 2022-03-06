@@ -106,7 +106,6 @@ def find_url(result):
     if https in result and len(result) <= 1000000:
         for i in range(0, len(result)):
             try:
-                #print(i)
                 index_1 = result.index(https, i, len(result))
                 index_2 = result.index(end_double, (index_1 + 9) , len(result))
                 
@@ -2662,6 +2661,8 @@ def link_scanner(url):
 
     while True:
         try:
+            total_web_list = list(dict.fromkeys(total_web_list))
+            
             i += 1
             print(total_web_list[i])
 
@@ -2683,18 +2684,15 @@ def link_scanner(url):
                     domain_name = str(original_url) in j
 
                     if domain_name == True:
-                        total_web_list = list(dict.fromkeys(total_web_list))
                         total_web_list.append(j)
 
                 if user_input == "2":
-                    total_web_list = list(dict.fromkeys(total_web_list))
                     total_web_list.append(j)
 
                 if user_input == "3":
                     domain_name = str(specific_link) in j
 
                     if domain_name == True:
-                        total_web_list = list(dict.fromkeys(total_web_list))
                         total_web_list.append(j)
                     
         except requests.exceptions.SSLError:
@@ -2731,7 +2729,7 @@ def link_scanner(url):
     os.system("clear")
     total_web_list = list(dict.fromkeys(total_web_list))
     
-    total_web_list.sort
+    total_web_list.sort()
     
     return total_web_list
 
@@ -2802,7 +2800,7 @@ def email_scanner(url):
 
     os.system("clear")
     total_web_list = list(dict.fromkeys(total_web_list))
-    total_web_list.sort
+    total_web_list.sort()
 
     for i in email_list:
         if i not in super_result:
@@ -2812,8 +2810,8 @@ def email_scanner(url):
         if i not in super_web_result:
             super_web_result.append(i)
 
-    super_result.sort
-    super_web_result.sort
+    super_result.sort()
+    super_web_result.sort()
     
     return str(super_result) + "\n\n" + str(super_web_result)
 
