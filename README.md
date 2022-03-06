@@ -1,2 +1,2 @@
 # The-Silent
-# Python penetration testing and digital forensics multi tool!
+# Python penetration testing, osint, and digital forensics multi tool!
