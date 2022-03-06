@@ -101,18 +101,37 @@ def find_url(string, output):
     result = string
     web_list = []
 
-    start_href = "href=\""
-    end_href = "\""
+    start_http = "http://"
+    start_https = "https://"
+    end_url = "\""
 
-    if "href=\"" in result:
+    if "http://" in result:
         for i in range(0, len(result)):
             try:
-                index_1 = result.index(start_href, i, len(result))
-                index_2 = result.index(end_href, (index_1 + 6) , len(result))
+                index_1 = result.index(start_http, i, len(result))
+                index_2 = result.index(end_url, (index_1 + 6) , len(result))
                 
-                super_result = result[index_1 + len(start_href) + 0: index_2]
+                super_result = result[index_1 + len(start_http) + 0: index_2]
 
-                if "http://" in super_result or "https://" in super_result:
+                if "http://" in super_result or "http://" in super_result:
+                    web_list.append(super_result)
+
+                else:
+                    super_result = output + "/" + super_result
+                    web_list.append(super_result)
+
+            except:
+                continue
+
+    if "https://" in result:
+        for i in range(0, len(result)):
+            try:
+                index_1 = result.index(start_https, i, len(result))
+                index_2 = result.index(end_url, (index_1 + 6) , len(result))
+                
+                super_result = result[index_1 + len(start_https) + 0: index_2]
+
+                if "https://" in super_result or "https://" in super_result:
                     web_list.append(super_result)
 
                 else:
@@ -124,7 +143,7 @@ def find_url(string, output):
 
         web_list = list(dict.fromkeys(web_list))
 
-    if "href=\"" not in result:
+    if "http://" not in result and "https://" not in result:
         print("ERROR: no url found!")
 
     return web_list
@@ -2652,7 +2671,10 @@ def link_scanner(url):
     total_web_list = []
     total_web_list.append(output)
 
-    user_input = input("1 = domain links | 2 = all links\n")
+    user_input = input("1 = domain links | 2 = all links | 3 = specific link\n")
+
+    if user_input == "3":
+        specific_link = input("Enter specific link: ")
 
     while True:
         try:
@@ -2683,6 +2705,13 @@ def link_scanner(url):
                 if user_input == "2":
                     total_web_list = list(dict.fromkeys(total_web_list))
                     total_web_list.append(j)
+
+                if user_input == "3":
+                    domain_name = str(specific_link) in j
+
+                    if domain_name == True:
+                        total_web_list = list(dict.fromkeys(total_web_list))
+                        total_web_list.append(j)
                     
         except requests.exceptions.SSLError:
             print("ERROR: invalid certificate!")
