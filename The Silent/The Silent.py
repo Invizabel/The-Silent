@@ -2664,7 +2664,6 @@ def link_scanner(url):
             total_web_list = list(dict.fromkeys(total_web_list))
             
             i += 1
-            print(total_web_list[i])
 
             if termux_tor_boolean == True or tor_boolean == True:
                 final = web_session.get(total_web_list[i], verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
@@ -2672,28 +2671,35 @@ def link_scanner(url):
             if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
                 final = web_session.get(total_web_list[i], verify = valid_certificate, headers = user_agent, timeout = 5)
 
-            try:
-                result = str(final.text)
-                web_list = find_url(result)
+            found = str(final.status_code)
 
-            except:
-                print("ERROR!")
+            if found == "200":
+                try:
+                    print(total_web_list[i])
+                    result = str(final.text)
+                    web_list = find_url(result)
 
-            for j in web_list:
-                if user_input == "1":
-                    domain_name = str(original_url) in j
+                except:
+                    print("ERROR!")
 
-                    if domain_name == True:
+                for j in web_list:
+                    if user_input == "1":
+                        domain_name = str(original_url) in j
+
+                        if domain_name == True:
+                            total_web_list.append(j)
+
+                    if user_input == "2":
                         total_web_list.append(j)
 
-                if user_input == "2":
-                    total_web_list.append(j)
+                    if user_input == "3":
+                        domain_name = str(specific_link) in j
 
-                if user_input == "3":
-                    domain_name = str(specific_link) in j
+                        if domain_name == True:
+                            total_web_list.append(j)
 
-                    if domain_name == True:
-                        total_web_list.append(j)
+            else:
+                continue
                     
         except requests.exceptions.SSLError:
             print("ERROR: invalid certificate!")
@@ -3071,13 +3077,10 @@ def all_images():
         except requests.exceptions.ReadTimeout:
             print("ERROR: read timeout!")
             continue
-
-    
+        
     sources_boolean = False
     sources_list = []
     sources_string = ""
-
-    super_sources_list = []
 
     for j in website:
         try:
@@ -3093,12 +3096,13 @@ def all_images():
             words = re.findall(r"\w+", html)
 
             for i in words:
-                if i == "jpg" or i == "jpeg" or i == "png" and sources_boolean == True:
-                    sources_boolean = False
-                    sources_string += "." + i
-                    result = url + sources_string
-                    sources_list.append("https://" + result)
-                    sources_string = ""
+                if i == "jpg" or i == "jpeg" or i == "png":
+                    if sources_boolean == True:
+                        sources_boolean = False
+                        sources_string += "." + i
+                        result = url + sources_string
+                        sources_list.append("https://" + result)
+                        sources_string = ""
 
                 if sources_boolean == True:
                     sources_string = sources_string + "/" + i
@@ -3134,51 +3138,10 @@ def all_images():
         except requests.exceptions.ReadTimeout:
             print("ERROR: read timeout!")
             continue
+        
+    sources_list = list(dict.fromkeys(sources_list))
 
     for i in sources_list:
-        try:
-            if termux_tor_boolean == True or tor_boolean == True:
-                final = web_session.get(i, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
-                        
-            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                final = web_session.get(i, verify = valid_certificate, headers = user_agent, timeout = 5)
-                
-            file_found = final.status_code
-
-            if file_found == 200:
-                super_sources_list.append(i)
-
-        except requests.exceptions.SSLError:
-            print("ERROR: invalid certificate!")
-            break
-
-        except requests.exceptions.ConnectTimeout:
-            print("ERROR: connect timeout!")
-            continue
-
-        except requests.exceptions.ConnectionError:
-            print("ERROR: connection error!")
-            continue
-        
-        except requests.exceptions.InvalidSchema:
-            print("ERROR: invalid schema!")
-            continue
-
-        except requests.exceptions.InvalidURL:
-            print("ERROR: invalid url!")
-            continue
-
-        except requests.exceptions.MissingSchema:
-            print("ERROR: missing schema!")
-            continue
-
-        except requests.exceptions.ReadTimeout:
-            print("ERROR: read timeout!")
-            continue
-
-    super_sources_list = list(dict.fromkeys(super_sources_list))
-
-    for i in super_sources_list:
         jpeg = ".jpeg" in i
         jpg = ".jpg" in i
         png = ".png" in i
