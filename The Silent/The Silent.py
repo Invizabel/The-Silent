@@ -2653,6 +2653,7 @@ def link_scanner(url):
     output = https_string + url
     total_web_list = []
     total_web_list.append(output)
+    result_list = []
 
     user_input = input("1 = domain links | 2 = all links | 3 = specific link\n")
 
@@ -2688,15 +2689,18 @@ def link_scanner(url):
 
                         if domain_name == True:
                             total_web_list.append(j)
+                            result_list.append(j)
 
                     if user_input == "2":
                         total_web_list.append(j)
+                        result_list.append(j)
 
                     if user_input == "3":
                         domain_name = str(specific_link) in j
 
                         if domain_name == True:
                             total_web_list.append(j)
+                            result_list.append(j)
 
             else:
                 continue
@@ -2733,11 +2737,11 @@ def link_scanner(url):
             break
 
     os.system("clear")
-    total_web_list = list(dict.fromkeys(total_web_list))
+    result_list = list(dict.fromkeys(result_list))
     
-    total_web_list.sort()
+    result_list.sort()
     
-    return total_web_list
+    return result_list
 
 #scans for emails on website
 def email_scanner(url):
