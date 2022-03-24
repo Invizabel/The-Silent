@@ -2684,23 +2684,22 @@ def link_scanner(url):
                     print("ERROR!")
 
                 for j in web_list:
+                    result_list.append(j)
+                    
                     if user_input == "1":
                         domain_name = str(original_url) in j
 
                         if domain_name == True:
                             total_web_list.append(j)
-                            result_list.append(j)
-
+                            
                     if user_input == "2":
                         total_web_list.append(j)
-                        result_list.append(j)
 
                     if user_input == "3":
                         domain_name = str(specific_link) in j
 
                         if domain_name == True:
                             total_web_list.append(j)
-                            result_list.append(j)
 
             else:
                 continue
