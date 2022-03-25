@@ -2706,7 +2706,7 @@ def link_scanner(url):
                                 specific = str(specific_link) in k
 
                                 if specific == True:
-                                    result_list.append(j)
+                                    result_list.append(k)
 
             else:
                 continue
