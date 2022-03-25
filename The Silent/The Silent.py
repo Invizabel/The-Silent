@@ -2701,10 +2701,12 @@ def link_scanner(url):
 
                         if domain_name == True:
                             total_web_list.append(j)
-                            specific = str(specific_link) in j
 
-                            if specific == True:
-                                result_list.append(j)
+                            for k in web_list:
+                                specific = str(specific_link) in k
+
+                                if specific == True:
+                                    result_list.append(j)
 
             else:
                 continue
