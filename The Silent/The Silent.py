@@ -2655,7 +2655,7 @@ def link_scanner(url):
     total_web_list.append(output)
     result_list = []
 
-    user_input = input("1 = domain links | 2 = all links | 3 = specific link\n")
+    user_input = input("1 = search domain links | 2 = search all links | 3 = search for a specific link\n")
 
     if user_input == "3":
         specific_link = input("Enter specific link: ")
@@ -2684,22 +2684,27 @@ def link_scanner(url):
                     print("ERROR!")
 
                 for j in web_list:
-                    result_list.append(j)
                     
                     if user_input == "1":
                         domain_name = str(original_url) in j
 
                         if domain_name == True:
                             total_web_list.append(j)
+                            result_list.append(j)
                             
                     if user_input == "2":
                         total_web_list.append(j)
+                        result_list.append(j)
 
                     if user_input == "3":
-                        domain_name = str(specific_link) in j
+                        domain_name = str(original_url) in j
 
                         if domain_name == True:
                             total_web_list.append(j)
+                            specific = str(specific_link) in j
+
+                            if specific == True:
+                                result_list.append(j)
 
             else:
                 continue
