@@ -3190,40 +3190,15 @@ def all_data():
     global website
     os.system("clear")
     website = input("enter website:\n")
-    os.system("clear")
-    print("Downloading!")
+    
     start = time.time()
 
-    if https == True:
-        secure = "https://"
+    web_list = link_scanner(website)
 
-    if https == False:
-        secure = "http://"
-    
-    output = secure + website
-
-    if tor_boolean == True:
-        url = tor.get(output, verify = valid_certificate, headers = user_agent)
-        
-    if tor_boolean == False:
-        url = web_session.get(output, verify = valid_certificate, headers = user_agent)
-
-    if change_tor_boolean == True:
-        os.system("sudo service tor stop")
-        os.system("sudo service tor start")
-    
-    out = str(url.text)
-    web_list = find_url(out)
-    file = open(os.path.join("data/all data", website + ".html"), "w+")
-    file.write(url.text)
-    url.close()
-    file.close()
+    os.system("clear")
+    print("Downloading!")
 
     for i in web_list:
-        if change_tor_boolean == True:
-            os.system("sudo service tor stop")
-            os.system("sudo service tor start")
-        
         app = ".app" in i
         avi = ".avi" in i
         bat = ".bat" in i
@@ -3252,391 +3227,630 @@ def all_data():
 
         if app == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".app"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if app == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data","file " + str(count)  + ".app"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if avi == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+            
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".avi"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if avi == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".avi"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if bat == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".bat"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if bat == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".bat"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if cmd == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".cmd"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if cmd == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".cmd"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if css == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".css"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if css == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".css"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if doc == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".doc"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if doc == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".doc"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if docx == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".docx"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if docx == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".docx"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if exe == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".exe"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if exe == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".exe"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if gif == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".gif"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if gif == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".gif"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if html == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".html"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if html == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.get("data/all data", "file " + str(count)  + ".html"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jar == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jar"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jar == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jar"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if java == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".java"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if java == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".java"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jpeg == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jpeg == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jpeg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jpg == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jpg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jpg == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jpg"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jss == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jss"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if jss == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".jss"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if m4a == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".m4a"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if m4a == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".m4a"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if mp3 == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".mp3"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if mp3 == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".mp3"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if mp4 == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".mp4"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if mp4 == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".mp4"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if pdf == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".pdf"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if pdf == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".pdf"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if png == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".png"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if png == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".png"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if py == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".py"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if py == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".py"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if sh == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".sh"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if sh == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".sh"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if txt == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".txt"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if txt == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".txt"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if xml == True and y == True:
             count += 1
-            data_file = str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".xml"), "wb") as file_writer:
                 file_writer.write(data.content)
 
         if xml == True and y == False:
             count += 1
-            data_file = secure + str(i)
-            data = web_session.get(data_file, verify = valid_certificate, headers = user_agent)
+            file_link = secure + str(i)
+
+            if termux_tor_boolean == True or tor_boolean == True:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                            
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                data = web_session.get(file_link, verify = valid_certificate, headers = user_agent, timeout = 5)
 
             with open(os.path.join("data/all data", "file " + str(count)  + ".xml"), "wb") as file_writer:
                 file_writer.write(data.content)
 
     end = time.time()
     print("\nTime: " + str(end - start) + " seconds.")
-    url.close()
     pause = input()
 
 #password generator
