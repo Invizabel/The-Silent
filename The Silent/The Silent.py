@@ -27,6 +27,7 @@ from hashlib import *
 from itertools import *
 
 import codecs
+import gc
 import hashlib
 import itertools
 import math
@@ -2690,11 +2691,9 @@ def link_scanner(url):
 
                         if domain_name == True:
                             total_web_list.append(j)
-                            result_list.append(j)
                             
                     if user_input == "2":
                         total_web_list.append(j)
-                        result_list.append(j)
 
                     if user_input == "3":
                         domain_name = str(original_url) in j
@@ -2746,8 +2745,12 @@ def link_scanner(url):
     result_list = list(dict.fromkeys(result_list))
     
     result_list.sort()
-    
-    return result_list
+
+    if user_input == "1" or user_input == "2":
+        return total_web_list
+
+    if user_input == "3":
+        return result_list
 
 #scans for emails on website
 def email_scanner(url):
