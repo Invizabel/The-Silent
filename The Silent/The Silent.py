@@ -43,7 +43,7 @@ import time
 import threading
 import urllib3
 
-sys.setrecursionlimit(1000000)
+sys.setrecursionlimit(1000000000)
 
 #connect to tor
 tor_proxy = {"http": "socks5h://localhost:9050", "https": "socks5h://localhost:9050"}
