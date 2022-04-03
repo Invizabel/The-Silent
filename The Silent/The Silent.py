@@ -5,7 +5,7 @@
 #https://www.w3schools.com/python/gloss_python_check_string.asp
 #https://stackoverflow.com/questions/38015537/python-requests-exceptions-sslerror-dh-key-too-small
 #https://www.geeksforgeeks.org/create-a-directory-in-python/
-#https://stackoverflow.com/questions/7935972/writing-to-a-new-directory-in-python-without-changing-directory
+#https://stackoverflow.com/quezzstions/7935972/writing-to-a-new-directory-in-python-without-changing-directory
 #https://medium.com/@jasonrigden/using-tor-with-the-python-request-library-79015b2606cb
 #https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent
 #https://content-blockchain.org/research/testing-different-image-hash-functions/
@@ -20,6 +20,7 @@
 #https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/
 #https://stackoverflow.com/questions/67423037/python-extract-email-address-from-a-huge-string
 #https://www.geeksforgeeks.org/python-remove-after-substring-in-string/
+#https://www.tutorialspoint.com/python-program-to-check-for-url-in-a-string
 
 #import libraries
 from collections import *
@@ -42,8 +43,6 @@ import sys
 import time
 import threading
 import urllib3
-
-sys.setrecursionlimit(1000000000)
 
 #connect to tor
 tor_proxy = {"http": "socks5h://localhost:9050", "https": "socks5h://localhost:9050"}
@@ -101,6 +100,9 @@ def find_url(string):
 	return [x[0] for x in url]
 '''
 
+#find url in string
+#source code is my own solution https://github.com/Invizabel
+'''
 def find_url(result):
     web_list = []
 
@@ -134,7 +136,7 @@ def find_url(result):
         print("ERROR: no url found!")
 
     return web_list
-
+'''
 #source code taken from geeksforgeeks.org
 def find_email(email):
     result = False
@@ -2682,7 +2684,7 @@ def link_scanner(url):
                 try:
                     print(total_web_list[i])
                     result = str(final.text)
-                    web_list = find_url(result)
+                    web_list = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', result)
 
                 except:
                     print("ERROR!")
