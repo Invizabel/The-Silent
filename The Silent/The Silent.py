@@ -2685,6 +2685,8 @@ def link_scanner(url):
                     print(total_web_list[i])
                     result = str(final.text)
                     web_list = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', result)
+                    web_list = list(dict.fromkeys(web_list))
+                    web_list.sort()
 
                 except:
                     print("ERROR!")
