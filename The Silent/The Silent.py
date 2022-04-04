@@ -2697,22 +2697,58 @@ def link_scanner(url):
                         domain_name = str(original_url) in j
 
                         if domain_name == True:
-                            total_web_list.append(j)
+                            if "'" in j:
+                                j.split("'")
+                                total_web_list.append(j[0])
+
+                            if "<" in j:
+                                j.split("<")
+                                total_web_list.append(j[0])
+
+                            else:
+                                total_web_list.append(j)
                             
                     if user_input == "2":
-                        total_web_list.append(j)
+                        if "'" in j:
+                            j.split("'")
+                            total_web_list.append(j[0])
+
+                        if "<" in j:
+                            j.split("<")
+                            total_web_list.append(j[0])
+
+                        else:
+                            total_web_list.append(j)
 
                     if user_input == "3":
                         domain_name = str(original_url) in j
 
                         if domain_name == True:
-                            total_web_list.append(j)
+                            if "'" in j:
+                                j.split("'")
+                                total_web_list.append(j[0])
+
+                            if "<" in j:
+                                j.split("<")
+                                total_web_list.append(j[0])
+
+                            else:
+                                total_web_list.append(j)
 
                             for k in web_list:
                                 specific = str(specific_link) in k
 
                                 if specific == True:
-                                    result_list.append(k)
+                                    if "'" in k:
+                                        k.split("'")
+                                        total_web_list.append(k[0])
+
+                                    if "<" in k:
+                                        k.split("<")
+                                        total_web_list.append(k[0])
+
+                                    else:
+                                        total_web_list.append(k)
 
             else:
                 continue
