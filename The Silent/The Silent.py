@@ -2697,8 +2697,8 @@ def link_scanner(url):
                         domain_name = str(original_url) in j
 
                         if domain_name == True:
-                            if "'" in j:
-                                j.split("'")
+                            if "\'" in j:
+                                j.split("\'")
                                 total_web_list.append(j[0])
 
                             if "<" in j:
@@ -2717,8 +2717,8 @@ def link_scanner(url):
                                 total_web_list.append(j)
                             
                     if user_input == "2":
-                        if "'" in j:
-                            j.split("'")
+                        if "\'" in j:
+                            j.split("\'")
                             total_web_list.append(j[0])
 
                         if "<" in j:
@@ -2740,8 +2740,8 @@ def link_scanner(url):
                         domain_name = str(original_url) in j
 
                         if domain_name == True:
-                            if "'" in j:
-                                j.split("'")
+                            if "\'" in j:
+                                j.split("\'")
                                 total_web_list.append(j[0])
 
                             if "<" in j:
@@ -2763,8 +2763,8 @@ def link_scanner(url):
                                 specific = str(specific_link) in k
 
                                 if specific == True:
-                                    if "'" in k:
-                                        k.split("'")
+                                    if "\'" in k:
+                                        k.split("\'")
                                         result_list.append(k[0])
 
                                     if "<" in k:
