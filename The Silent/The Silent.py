@@ -2709,6 +2709,10 @@ def link_scanner(url):
                                 j.split("\\")
                                 total_web_list.append(j[0])
 
+                            if "href" in j:
+                                j.split("href")
+                                total_web_list.append(j[0])
+
                             else:
                                 total_web_list.append(j)
                             
@@ -2723,6 +2727,10 @@ def link_scanner(url):
 
                         if "\\" in j:
                             j.split("\\")
+                            total_web_list.append(j[0])
+
+                        if "href" in j:
+                            j.split("href")
                             total_web_list.append(j[0])
 
                         else:
@@ -2744,6 +2752,10 @@ def link_scanner(url):
                                 j.split("\\")
                                 total_web_list.append(j[0])
 
+                            if "href" in j:
+                                j.split("href")
+                                total_web_list.append(j[0])
+
                             else:
                                 total_web_list.append(j)
 
@@ -2762,6 +2774,10 @@ def link_scanner(url):
                                     if "\\" in k:
                                         k.split("\\")
                                         result_list.append(k[0])
+
+                                    if "href" in k:
+                                        k.split("href")
+                                        total_web_list.append(k[0])
 
                                     else:
                                         result_list.append(k)
