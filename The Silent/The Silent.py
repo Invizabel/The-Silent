@@ -23,9 +23,11 @@
 #https://www.tutorialspoint.com/python-program-to-check-for-url-in-a-string
 
 #import libraries
+from bs4 import BeautifulSoup
 from collections import *
 from hashlib import *
 from itertools import *
+from urllib.parse import urljoin
 
 import codecs
 import gc
@@ -2650,7 +2652,7 @@ def network_mapper_51(ip):
 
             except TimeoutError:
                 continue
-                
+
 #scans for hyperlinks
 def link_scanner(url):
     #variables
@@ -2846,6 +2848,36 @@ def link_scanner(url):
 
     if user_input == "3":
         return result_list
+
+#scans for sql injection vulnerabilities
+def sql_injection_scanner():
+    os.system("clear")
+    user_input = input("Enter url: ")
+    result = link_scanner(user_input)
+
+    os.system("clear")
+    print("Checking for vulnerabilities...")
+    
+    for url in result:
+        double_quotes_list = []
+
+        grab_forms = BeautifulSoup(web_session.get(url).content, "html.parser")
+        grab_forms.find_all("form")
+        grab_forms = str(grab_forms)
+
+        for i in range(len(grab_forms)):
+            double_quotes = grab_forms.find("\"", i, i + 1)
+            if double_quotes >= 0:
+                double_quotes_list.append(double_quotes)
+            
+
+        if len(double_quotes_list) % 2 == 0:
+            continue
+
+        else:
+            print("True: " + url)
+
+    print("Done!")
 
 #scans for emails on website
 def email_scanner(url):
@@ -4217,7 +4249,7 @@ def file_finder(file, directory):
 #mainloop
 while True:
     os.system("clear")
-    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\n17 = twitter\n18 = security questions\n19 = generate list of server names\ne = exit\n")
+    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\n17 = twitter\n18 = security questions\n19 = generate list of server names\n20 = sql injection scanner\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -4648,6 +4680,10 @@ while True:
         print("red hat enterprise linux: " + str(total_rhel) + "%")
         print("ubuntu: " + str(total_ubuntu) + "%")
 
+        pause = input()
+
+    if user_input == "20":
+        sql_injection_scanner()
         pause = input()
     
     if user_input == "e":
