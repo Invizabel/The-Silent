@@ -2825,6 +2825,10 @@ def link_scanner(url):
             print("ERROR: missing schema!")
             continue
 
+        except requests.exceptions.TooManyRedirects:
+            print("ERROR: too many redirects!")
+            continue
+
         except requests.exceptions.ReadTimeout:
             print("ERROR: read timeout!")
             continue
