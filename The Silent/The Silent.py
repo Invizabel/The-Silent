@@ -2859,23 +2859,56 @@ def sql_injection_scanner():
     print("Checking for vulnerabilities...")
     
     for url in result:
-        double_quotes_list = []
+        try:
+            double_quotes_list = []
 
-        grab_forms = BeautifulSoup(web_session.get(url).content, "html.parser")
-        grab_forms.find_all("form")
-        grab_forms = str(grab_forms)
+            grab_forms = BeautifulSoup(web_session.get(url).content, "html.parser")
+            grab_forms.find_all("form")
+            grab_forms = str(grab_forms)
 
-        for i in range(len(grab_forms)):
-            double_quotes = grab_forms.find("\"", i, i + 1)
-            if double_quotes >= 0:
-                double_quotes_list.append(double_quotes)
-            
+            for i in range(len(grab_forms)):
+                double_quotes = grab_forms.find("\"", i, i + 1)
+                if double_quotes >= 0:
+                    double_quotes_list.append(double_quotes)
+                
 
-        if len(double_quotes_list) % 2 == 0:
+            if len(double_quotes_list) % 2 == 0:
+                continue
+
+            else:
+                print("True: " + url)
+
+        except requests.exceptions.SSLError:
+            print("ERROR: invalid certificate!")
             continue
 
-        else:
-            print("True: " + url)
+        except requests.exceptions.ConnectionError:
+            print("ERROR: connection error!")
+            continue
+
+        except requests.exceptions.ConnectTimeout:
+            print("ERROR: connect timeout!")
+            continue
+
+        except requests.exceptions.InvalidSchema:
+            print("ERROR: invalid schema!")
+            continue
+
+        except requests.exceptions.InvalidURL:
+            print("ERROR: invalid url!")
+            continue
+
+        except requests.exceptions.MissingSchema:
+            print("ERROR: missing schema!")
+            continue
+
+        except requests.exceptions.TooManyRedirects:
+            print("ERROR: too many redirects!")
+            continue
+
+        except requests.exceptions.ReadTimeout:
+            print("ERROR: read timeout!")
+            continue
 
     print("Done!")
 
