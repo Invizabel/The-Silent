@@ -2850,67 +2850,70 @@ def link_scanner(url):
         return result_list
 
 #scans for sql injection vulnerabilities
-def sql_injection_scanner():
-    os.system("clear")
-    user_input = input("Enter url: ")
-    result = link_scanner(user_input)
-
-    os.system("clear")
-    print("Checking for vulnerabilities...")
-    
-    for url in result:
-        try:
-            double_quotes_list = []
-
-            grab_forms = BeautifulSoup(web_session.get(url).content, "html.parser")
-            grab_forms.find_all("form")
-            grab_forms = str(grab_forms)
-
-            for i in range(len(grab_forms)):
-                double_quotes = grab_forms.find("\"", i, i + 1)
-                if double_quotes >= 0:
-                    double_quotes_list.append(double_quotes)
+def get_forms(url):
+    soup = BeautifulSoup(web_session.get(url).content, "html.parser")
+    return soup.find_all("form")
+  
+  
+def form_details(form):
+    details_of_form = {}
+    action = form.attrs.get("action", "get").lower()
+    method = form.attrs.get("method", "get").lower()
+    inputs = []
+      
+    for input_tag in form.find_all("input"):
+        input_type = input_tag.attrs.get("type", "text")
+        input_name = input_tag.attrs.get("name")
+        input_value = input_tag.attrs.get("value", "")
+        inputs.append(
+            {"type": input_type, "name": input_name, "value": input_value}
+        )
+          
+    details_of_form["action"] = action
+    details_of_form["method"] = method
+    details_of_form["inputs"] = inputs
+    return details_of_form
+  
+  
+def vulnerable(response):
+    errors = {"quoted string not properly terminated",
+              "unclosed quotation mark after the character string", 
+              "you have an error in your sql syntax;"}
+      
+    for error in errors:
+        if error in response.content.decode().lower():
+            return True
+    return False
+  
+  
+def sql_injection_scanner(url):
+    forms = get_forms(url)
+    print(f"[+] Detected {len(forms)} forms on {url}.")
+      
+    for form in forms:
+        details = form_details(form)
+          
+        for c in "\"'":
+            data = {}
+              
+            for input_tag in details["inputs"]:
+                if input_tag["type"] == "hidden" or input_tag["value"]:
+                    data[input_tag["name"]] = input_tag["value"] + c
+                elif input_tag["type"] != "submit":
+                    data[input_tag["name"]] = f"test{c}"
+              
+            if details["method"] == "post":
+                res = web_session.post(url, data=data)
                 
+            elif details["method"] == "get":
+                res = web_session.get(url, params=data)
 
-            if len(double_quotes_list) % 2 == 0:
-                continue
+            if vulnerable(res):
+                print("SQL Injection attack vulnerability detected in link:", url)
 
             else:
-                print("True: " + url)
-
-        except requests.exceptions.SSLError:
-            print("ERROR: invalid certificate!")
-            continue
-
-        except requests.exceptions.ConnectionError:
-            print("ERROR: connection error!")
-            continue
-
-        except requests.exceptions.ConnectTimeout:
-            print("ERROR: connect timeout!")
-            continue
-
-        except requests.exceptions.InvalidSchema:
-            print("ERROR: invalid schema!")
-            continue
-
-        except requests.exceptions.InvalidURL:
-            print("ERROR: invalid url!")
-            continue
-
-        except requests.exceptions.MissingSchema:
-            print("ERROR: missing schema!")
-            continue
-
-        except requests.exceptions.TooManyRedirects:
-            print("ERROR: too many redirects!")
-            continue
-
-        except requests.exceptions.ReadTimeout:
-            print("ERROR: read timeout!")
-            continue
-
-    print("Done!")
+                print("No SQL Injection vulnerability detected")
+                break
 
 #scans for emails on website
 def email_scanner(url):
@@ -4716,7 +4719,10 @@ while True:
         pause = input()
 
     if user_input == "20":
-        sql_injection_scanner()
+        os.system("clear")
+        url = input("Enter url: ")
+        url = https_string + url
+        sql_injection_scanner(url)
         pause = input()
     
     if user_input == "e":
