@@ -2887,33 +2887,43 @@ def vulnerable(response):
   
   
 def sql_injection_scanner(url):
-    forms = get_forms(url)
-    print(f"[+] Detected {len(forms)} forms on {url}.")
+    vulnerable_list = []
+    result = link_scanner(url)
+
+    for i in result:
+        forms = get_forms(i)
+        print(f"[+] Detected {len(forms)} forms on {i}.")
       
-    for form in forms:
-        details = form_details(form)
-          
-        for c in "\"'":
-            data = {}
+        for form in forms:
+            details = form_details(form)
               
-            for input_tag in details["inputs"]:
-                if input_tag["type"] == "hidden" or input_tag["value"]:
-                    data[input_tag["name"]] = input_tag["value"] + c
-                elif input_tag["type"] != "submit":
-                    data[input_tag["name"]] = f"test{c}"
-              
-            if details["method"] == "post":
-                res = web_session.post(url, data=data)
+            for c in "\'":
+                data = {}
                 
-            elif details["method"] == "get":
-                res = web_session.get(url, params=data)
+                for input_tag in details["inputs"]:
+                    if input_tag["type"] == "hidden" or input_tag["value"]:
+                        data[input_tag["name"]] = input_tag["value"] + c
+                    elif input_tag["type"] != "submit":
+                        data[input_tag["name"]] = f"test{c}"
+                  
+                if details["method"] == "post":
+                    res = web_session.post(i, data=data)
+                    
+                elif details["method"] == "get":
+                    res = web_session.get(i, params=data)
 
-            if vulnerable(res):
-                print("SQL Injection attack vulnerability detected in link:", url)
+                if vulnerable(res):
+                    print("SQL Injection attack vulnerability detected in link:", i)
+                    vulnerable_list.append(i)
 
-            else:
-                print("No SQL Injection vulnerability detected")
-                break
+
+                else:
+                    print("No SQL Injection vulnerability detected")
+                    break
+
+    os.system("clear")
+
+    return vulnerable_list
 
 #scans for emails on website
 def email_scanner(url):
@@ -4721,8 +4731,8 @@ while True:
     if user_input == "20":
         os.system("clear")
         url = input("Enter url: ")
-        url = https_string + url
-        sql_injection_scanner(url)
+        print(sql_injection_scanner(url))
+        print("Done!")
         pause = input()
     
     if user_input == "e":
