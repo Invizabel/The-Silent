@@ -2851,7 +2851,33 @@ def link_scanner(url):
 
 #scans for sql injection vulnerabilities
 def get_forms(url):
-    soup = BeautifulSoup(web_session.get(url).content, "html.parser")
+    try:
+        soup = BeautifulSoup(web_session.get(url).content, "html.parser")
+
+    except requests.exceptions.SSLError:
+        print("ERROR: invalid certificate!")
+
+    except requests.exceptions.ConnectionError:
+        print("ERROR: connection error!")
+
+    except requests.exceptions.ConnectTimeout:
+        print("ERROR: connect timeout!")
+
+    except requests.exceptions.InvalidSchema:
+        print("ERROR: invalid schema!")
+
+    except requests.exceptions.InvalidURL:
+        print("ERROR: invalid url!")
+
+    except requests.exceptions.MissingSchema:
+        print("ERROR: missing schema!")
+        
+    except requests.exceptions.TooManyRedirects:
+        print("ERROR: too many redirects!")
+
+    except requests.exceptions.ReadTimeout:
+        print("ERROR: read timeout!")
+
     return soup.find_all("form")
   
   
@@ -2872,6 +2898,7 @@ def form_details(form):
     details_of_form["action"] = action
     details_of_form["method"] = method
     details_of_form["inputs"] = inputs
+
     return details_of_form
   
   
@@ -2883,7 +2910,9 @@ def vulnerable(response):
     for error in errors:
         if error in response.content.decode().lower():
             return True
-    return False
+
+        else:
+            return False
   
   
 def sql_injection_scanner(url):
