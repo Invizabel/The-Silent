@@ -2907,10 +2907,76 @@ def sql_injection_scanner(url):
                         data[input_tag["name"]] = f"test{c}"
                   
                 if details["method"] == "post":
-                    res = web_session.post(i, data=data)
+                    try:
+                        res = web_session.post(i, data=data)
+
+                    except requests.exceptions.SSLError:
+                        print("ERROR: invalid certificate!")
+                        continue
+
+                    except requests.exceptions.ConnectionError:
+                        print("ERROR: connection error!")
+                        continue
+
+                    except requests.exceptions.ConnectTimeout:
+                        print("ERROR: connect timeout!")
+                        continue
+
+                    except requests.exceptions.InvalidSchema:
+                        print("ERROR: invalid schema!")
+                        continue
+
+                    except requests.exceptions.InvalidURL:
+                        print("ERROR: invalid url!")
+                        continue
+
+                    except requests.exceptions.MissingSchema:
+                        print("ERROR: missing schema!")
+                        continue
+
+                    except requests.exceptions.TooManyRedirects:
+                        print("ERROR: too many redirects!")
+                        continue
+
+                    except requests.exceptions.ReadTimeout:
+                        print("ERROR: read timeout!")
+                        continue
                     
                 elif details["method"] == "get":
-                    res = web_session.get(i, params=data)
+                    try:
+                        res = web_session.get(i, params=data)
+
+                    except requests.exceptions.SSLError:
+                        print("ERROR: invalid certificate!")
+                        continue
+
+                    except requests.exceptions.ConnectionError:
+                        print("ERROR: connection error!")
+                        continue
+
+                    except requests.exceptions.ConnectTimeout:
+                        print("ERROR: connect timeout!")
+                        continue
+
+                    except requests.exceptions.InvalidSchema:
+                        print("ERROR: invalid schema!")
+                        continue
+
+                    except requests.exceptions.InvalidURL:
+                        print("ERROR: invalid url!")
+                        continue
+
+                    except requests.exceptions.MissingSchema:
+                        print("ERROR: missing schema!")
+                        continue
+
+                    except requests.exceptions.TooManyRedirects:
+                        print("ERROR: too many redirects!")
+                        continue
+
+                    except requests.exceptions.ReadTimeout:
+                        print("ERROR: read timeout!")
+                        continue
 
                 if vulnerable(res):
                     print("SQL Injection attack vulnerability detected in link:", i)
