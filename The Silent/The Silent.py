@@ -2807,6 +2807,10 @@ def link_scanner(url):
             print("ERROR: invalid certificate!")
             continue
 
+        except urllib3.exceptions.LocationParseError:
+            print("ERROR: location parse error!")
+            continue
+
         except requests.exceptions.ConnectionError:
             print("ERROR: connection error!")
             continue
