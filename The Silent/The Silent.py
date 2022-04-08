@@ -2909,110 +2909,115 @@ def vulnerable(response):
         if error in response.content.decode().lower():
             return True
 
-        else:
-            return False
+    return False
   
   
 def sql_injection_scanner(url):
     vulnerable_list = []
     result = link_scanner(url)
 
+    print("Checking...")
+
     for i in result:
         forms = get_forms(i)
-        print(f"[+] Detected {len(forms)} forms on {i}.")
-      
-        for form in forms:
-            details = form_details(form)
-              
-            for c in "\'":
-                data = {}
-                
-                for input_tag in details["inputs"]:
-                    if input_tag["type"] == "hidden" or input_tag["value"]:
-                        data[input_tag["name"]] = input_tag["value"] + c
-                    elif input_tag["type"] != "submit":
-                        data[input_tag["name"]] = f"test{c}"
+
+        try:
+            print(f"[+] Detected {len(forms)} forms on {i}.")
+  
+            for form in forms:
+                details = form_details(form)
                   
-                if details["method"] == "post":
-                    try:
-                        res = web_session.post(i, data=data)
-
-                    except requests.exceptions.SSLError:
-                        print("ERROR: invalid certificate!")
-                        continue
-
-                    except requests.exceptions.ConnectionError:
-                        print("ERROR: connection error!")
-                        continue
-
-                    except requests.exceptions.ConnectTimeout:
-                        print("ERROR: connect timeout!")
-                        continue
-
-                    except requests.exceptions.InvalidSchema:
-                        print("ERROR: invalid schema!")
-                        continue
-
-                    except requests.exceptions.InvalidURL:
-                        print("ERROR: invalid url!")
-                        continue
-
-                    except requests.exceptions.MissingSchema:
-                        print("ERROR: missing schema!")
-                        continue
-
-                    except requests.exceptions.TooManyRedirects:
-                        print("ERROR: too many redirects!")
-                        continue
-
-                    except requests.exceptions.ReadTimeout:
-                        print("ERROR: read timeout!")
-                        continue
+                for c in "\"'":
+                    data = {}
                     
-                elif details["method"] == "get":
-                    try:
-                        res = web_session.get(i, params=data)
+                    for input_tag in details["inputs"]:
+                        if input_tag["type"] == "hidden" or input_tag["value"]:
+                            data[input_tag["name"]] = input_tag["value"] + c
+                        elif input_tag["type"] != "submit":
+                            data[input_tag["name"]] = f"test{c}"
+                      
+                    if details["method"] == "post":
+                        try:
+                            res = web_session.post(i, data=data)
 
-                    except requests.exceptions.SSLError:
-                        print("ERROR: invalid certificate!")
-                        continue
+                        except requests.exceptions.SSLError:
+                            print("ERROR: invalid certificate!")
+                            continue
 
-                    except requests.exceptions.ConnectionError:
-                        print("ERROR: connection error!")
-                        continue
+                        except requests.exceptions.ConnectionError:
+                            print("ERROR: connection error!")
+                            continue
 
-                    except requests.exceptions.ConnectTimeout:
-                        print("ERROR: connect timeout!")
-                        continue
+                        except requests.exceptions.ConnectTimeout:
+                            print("ERROR: connect timeout!")
+                            continue
 
-                    except requests.exceptions.InvalidSchema:
-                        print("ERROR: invalid schema!")
-                        continue
+                        except requests.exceptions.InvalidSchema:
+                            print("ERROR: invalid schema!")
+                            continue
 
-                    except requests.exceptions.InvalidURL:
-                        print("ERROR: invalid url!")
-                        continue
+                        except requests.exceptions.InvalidURL:
+                            print("ERROR: invalid url!")
+                            continue
 
-                    except requests.exceptions.MissingSchema:
-                        print("ERROR: missing schema!")
-                        continue
+                        except requests.exceptions.MissingSchema:
+                            print("ERROR: missing schema!")
+                            continue
 
-                    except requests.exceptions.TooManyRedirects:
-                        print("ERROR: too many redirects!")
-                        continue
+                        except requests.exceptions.TooManyRedirects:
+                            print("ERROR: too many redirects!")
+                            continue
 
-                    except requests.exceptions.ReadTimeout:
-                        print("ERROR: read timeout!")
-                        continue
+                        except requests.exceptions.ReadTimeout:
+                            print("ERROR: read timeout!")
+                            continue
+                        
+                    elif details["method"] == "get":
+                        try:
+                            res = web_session.get(i, params=data)
 
-                if vulnerable(res):
-                    print("SQL Injection attack vulnerability detected in link:", i)
-                    vulnerable_list.append(i)
+                        except requests.exceptions.SSLError:
+                            print("ERROR: invalid certificate!")
+                            continue
+
+                        except requests.exceptions.ConnectionError:
+                            print("ERROR: connection error!")
+                            continue
+
+                        except requests.exceptions.ConnectTimeout:
+                            print("ERROR: connect timeout!")
+                            continue
+
+                        except requests.exceptions.InvalidSchema:
+                            print("ERROR: invalid schema!")
+                            continue
+
+                        except requests.exceptions.InvalidURL:
+                            print("ERROR: invalid url!")
+                            continue
+
+                        except requests.exceptions.MissingSchema:
+                            print("ERROR: missing schema!")
+                            continue
+
+                        except requests.exceptions.TooManyRedirects:
+                            print("ERROR: too many redirects!")
+                            continue
+
+                        except requests.exceptions.ReadTimeout:
+                            print("ERROR: read timeout!")
+                            continue
+
+                    if vulnerable(res):
+                        print("SQL Injection attack vulnerability detected in link:", i)
+                        vulnerable_list.append(i)
 
 
-                else:
-                    print("No SQL Injection vulnerability detected")
-                    break
+                    else:
+                        print("No SQL Injection vulnerability detected")
+                        break
+        except TypeError:
+            print("ERROR: type error!")
 
     os.system("clear")
 
