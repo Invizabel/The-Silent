@@ -2858,6 +2858,9 @@ def get_forms(url):
     except requests.exceptions.SSLError:
         print("ERROR: invalid certificate!")
 
+    except AssertionError:
+        print("ERROR: Assertion Error!")
+
     except requests.exceptions.ConnectionError:
         print("ERROR: connection error!")
 
@@ -2889,9 +2892,7 @@ def form_details(form):
         input_type = input_tag.attrs.get("type", "text")
         input_name = input_tag.attrs.get("name")
         input_value = input_tag.attrs.get("value", "")
-        inputs.append(
-            {"type": input_type, "name": input_name, "value": input_value}
-        )
+        inputs.append({"type": input_type, "name": input_name, "value": input_value})
           
     details_of_form["action"] = action
     details_of_form["method"] = method
