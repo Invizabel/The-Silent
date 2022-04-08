@@ -2863,6 +2863,7 @@ def is_vulnerable(response):
 
         except UnicodeDecodeError:
             print("ERROR: unicode decode error!")
+            continue
         
     return False
 
