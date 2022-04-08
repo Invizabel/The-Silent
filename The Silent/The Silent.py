@@ -2853,6 +2853,7 @@ def link_scanner(url):
 def get_forms(url):
     try:
         soup = BeautifulSoup(web_session.get(url).content, "html.parser")
+        return soup.find_all("form")
 
     except requests.exceptions.SSLError:
         print("ERROR: invalid certificate!")
@@ -2877,10 +2878,7 @@ def get_forms(url):
 
     except requests.exceptions.ReadTimeout:
         print("ERROR: read timeout!")
-
-    return soup.find_all("form")
-  
-  
+        
 def form_details(form):
     details_of_form = {}
     action = form.attrs.get("action", "get").lower()
