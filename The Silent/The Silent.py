@@ -2853,180 +2853,135 @@ def link_scanner(url):
     if user_input == "3":
         return result_list
 
-#scans for sql injection vulnerabilities
-def get_forms(url):
-    try:
-        soup = BeautifulSoup(web_session.get(url).content, "html.parser")
-        return soup.find_all("form")
+def is_vulnerable(response):
+    error_mesage = {"quoted string not properly terminated", "unclosed quotation mark after the character string", "warning: mysql", "you have an error in your sql syntax;"}
 
-    except requests.exceptions.SSLError:
-        print("ERROR: invalid certificate!")
-
-    except AssertionError:
-        print("ERROR: Assertion Error!")
-
-    except requests.exceptions.ConnectionError:
-        print("ERROR: connection error!")
-
-    except requests.exceptions.ConnectTimeout:
-        print("ERROR: connect timeout!")
-
-    except requests.exceptions.InvalidSchema:
-        print("ERROR: invalid schema!")
-
-    except requests.exceptions.InvalidURL:
-        print("ERROR: invalid url!")
-
-    except requests.exceptions.MissingSchema:
-        print("ERROR: missing schema!")
-        
-    except requests.exceptions.TooManyRedirects:
-        print("ERROR: too many redirects!")
-
-    except requests.exceptions.ReadTimeout:
-        print("ERROR: read timeout!")
-        
-def form_details(form):
-    details_of_form = {}
-    action = form.attrs.get("action", "get").lower()
-    method = form.attrs.get("method", "get").lower()
-    inputs = []
-      
-    for input_tag in form.find_all("input"):
-        input_type = input_tag.attrs.get("type", "text")
-        input_name = input_tag.attrs.get("name")
-        input_value = input_tag.attrs.get("value", "")
-        inputs.append({"type": input_type, "name": input_name, "value": input_value})
-          
-    details_of_form["action"] = action
-    details_of_form["method"] = method
-    details_of_form["inputs"] = inputs
-
-    return details_of_form
-  
-  
-def vulnerable(response):
-    errors = {"quoted string not properly terminated",
-              "unclosed quotation mark after the character string", 
-              "you have an error in your sql syntax;"}
-      
-    for error in errors:
-        if error in response.content.decode().lower():
+    for i in error_mesage:
+        if i in response.content.decode().lower():
             return True
-
+        
     return False
-  
-  
+
 def sql_injection_scanner(url):
-    vulnerable_list = []
-    result = link_scanner(url)
+    os.system("clear")
+    my_list = []
 
-    print("Checking...")
+    user_input = input("1 = scan url | 2 = scan url and hyperlinks\n")
+    os.system("clear")
+    
+    if user_input == "1":
+        url = https_string + url
+        
+        for c in "\"'":
+            new_url = f"{url}{c}"
+            print("Checking: " + new_url)
+            
+            try:
+                if termux_tor_boolean == True or tor_boolean == True:
+                    result = web_session.get(new_url, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
 
-    for i in result:
-        forms = get_forms(i)
+                if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                    result = web_session.get(new_url, verify = valid_certificate, headers = user_agent, timeout = 5)
 
-        try:
-            print(f"[+] Detected {len(forms)} forms on {i}.")
-  
-            for form in forms:
-                details = form_details(form)
-                  
-                for c in "\"'":
-                    data = {}
-                    
-                    for input_tag in details["inputs"]:
-                        if input_tag["type"] == "hidden" or input_tag["value"]:
-                            data[input_tag["name"]] = input_tag["value"] + c
-                        elif input_tag["type"] != "submit":
-                            data[input_tag["name"]] = f"test{c}"
-                      
-                    if details["method"] == "post":
-                        try:
-                            res = web_session.post(i, data=data)
+            except requests.exceptions.SSLError:
+                print("ERROR: invalid certificate!")
+                continue
 
-                        except requests.exceptions.SSLError:
-                            print("ERROR: invalid certificate!")
-                            continue
+            except urllib3.exceptions.LocationParseError:
+                print("ERROR: location parse error!")
+                continue
 
-                        except requests.exceptions.ConnectionError:
-                            print("ERROR: connection error!")
-                            continue
+            except requests.exceptions.ConnectionError:
+                print("ERROR: connection error!")
+                continue
 
-                        except requests.exceptions.ConnectTimeout:
-                            print("ERROR: connect timeout!")
-                            continue
+            except requests.exceptions.ConnectTimeout:
+                print("ERROR: connect timeout!")
+                continue
 
-                        except requests.exceptions.InvalidSchema:
-                            print("ERROR: invalid schema!")
-                            continue
+            except requests.exceptions.InvalidSchema:
+                print("ERROR: invalid schema!")
+                continue
 
-                        except requests.exceptions.InvalidURL:
-                            print("ERROR: invalid url!")
-                            continue
+            except requests.exceptions.InvalidURL:
+                print("ERROR: invalid url!")
+                continue
 
-                        except requests.exceptions.MissingSchema:
-                            print("ERROR: missing schema!")
-                            continue
+            except requests.exceptions.MissingSchema:
+                print("ERROR: missing schema!")
+                continue
 
-                        except requests.exceptions.TooManyRedirects:
-                            print("ERROR: too many redirects!")
-                            continue
+            except requests.exceptions.TooManyRedirects:
+                print("ERROR: too many redirects!")
+                continue
 
-                        except requests.exceptions.ReadTimeout:
-                            print("ERROR: read timeout!")
-                            continue
-                        
-                    elif details["method"] == "get":
-                        try:
-                            res = web_session.get(i, params=data)
+            except requests.exceptions.ReadTimeout:
+                print("ERROR: read timeout!")
+                continue
 
-                        except requests.exceptions.SSLError:
-                            print("ERROR: invalid certificate!")
-                            continue
+            if is_vulnerable(result):
+                print("True: " + new_url)
+                my_list.append(new_url)
 
-                        except requests.exceptions.ConnectionError:
-                            print("ERROR: connection error!")
-                            continue
+    if user_input == "2":
+        my_result = link_scanner(url)
 
-                        except requests.exceptions.ConnectTimeout:
-                            print("ERROR: connect timeout!")
-                            continue
+        for i in my_result:
+            for c in "\"'":
+                new_url = f"{i}{c}"
 
-                        except requests.exceptions.InvalidSchema:
-                            print("ERROR: invalid schema!")
-                            continue
+                print("Checking: " + new_url)
 
-                        except requests.exceptions.InvalidURL:
-                            print("ERROR: invalid url!")
-                            continue
+                try:
+                    if termux_tor_boolean == True or tor_boolean == True:
+                        result = web_session.get(new_url, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
 
-                        except requests.exceptions.MissingSchema:
-                            print("ERROR: missing schema!")
-                            continue
+                    if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                        result = web_session.get(new_url, verify = valid_certificate, headers = user_agent, timeout = 5)
 
-                        except requests.exceptions.TooManyRedirects:
-                            print("ERROR: too many redirects!")
-                            continue
+                except requests.exceptions.SSLError:
+                    print("ERROR: invalid certificate!")
+                    continue
 
-                        except requests.exceptions.ReadTimeout:
-                            print("ERROR: read timeout!")
-                            continue
+                except urllib3.exceptions.LocationParseError:
+                    print("ERROR: location parse error!")
+                    continue
 
-                    if vulnerable(res):
-                        print("SQL Injection attack vulnerability detected in link:", i)
-                        vulnerable_list.append(i)
+                except requests.exceptions.ConnectionError:
+                    print("ERROR: connection error!")
+                    continue
 
+                except requests.exceptions.ConnectTimeout:
+                    print("ERROR: connect timeout!")
+                    continue
 
-                    else:
-                        print("No SQL Injection vulnerability detected")
-                        break
-        except TypeError:
-            print("ERROR: type error!")
+                except requests.exceptions.InvalidSchema:
+                    print("ERROR: invalid schema!")
+                    continue
+
+                except requests.exceptions.InvalidURL:
+                    print("ERROR: invalid url!")
+                    continue
+
+                except requests.exceptions.MissingSchema:
+                    print("ERROR: missing schema!")
+                    continue
+
+                except requests.exceptions.TooManyRedirects:
+                    print("ERROR: too many redirects!")
+                    continue
+
+                except requests.exceptions.ReadTimeout:
+                    print("ERROR: read timeout!")
+                    continue
+
+                if is_vulnerable(result):
+                    print("True: " + new_url)
+                    my_list.append(new_url)
 
     os.system("clear")
-
-    return vulnerable_list
+    
+    return my_list
 
 #scans for emails on website
 def email_scanner(url):
