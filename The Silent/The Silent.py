@@ -2868,6 +2868,8 @@ def is_vulnerable(response):
 
 def sql_injection_scanner(url):
     os.system("clear")
+
+    error_mesage = {"Access Database Engine", "check the manual that corresponds to your Drizzle server version", "check the manual that fits your Drizzle server version", "check the manual that corresponds to your MariaDB server version", "check the manual that fits your MariaDB server version", "check the manual that corresponds to your MySQL server version", "check the manual that fits your MySQL server version", "com.microsoft.sqlserver.jdbc", "com.mysql.jdbc", "com.jnetdirect.jsql", "ERROR: parser: parse error at or near", "ERROR:sssyntax error at or near", "JET Database Engine", "is not supported by MemSQL", "macromedia\.jdbc\.oracle", "macromedia.jdbc.sqlserver", "MemSQL does not support this type of query", "MySqlClient.", "MySqlException", "MySQLSyntaxErrorException", "ODBC Microsoft Access", "Oracle: Driver", "Oracle error", "OracleException", "oracle.jdbc", "org.postgresql.jdbc", "org.postgresql.util.PSQLException", "PG::SyntaxError:", "PostgreSQL: ERROR", "PostgreSQL query failed", "PSQLException", "quoted string not properly terminated", "SQL command not properly ended", "\[SQL Server\]", "SQLSrvException", "SQLServerException","SQLServer JDBC Driver", "SQL syntax: MySQL", "Npgsql.", "Syntax error (missing operator) in query expression", "unclosed quotation mark after the character string", "unsupported nested scalar subselect", "valid MySQL result", "valid PostgreSQL result", "warning: mysql", "Warning: Wpg", "you have an error in your sql syntax", "Zend_Db_Adapter_Mysqli_Exception", "Zend_Db_Statement_Mysqli_Exception", "Zend_Db_Adapter_Oracle_Exception", "Zend_Db_Statement_Oracle_Exception", "Zend_Db_Adapter_Sqlsrv_Exception," "Zend_Db_Statement_Sqlsrv_Exception"}
     my_list = []
 
     user_input = input("1 = scan url | 2 = scan url and hyperlinks\n")
@@ -2923,16 +2925,23 @@ def sql_injection_scanner(url):
                 print("ERROR: read timeout!")
                 continue
 
-            if is_vulnerable(result):
+            for i in error_mesage:
+                my_boolean = False
+
+                if i in result.content.decode().lower():
+                    my_boolean = True
+                    break
+
+            if my_boolean == True:
                 print("True: " + new_url)
                 my_list.append(new_url)
 
     if user_input == "2":
         my_result = link_scanner(url)
 
-        for i in my_result:
+        for j in my_result:
             for c in "\"'":
-                new_url = f"{i}{c}"
+                new_url = f"{j}{c}"
 
                 print("Checking: " + new_url)
 
@@ -2979,7 +2988,14 @@ def sql_injection_scanner(url):
                     print("ERROR: read timeout!")
                     continue
 
-                if is_vulnerable(result):
+                for i in error_mesage:
+                    my_boolean = False
+
+                    if i in result.content.decode().lower():
+                        my_boolean = True
+                        break
+
+                if my_boolean == True:
                     print("True: " + new_url)
                     my_list.append(new_url)
 
