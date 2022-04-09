@@ -2928,9 +2928,13 @@ def sql_injection_scanner(url):
             for i in error_mesage:
                 my_boolean = False
 
-                if i in result.content.decode().lower():
-                    my_boolean = True
-                    break
+                try:
+                    if i in result.content.decode().lower():
+                        my_boolean = True
+                        break
+
+                except UnicodeDecodeError:
+                    continue
 
             if my_boolean == True:
                 print("True: " + new_url)
@@ -2991,9 +2995,14 @@ def sql_injection_scanner(url):
                 for i in error_mesage:
                     my_boolean = False
 
-                    if i in result.content.decode().lower():
-                        my_boolean = True
-                        break
+                    
+                    try:
+                        if i in result.content.decode().lower():
+                            my_boolean = True
+                            break
+
+                    except UnicodeDecodeError:
+                        continue
 
                 if my_boolean == True:
                     print("True: " + new_url)
