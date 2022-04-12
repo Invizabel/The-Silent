@@ -27,6 +27,7 @@ from bs4 import BeautifulSoup
 from collections import *
 from hashlib import *
 from itertools import *
+from requests_html import *
 from urllib.parse import urljoin
 
 import codecs
@@ -49,7 +50,10 @@ import urllib3
 #connect to tor
 tor_proxy = {"http": "socks5h://localhost:9050", "https": "socks5h://localhost:9050"}
 
-#create sessions object
+#create javascript sessions object
+javascript_session = HTMLSession()
+
+#create html sessions object
 web_session = requests.Session()
 
 #fake user agent
@@ -2676,10 +2680,12 @@ def link_scanner(url):
 
             if termux_tor_boolean == True or tor_boolean == True:
                 final = web_session.get(total_web_list[i], verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
-        
+                final_javascript = javascript_session.get(total_web_list[i], verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+                
             if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
                 final = web_session.get(total_web_list[i], verify = valid_certificate, headers = user_agent, timeout = (5, 30))
-
+                final_javascript = javascript_session.get(total_web_list[i], verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+                
             found = str(final.status_code)
 
             if found == "200":
@@ -2699,6 +2705,17 @@ def link_scanner(url):
                         domain_name = str(original_url) in j
 
                         if domain_name == True:
+                            final_javascript.html.render()
+                            javascript = final_javascript.html.html
+
+                            parse = re.findall(r'(?<=<a href="/)[^"]*', javascript)
+                            parse = list(dict.fromkeys(parse))
+                            parse.sort()
+
+                            for href in parse:
+                                result = "https://www.nasa.gov/" + href
+                                total_web_list.append(result)
+                            
                             if "\'" in j:
                                 j.split("\'")
                                 total_web_list.append(j[0])
