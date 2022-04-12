@@ -2807,6 +2807,10 @@ def link_scanner(url):
             print("ERROR: invalid certificate!")
             continue
 
+        except requests.exceptions.ChunkedEncodingError:
+            print("ERROR: chunked encoding error!")
+            continue
+
         except urllib3.exceptions.LocationParseError:
             print("ERROR: location parse error!")
             continue
