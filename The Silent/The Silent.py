@@ -2675,10 +2675,10 @@ def link_scanner(url):
             i += 1
 
             if termux_tor_boolean == True or tor_boolean == True:
-                final = web_session.get(total_web_list[i], verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                final = web_session.get(total_web_list[i], verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
         
             if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                final = web_session.get(total_web_list[i], verify = valid_certificate, headers = user_agent, timeout = 5)
+                final = web_session.get(total_web_list[i], verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
             found = str(final.status_code)
 
