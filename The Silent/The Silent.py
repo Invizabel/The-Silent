@@ -2888,7 +2888,6 @@ def link_scanner_selenium(url):
         i = i + 1
         
         try:
-            print(i)
             print(total_web_list[i])
             driver.get(total_web_list[i])
 
