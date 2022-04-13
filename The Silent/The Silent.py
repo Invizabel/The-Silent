@@ -27,7 +27,11 @@ from bs4 import BeautifulSoup
 from collections import *
 from hashlib import *
 from itertools import *
+from selenium import webdriver
+from selenium.webdriver.common.by import *
+from selenium.webdriver.firefox.service import *
 from urllib.parse import urljoin
+from webdriver_manager.firefox import *
 
 import codecs
 import gc
@@ -2663,10 +2667,13 @@ def link_scanner(url):
     total_web_list.append(output)
     result_list = []
 
-    user_input = input("1 = search domain links | 2 = search all links | 3 = search for a specific link\n")
+    user_input = input("1 = search domain links | 2 = search all links | 3 = search for a specific link | 4 = search domain links using selenium\n")
 
     if user_input == "3":
         specific_link = input("Enter specific link: ")
+
+    if user_input == "4":
+        return link_scanner_selenium(url)
 
     while True:
         try:
@@ -2856,6 +2863,7 @@ def link_scanner(url):
 
     os.system("clear")
     result_list = list(dict.fromkeys(result_list))
+    total_web_list = list(dict.fromkeys(total_web_list))
     
     result_list.sort()
 
@@ -2865,18 +2873,57 @@ def link_scanner(url):
     if user_input == "3":
         return result_list
 
-def is_vulnerable(response):
-    error_mesage = {"Access Database Engine", "check the manual that corresponds to your Drizzle server version", "check the manual that fits your Drizzle server version", "check the manual that corresponds to your MariaDB server version", "check the manual that fits your MariaDB server version", "check the manual that corresponds to your MySQL server version", "check the manual that fits your MySQL server version", "com.microsoft.sqlserver.jdbc", "com.mysql.jdbc", "com.jnetdirect.jsql", "ERROR: parser: parse error at or near", "ERROR:sssyntax error at or near", "JET Database Engine", "is not supported by MemSQL", "macromedia\.jdbc\.oracle", "macromedia.jdbc.sqlserver", "MemSQL does not support this type of query", "MySqlClient.", "MySqlException", "MySQLSyntaxErrorException", "ODBC Microsoft Access", "Oracle: Driver", "Oracle error", "OracleException", "oracle.jdbc", "org.postgresql.jdbc", "org.postgresql.util.PSQLException", "PG::SyntaxError:", "PostgreSQL: ERROR", "PostgreSQL query failed", "PSQLException", "quoted string not properly terminated", "SQL command not properly ended", "\[SQL Server\]", "SQLSrvException", "SQLServerException","SQLServer JDBC Driver", "SQL syntax: MySQL", "Npgsql.", "Syntax error (missing operator) in query expression", "unclosed quotation mark after the character string", "unsupported nested scalar subselect", "valid MySQL result", "valid PostgreSQL result", "warning: mysql", "Warning: Wpg", "you have an error in your sql syntax", "Zend_Db_Adapter_Mysqli_Exception", "Zend_Db_Statement_Mysqli_Exception", "Zend_Db_Adapter_Oracle_Exception", "Zend_Db_Statement_Oracle_Exception", "Zend_Db_Adapter_Sqlsrv_Exception," "Zend_Db_Statement_Sqlsrv_Exception"}
+def link_scanner_selenium(url):
+    result = https_string + url
+    
+    driver = webdriver.Firefox(service = Service(GeckoDriverManager().install()))
+    os.system("clear")
 
-    for i in error_mesage:
+    i = -1
+    total_web_list = []
+    total_web_list.append(result)
+    web_list = []
+
+    while True:
+        i = i + 1
+        
         try:
-            if i in response.content.decode().lower():
-                return True
+            print(i)
+            print(total_web_list[i])
+            driver.get(total_web_list[i])
 
-        except UnicodeDecodeError:
+        except IndexError:
+            break
+
+        except:
             continue
         
-    return False
+        try:
+            for ii in driver.find_elements(by = By.XPATH, value = ".//a"):
+                web_list.append(ii.get_attribute("href"))
+
+        except:
+            pass
+
+        web_list = list(dict.fromkeys(web_list))
+
+        for iii in web_list:
+            try:
+                domain_name = result in iii
+
+                parse = iii.index(result, 0, len(result))
+                
+                if domain_name == True and parse == 0:
+                    total_web_list.append(iii)
+                    total_web_list = list(dict.fromkeys(total_web_list))
+
+            except:
+                continue
+
+    total_web_list = list(dict.fromkeys(total_web_list))
+    total_web_list.sort()
+
+    return total_web_list
 
 def sql_injection_scanner(url):
     os.system("clear")
@@ -4394,7 +4441,7 @@ def file_finder(file, directory):
 #mainloop
 while True:
     os.system("clear")
-    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\n17 = twitter\n18 = security questions\n19 = generate list of server names\n20 = sql injection scanner\ne = exit\n")
+    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\n17 = twitter\n18 = security questions\n19 = generate list of server names\n20 = sql injection scanner\n21 = link scanner (selenium)\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -4833,6 +4880,11 @@ while True:
         print(sql_injection_scanner(url))
         print("Done!")
         pause = input()
-    
+
+    if user_input == "21":
+        os.system("clear")
+        url = input("Enter url: ")
+        print(link_scanner_selenium(url))
+        
     if user_input == "e":
         exit()
