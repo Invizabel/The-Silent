@@ -2942,10 +2942,10 @@ def sql_injection_scanner(url):
             
             try:
                 if termux_tor_boolean == True or tor_boolean == True:
-                    result = web_session.get(new_url, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                    result = web_session.get(new_url, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
 
                 if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                    result = web_session.get(new_url, verify = valid_certificate, headers = user_agent, timeout = 5)
+                    result = web_session.get(new_url, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
             except requests.exceptions.SSLError:
                 print("ERROR: invalid certificate!")
@@ -2998,6 +2998,233 @@ def sql_injection_scanner(url):
                 print("True: " + new_url)
                 my_list.append(new_url)
 
+        try:
+            print("Checking forms on: " + url)
+            
+            if termux_tor_boolean == True or tor_boolean == True:
+                result = web_session.get(url, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                result = web_session.get(url, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+            soup = BeautifulSoup(result.text, "html.parser")
+            get_input = soup.find_all("input")
+
+            form_list = []
+
+            for i in get_input:
+                if "email" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                    
+
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "hidden" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                    
+
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+                    
+                if "number" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                    
+
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "password" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                    
+
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "search" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                    
+
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "tel" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                    
+
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "text" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                    
+
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "url" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                    
+
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+            form_list = list(dict.fromkeys(form_list))
+            form_list.sort()
+
+            for i in form_list:
+                my_data_double = {i: "\""}
+                my_data_single = {i: "\'"}
+
+                print("Checking form: " + i)
+
+                if termux_tor_boolean == True or tor_boolean == True:
+                    send_double = web_session.post(url, data = my_data_double, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+                if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                    send_double = web_session.post(url, data = my_data_double, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+                if termux_tor_boolean == True or tor_boolean == True:
+                    send_single = web_session.post(url, data = my_data_single, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+                if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                    send_single = web_session.post(url, data = my_data_single, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+        except requests.exceptions.SSLError:
+            print("ERROR: invalid certificate!")
+            pass
+
+        except urllib3.exceptions.LocationParseError:
+            print("ERROR: location parse error!")
+            pass
+
+        except requests.exceptions.ConnectionError:
+            print("ERROR: connection error!")
+            pass
+
+        except requests.exceptions.ConnectTimeout:
+            print("ERROR: connect timeout!")
+            pass
+
+        except requests.exceptions.InvalidSchema:
+            print("ERROR: invalid schema!")
+            pass
+
+        except requests.exceptions.InvalidURL:
+            print("ERROR: invalid url!")
+            pass
+
+        except requests.exceptions.MissingSchema:
+            print("ERROR: missing schema!")
+            pass
+
+        except requests.exceptions.TooManyRedirects:
+            print("ERROR: too many redirects!")
+            pass
+
+        except requests.exceptions.ReadTimeout:
+            print("ERROR: read timeout!")
+            pass
+
+        for i in error_mesage:
+            my_boolean = False
+
+            try:
+                if i in send_double.content.decode().lower():
+                        my_boolean = True
+                        break
+
+                if i in send_single.content.decode().lower():
+                    my_boolean = True
+                    break
+
+            except UnicodeDecodeError:
+                continue
+
+        if my_boolean == True:
+            print("True: " + url + ("form"))
+            my_list.append(url + ("form"))
+
     if user_input == "2":
         my_result = link_scanner(url)
 
@@ -3009,51 +3236,50 @@ def sql_injection_scanner(url):
 
                 try:
                     if termux_tor_boolean == True or tor_boolean == True:
-                        result = web_session.get(new_url, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = 5)
+                        result = web_session.get(new_url, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
 
                     if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                        result = web_session.get(new_url, verify = valid_certificate, headers = user_agent, timeout = 5)
+                        result = web_session.get(new_url, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
                 except requests.exceptions.SSLError:
                     print("ERROR: invalid certificate!")
-                    continue
+                    pass
 
                 except urllib3.exceptions.LocationParseError:
                     print("ERROR: location parse error!")
-                    continue
+                    pass
 
                 except requests.exceptions.ConnectionError:
                     print("ERROR: connection error!")
-                    continue
+                    pass
 
                 except requests.exceptions.ConnectTimeout:
                     print("ERROR: connect timeout!")
-                    continue
+                    pass
 
                 except requests.exceptions.InvalidSchema:
                     print("ERROR: invalid schema!")
-                    continue
+                    pass
 
                 except requests.exceptions.InvalidURL:
                     print("ERROR: invalid url!")
-                    continue
+                    pass
 
                 except requests.exceptions.MissingSchema:
                     print("ERROR: missing schema!")
-                    continue
+                    pass
 
                 except requests.exceptions.TooManyRedirects:
                     print("ERROR: too many redirects!")
-                    continue
+                    pass
 
                 except requests.exceptions.ReadTimeout:
                     print("ERROR: read timeout!")
-                    continue
+                    pass
 
                 for i in error_mesage:
                     my_boolean = False
 
-                    
                     try:
                         if i in result.content.decode().lower():
                             my_boolean = True
@@ -3065,6 +3291,233 @@ def sql_injection_scanner(url):
                 if my_boolean == True:
                     print("True: " + new_url)
                     my_list.append(new_url)
+
+            try:
+                print("Checking forms on: " + url)
+
+                if termux_tor_boolean == True or tor_boolean == True:
+                    result = web_session.get(url, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+                if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                    result = web_session.get(url, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+                soup = BeautifulSoup(result.text, "html.parser")
+                get_input = soup.find_all("input")
+
+                form_list = []
+
+                for i in get_input:
+                    if "email" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                        
+
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                    if "hidden" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                        
+
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+                        
+                    if "number" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                        
+
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                    if "password" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                        
+
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                    if "search" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                        
+
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                    if "tel" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                        
+
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                    if "text" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                        
+
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                    if "url" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                        
+
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                form_list = list(dict.fromkeys(form_list))
+                form_list.sort()
+
+                for i in form_list:
+                    my_data_double = {i: "\""}
+                    my_data_single = {i: "\'"}
+
+                    print("Checking form: " + i)
+
+                    if termux_tor_boolean == True or tor_boolean == True:
+                        send_double = web_session.post(url, data = my_data_double, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+                    if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                        send_double = web_session.post(url, data = my_data_double, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+                    if termux_tor_boolean == True or tor_boolean == True:
+                        send_single = web_session.post(url, data = my_data_single, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+                    if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                        send_single = web_session.post(url, data = my_data_single, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+            except requests.exceptions.SSLError:
+                print("ERROR: invalid certificate!")
+                continue
+
+            except urllib3.exceptions.LocationParseError:
+                print("ERROR: location parse error!")
+                continue
+
+            except requests.exceptions.ConnectionError:
+                print("ERROR: connection error!")
+                continue
+
+            except requests.exceptions.ConnectTimeout:
+                print("ERROR: connect timeout!")
+                continue
+
+            except requests.exceptions.InvalidSchema:
+                print("ERROR: invalid schema!")
+                continue
+
+            except requests.exceptions.InvalidURL:
+                print("ERROR: invalid url!")
+                continue
+
+            except requests.exceptions.MissingSchema:
+                print("ERROR: missing schema!")
+                continue
+
+            except requests.exceptions.TooManyRedirects:
+                print("ERROR: too many redirects!")
+                continue
+
+            except requests.exceptions.ReadTimeout:
+                print("ERROR: read timeout!")
+                continue
+
+            for i in error_mesage:
+                my_boolean = False
+
+                try:
+                    if i in send_double.content.decode().lower():
+                        my_boolean = True
+                        break
+
+                    if i in send_single.content.decode().lower():
+                        my_boolean = True
+                        break
+
+                except UnicodeDecodeError:
+                    continue
+
+            if my_boolean == True:
+                print("True: " + url + ("form"))
+                my_list.append(url + ("form"))
 
     os.system("clear")
     
