@@ -3170,6 +3170,25 @@ def sql_injection_scanner(url):
                 if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
                     send_single = web_session.post(url, data = my_data_single, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
+                for i in error_mesage:
+                    my_boolean = False
+
+                    try:
+                        if i in send_double.content.decode().lower():
+                                my_boolean = True
+                                break
+
+                        if i in send_single.content.decode().lower():
+                            my_boolean = True
+                            break
+
+                    except UnicodeDecodeError:
+                        continue
+
+                if my_boolean == True:
+                    print("True: " + url + ("form"))
+                    my_list.append(url + ("form"))
+
         except requests.exceptions.SSLError:
             print("ERROR: invalid certificate!")
             pass
@@ -3205,25 +3224,6 @@ def sql_injection_scanner(url):
         except requests.exceptions.ReadTimeout:
             print("ERROR: read timeout!")
             pass
-
-        for i in error_mesage:
-            my_boolean = False
-
-            try:
-                if i in send_double.content.decode().lower():
-                        my_boolean = True
-                        break
-
-                if i in send_single.content.decode().lower():
-                    my_boolean = True
-                    break
-
-            except UnicodeDecodeError:
-                continue
-
-        if my_boolean == True:
-            print("True: " + url + ("form"))
-            my_list.append(url + ("form"))
 
     if user_input == "2":
         my_result = link_scanner(url)
@@ -3464,6 +3464,25 @@ def sql_injection_scanner(url):
                     if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
                         send_single = web_session.post(url, data = my_data_single, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
+                    for i in error_mesage:
+                        my_boolean = False
+
+                        try:
+                            if i in send_double.content.decode().lower():
+                                    my_boolean = True
+                                    break
+
+                            if i in send_single.content.decode().lower():
+                                my_boolean = True
+                                break
+
+                        except UnicodeDecodeError:
+                            continue
+
+                    if my_boolean == True:
+                        print("True: " + url + ("form"))
+                        my_list.append(url + ("form"))
+
             except requests.exceptions.SSLError:
                 print("ERROR: invalid certificate!")
                 continue
@@ -3499,25 +3518,6 @@ def sql_injection_scanner(url):
             except requests.exceptions.ReadTimeout:
                 print("ERROR: read timeout!")
                 continue
-
-            for i in error_mesage:
-                my_boolean = False
-
-                try:
-                    if i in send_double.content.decode().lower():
-                        my_boolean = True
-                        break
-
-                    if i in send_single.content.decode().lower():
-                        my_boolean = True
-                        break
-
-                except UnicodeDecodeError:
-                    continue
-
-            if my_boolean == True:
-                print("True: " + url + ("form"))
-                my_list.append(url + ("form"))
 
     os.system("clear")
     
