@@ -23,6 +23,17 @@
 #https://www.tutorialspoint.com/python-program-to-check-for-url-in-a-string
 
 #import libraries
+
+#try and except block required for Termux
+try:
+    from selenium import *
+    from selenium.webdriver.common.by import *
+    from selenium.webdriver.firefox.service import *
+    from webdriver_manager.firefox import *
+
+except:
+    pass
+
 from bs4 import BeautifulSoup
 from collections import *
 from hashlib import *
@@ -2870,11 +2881,6 @@ def link_scanner(url):
         return result_list
 
 def link_scanner_selenium(url):
-    from selenium import *
-    from selenium.webdriver.common.by import *
-    from selenium.webdriver.firefox.service import *
-    from webdriver_manager.firefox import *
-    
     result = https_string + url
     
     driver = webdriver.Firefox(service = Service(GeckoDriverManager().install()))
