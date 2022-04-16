@@ -26,7 +26,7 @@
 
 #try and except block required for Termux
 try:
-    from selenium import *
+    from selenium import webdriver
     from selenium.webdriver.common.by import *
     from selenium.webdriver.firefox.service import *
     from webdriver_manager.firefox import *
