@@ -3006,8 +3006,12 @@ def sql_injection_scanner(url):
             if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
                 result = web_session.get(my_url, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
-            soup = BeautifulSoup(result.text, "html.parser")
-            get_input = soup.find_all("input")
+            try:
+                soup = BeautifulSoup(result.text, "html.parser")
+                get_input = soup.find_all("input")
+
+            except:
+                pass
 
             form_list = []
 
@@ -3300,8 +3304,12 @@ def sql_injection_scanner(url):
                 if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
                     result = web_session.get(j, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
-                soup = BeautifulSoup(result.text, "html.parser")
-                get_input = soup.find_all("input")
+                try:
+                    soup = BeautifulSoup(result.text, "html.parser")
+                    get_input = soup.find_all("input")
+
+                except:
+                    pass
 
                 form_list = []
 
