@@ -2926,6 +2926,7 @@ def link_scanner_selenium(url):
 
 def sql_injection_scanner(url):
     os.system("clear")
+    my_url = https_string + url
 
     error_mesage = {"Access Database Engine", "check the manual that corresponds to your Drizzle server version", "check the manual that fits your Drizzle server version", "check the manual that corresponds to your MariaDB server version", "check the manual that fits your MariaDB server version", "check the manual that corresponds to your MySQL server version", "check the manual that fits your MySQL server version", "com.microsoft.sqlserver.jdbc", "com.mysql.jdbc", "com.jnetdirect.jsql", "ERROR: parser: parse error at or near", "ERROR:sssyntax error at or near", "JET Database Engine", "is not supported by MemSQL", "macromedia\.jdbc\.oracle", "macromedia.jdbc.sqlserver", "MemSQL does not support this type of query", "MySqlClient.", "MySqlException", "MySQLSyntaxErrorException", "ODBC Microsoft Access", "Oracle: Driver", "Oracle error", "OracleException", "oracle.jdbc", "org.postgresql.jdbc", "org.postgresql.util.PSQLException", "PG::SyntaxError:", "PostgreSQL: ERROR", "PostgreSQL query failed", "PSQLException", "quoted string not properly terminated", "SQL command not properly ended", "\[SQL Server\]", "SQLSrvException", "SQLServerException","SQLServer JDBC Driver", "SQL syntax: MySQL", "Npgsql.", "Syntax error (missing operator) in query expression", "unclosed quotation mark after the character string", "unsupported nested scalar subselect", "valid MySQL result", "valid PostgreSQL result", "warning: mysql", "Warning: Wpg", "you have an error in your sql syntax", "Zend_Db_Adapter_Mysqli_Exception", "Zend_Db_Statement_Mysqli_Exception", "Zend_Db_Adapter_Oracle_Exception", "Zend_Db_Statement_Oracle_Exception", "Zend_Db_Adapter_Sqlsrv_Exception," "Zend_Db_Statement_Sqlsrv_Exception"}
     my_list = []
@@ -2934,10 +2935,8 @@ def sql_injection_scanner(url):
     os.system("clear")
     
     if user_input == "1":
-        url = https_string + url
-        
         for c in "\"'":
-            new_url = f"{url}{c}"
+            new_url = f"{my_url}{c}"
             print("Checking: " + new_url)
             
             try:
@@ -2999,13 +2998,13 @@ def sql_injection_scanner(url):
                 continue
 
         try:
-            print("Checking forms on: " + url)
+            print("Checking forms on: " + my_url)
             
             if termux_tor_boolean == True or tor_boolean == True:
-                result = web_session.get(url, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+                result = web_session.get(my_url, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
 
             if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                result = web_session.get(url, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+                result = web_session.get(my_url, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
             soup = BeautifulSoup(result.text, "html.parser")
             get_input = soup.find_all("input")
@@ -3159,16 +3158,16 @@ def sql_injection_scanner(url):
                 print("Checking form: " + i)
 
                 if termux_tor_boolean == True or tor_boolean == True:
-                    send_double = web_session.post(url, data = my_data_double, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+                    send_double = web_session.post(my_url, data = my_data_double, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
 
                 if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                    send_double = web_session.post(url, data = my_data_double, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+                    send_double = web_session.post(my_url, data = my_data_double, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
                 if termux_tor_boolean == True or tor_boolean == True:
-                    send_single = web_session.post(url, data = my_data_single, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+                    send_single = web_session.post(my_url, data = my_data_single, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
 
                 if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                    send_single = web_session.post(url, data = my_data_single, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+                    send_single = web_session.post(my_url, data = my_data_single, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
                 for i in error_mesage:
                     my_boolean = False
@@ -3293,13 +3292,13 @@ def sql_injection_scanner(url):
                     pass
                 
             try:
-                print("Checking forms on: " + url)
+                print("Checking forms on: " + j)
 
                 if termux_tor_boolean == True or tor_boolean == True:
-                    result = web_session.get(url, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+                    result = web_session.get(j, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
 
                 if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                    result = web_session.get(url, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+                    result = web_session.get(j, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
                 soup = BeautifulSoup(result.text, "html.parser")
                 get_input = soup.find_all("input")
@@ -3453,16 +3452,16 @@ def sql_injection_scanner(url):
                     print("Checking form: " + i)
 
                     if termux_tor_boolean == True or tor_boolean == True:
-                        send_double = web_session.post(url, data = my_data_double, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+                        send_double = web_session.post(j, data = my_data_double, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
 
                     if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                        send_double = web_session.post(url, data = my_data_double, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+                        send_double = web_session.post(j, data = my_data_double, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
                     if termux_tor_boolean == True or tor_boolean == True:
-                        send_single = web_session.post(url, data = my_data_single, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+                        send_single = web_session.post(j, data = my_data_single, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
 
                     if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                        send_single = web_session.post(url, data = my_data_single, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+                        send_single = web_session.post(j, data = my_data_single, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
                     for i in error_mesage:
                         my_boolean = False
