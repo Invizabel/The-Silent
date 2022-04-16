@@ -27,11 +27,7 @@ from bs4 import BeautifulSoup
 from collections import *
 from hashlib import *
 from itertools import *
-from selenium import webdriver
-from selenium.webdriver.common.by import *
-from selenium.webdriver.firefox.service import *
 from urllib.parse import urljoin
-from webdriver_manager.firefox import *
 
 import codecs
 import gc
@@ -2874,6 +2870,11 @@ def link_scanner(url):
         return result_list
 
 def link_scanner_selenium(url):
+    from selenium import *
+    from selenium.webdriver.common.by import *
+    from selenium.webdriver.firefox.service import *
+    from webdriver_manager.firefox import *
+    
     result = https_string + url
     
     driver = webdriver.Firefox(service = Service(GeckoDriverManager().install()))
