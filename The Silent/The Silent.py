@@ -2935,7 +2935,12 @@ def sql_injection_scanner(url):
     os.system("clear")
     my_url = https_string + url
 
-    error_mesage = {"Access Database Engine", "check the manual that corresponds to your Drizzle server version", "check the manual that fits your Drizzle server version", "check the manual that corresponds to your MariaDB server version", "check the manual that fits your MariaDB server version", "check the manual that corresponds to your MySQL server version", "check the manual that fits your MySQL server version", "com.ibm.db2.jcc", "com.microsoft.sqlserver.jdbc", "com.mysql.jdbc", "com.jnetdirect.jsql", "DB2Exception", "DB2 SQL error", "ERROR: parser: parse error at or near", "ERROR:sssyntax error at or near", "ibm_db_dbi.ProgrammingError", "is not supported by MemSQL", "JET Database Engine", "macromedia\.jdbc\.oracle", "macromedia.jdbc.sqlserver", "MemSQL does not support this type of query", "MySqlClient.", "MySqlException", "MySQLSyntaxErrorException", "ODBC Microsoft Access", "Oracle: Driver", "Oracle error", "OracleException", "oracle.jdbc", "org.postgresql.jdbc", "org.postgresql.util.PSQLException", "PG::SyntaxError:", "PostgreSQL: ERROR", "PostgreSQL query failed", "PSQLException", "quoted string not properly terminated", "SQL command not properly ended", "\[SQL Server\]", "SQLSrvException", "SQLServerException","SQLServer JDBC Driver", "SQL syntax: MySQL", "Npgsql.", "Syntax error (missing operator) in query expression", "unclosed quotation mark after the character string", "unsupported nested scalar subselect", "valid MySQL result", "valid PostgreSQL result", "warning: mysql", "Warning: Wpg", "you have an error in your sql syntax", "Zend_Db_Adapter_Db2_Exception", "Zend_Db_Statement_Db2_Exception", "Zend_Db_Adapter_Mysqli_Exception", "Zend_Db_Statement_Mysqli_Exception", "Zend_Db_Adapter_Oracle_Exception", "Zend_Db_Statement_Oracle_Exception", "Zend_Db_Adapter_Sqlsrv_Exception," "Zend_Db_Statement_Sqlsrv_Exception"}
+    #sql errors
+    error_mesage = {"Access Database Engine", "check the manual that corresponds to your Drizzle server version", "check the manual that fits your Drizzle server version", "check the manual that corresponds to your MariaDB server version", "check the manual that fits your MariaDB server version", "check the manual that corresponds to your MySQL server version", "check the manual that fits your MySQL server version", "com\.ibm\.db2\.jcc", "com\.microsoft\.sqlserver\.jdbc", "com\.mysql\.jdbc", "com\.jnetdirect\.jsql", "DB2Exception", "DB2 SQL error", "ERROR: parser: parse error at or near", "ERROR:sssyntax error at or near", "ibm_db_dbi\.ProgrammingError", "is not supported by MemSQL", "JET Database Engine", "macromedia\.jdbc\.oracle", "macromedia\.jdbc\.sqlserver", "MemSQL does not support this type of query", "MySqlClient.", "MySqlException", "MySQLSyntaxErrorException", "ODBC Microsoft Access", "Oracle: Driver", "Oracle error", "OracleException", "oracle\.jdbc", "org\.postgresql\.jdbc", "org\.postgresql\.util\.PSQLException", "PG::SyntaxError:", "PostgreSQL: ERROR", "PostgreSQL query failed", "PSQLException", "quoted string not properly terminated", "SQL command not properly ended", "\[SQL Server\]", "SQLSrvException", "SQLServerException","SQLServer JDBC Driver", "SQL syntax: MySQL", "Npgsql.", "Syntax error (missing operator) in query expression", "unclosed quotation mark after the character string", "unsupported nested scalar subselect", "valid MySQL result", "valid PostgreSQL result", "warning: mysql", "Warning: Wpg", "you have an error in your sql syntax", "Zend_Db_Adapter_Db2_Exception", "Zend_Db_Statement_Db2_Exception", "Zend_Db_Adapter_Mysqli_Exception", "Zend_Db_Statement_Mysqli_Exception", "Zend_Db_Adapter_Oracle_Exception", "Zend_Db_Statement_Oracle_Exception", "Zend_Db_Adapter_Sqlsrv_Exception," "Zend_Db_Statement_Sqlsrv_Exception"}
+
+    #malicious sql code
+    mal_sql = ["\"", "\'"]
+
     my_list = []
 
     user_input = input("1 = scan url | 2 = scan url and hyperlinks\n")
@@ -3162,42 +3167,32 @@ def sql_injection_scanner(url):
             form_list = list(dict.fromkeys(form_list))
             form_list.sort()
 
-            for i in form_list:
-                my_data_double = {i: "\""}
-                my_data_single = {i: "\'"}
+            for forms in form_list:
+                for mal in mal_sql:
+                    form_dict = {forms: mal}
 
-                print("Checking form: " + i)
+                    print("Checking form: " + forms)
 
-                if termux_tor_boolean == True or tor_boolean == True:
-                    send_double = web_session.post(my_url, data = my_data_double, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+                    if termux_tor_boolean == True or tor_boolean == True:
+                        send_data = web_session.post(my_url, data = form_dict, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
 
-                if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                    send_double = web_session.post(my_url, data = my_data_double, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+                    if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                        send_data = web_session.post(my_url, data = form_dict, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
-                if termux_tor_boolean == True or tor_boolean == True:
-                    send_single = web_session.post(my_url, data = my_data_single, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+                    for i in error_mesage:
+                        my_boolean = False
 
-                if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                    send_single = web_session.post(my_url, data = my_data_single, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+                        try:
+                            if i in send_data.content.decode().lower():
+                                    my_boolean = True
+                                    break
 
-                for i in error_mesage:
-                    my_boolean = False
+                        except UnicodeDecodeError:
+                            continue
 
-                    try:
-                        if i in send_double.content.decode().lower():
-                                my_boolean = True
-                                break
-
-                        if i in send_single.content.decode().lower():
-                            my_boolean = True
-                            break
-
-                    except UnicodeDecodeError:
-                        continue
-
-                if my_boolean == True:
-                    print("True: " + url + ("form"))
-                    my_list.append(url + ("form"))
+                    if my_boolean == True:
+                        print("True: " + url + (" form"))
+                        my_list.append(url + (" form"))
 
         except requests.exceptions.SSLError:
             print("ERROR: invalid certificate!")
@@ -3460,42 +3455,32 @@ def sql_injection_scanner(url):
                 form_list = list(dict.fromkeys(form_list))
                 form_list.sort()
 
-                for i in form_list:
-                    my_data_double = {i: "\""}
-                    my_data_single = {i: "\'"}
+                for forms in form_list:
+                    for mal in mal_sql:
+                        form_dict = {forms: mal}
 
-                    print("Checking form: " + i)
+                        print("Checking form: " + forms)
 
-                    if termux_tor_boolean == True or tor_boolean == True:
-                        send_double = web_session.post(j, data = my_data_double, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+                        if termux_tor_boolean == True or tor_boolean == True:
+                            send_data = web_session.post(j, data = form_dict, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
 
-                    if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                        send_double = web_session.post(j, data = my_data_double, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+                        if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                            send_data = web_session.post(j, data = form_dict, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
-                    if termux_tor_boolean == True or tor_boolean == True:
-                        send_single = web_session.post(j, data = my_data_single, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+                        for i in error_mesage:
+                            my_boolean = False
 
-                    if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
-                        send_single = web_session.post(j, data = my_data_single, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+                            try:
+                                if i in send_data.content.decode().lower():
+                                        my_boolean = True
+                                        break
 
-                    for i in error_mesage:
-                        my_boolean = False
+                            except UnicodeDecodeError:
+                                continue
 
-                        try:
-                            if i in send_double.content.decode().lower():
-                                    my_boolean = True
-                                    break
-
-                            if i in send_single.content.decode().lower():
-                                my_boolean = True
-                                break
-
-                        except UnicodeDecodeError:
-                            continue
-
-                    if my_boolean == True:
-                        print("True: " + url + ("form"))
-                        my_list.append(url + ("form"))
+                        if my_boolean == True:
+                            print("True: " + url + (" form"))
+                            my_list.append(url + (" form"))
 
             except requests.exceptions.SSLError:
                 print("ERROR: invalid certificate!")
