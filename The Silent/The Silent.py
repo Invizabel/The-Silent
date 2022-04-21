@@ -2673,6 +2673,7 @@ def link_scanner(url):
     total_web_list = []
     total_web_list.append(output)
     result_list = []
+    web_list = []
 
     user_input = input("1 = search domain links | 2 = search all links | 3 = search for a specific link | 4 = search domain links using selenium\n")
 
@@ -2700,7 +2701,21 @@ def link_scanner(url):
                 try:
                     print(total_web_list[i])
                     result = str(final.text)
-                    web_list = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', result)
+
+                    soup = BeautifulSoup(result, "html.parser")
+
+                    for my_link in soup.find_all("a", href = True):
+                        if "http://" in my_link["href"] or "https://" in my_link["href"]:
+                            web_list.append(my_link["href"])
+
+                        if "http://" not in my_link["href"] and "https://" not in my_link["href"]:
+                            try:
+                                if my_link["href"].index("/") == 0:
+                                    web_list.append(str(output + my_link["href"]))
+
+                            except:
+                                web_list.append(str(output + "/" + my_link["href"]))
+                                
                     web_list = list(dict.fromkeys(web_list))
                     web_list.sort()
 
