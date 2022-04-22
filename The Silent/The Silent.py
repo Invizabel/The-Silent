@@ -2962,7 +2962,7 @@ def sql_injection_scanner(url):
     os.system("clear")
     
     if user_input == "1":
-        for c in "\"'":
+        for c in mal_sql:
             new_url = f"{my_url}{c}"
             print("Checking: " + new_url)
             
@@ -3249,7 +3249,7 @@ def sql_injection_scanner(url):
         my_result = link_scanner(url)
 
         for j in my_result:
-            for c in "\"'":
+            for c in mal_sql:
                 new_url = f"{j}{c}"
 
                 print("Checking: " + new_url)
