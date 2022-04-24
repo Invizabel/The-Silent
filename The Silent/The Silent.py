@@ -2951,7 +2951,7 @@ def sql_injection_scanner(url):
     my_url = https_string + url
 
     #sql errors
-    error_mesage = {"Access Database Engine", "check the manual that corresponds to your Drizzle server version", "check the manual that fits your Drizzle server version", "check the manual that corresponds to your MariaDB server version", "check the manual that fits your MariaDB server version", "check the manual that corresponds to your MySQL server version", "check the manual that fits your MySQL server version", "CLI Driver: DB2", "com.ibm.db2.jcc", "com.informix.jdbc", "com.microsoft.sqlserver.jdbc", "com.mysql.jdbc", "com.jnetdirect.jsql", "DB2Exception", "DB2 SQL error", "Dynamic SQL Error", "ERROR: parser: parse error at or near", "ERROR:sssyntax error at or near", "Exception: Informix", "ibm_db_dbi.ProgrammingError", "IfxException", "Informix ODBC Driver", "is not supported by MemSQL", "JET Database Engine", "macromedia.jdbc.oracle", "macromedia.jdbc.sqlserver", "MemSQL does not support this type of query", "MySqlClient.", "MySqlException", "MySQLSyntaxErrorException", "ODBC Informix driver", "ODBC Microsoft Access", "Oracle: Driver", "Oracle error", "OracleException", "oracle.jdbc", "org.postgresql.jdbc", "org.postgresql.util.PSQLException", "PG::SyntaxError:", "PostgreSQL: ERROR", "PostgreSQL query failed", "PSQLException", "quoted string not properly terminated", "SQL command not properly ended", "SQL Server", "SQLSrvException", "SQLServerException","SQLServer JDBC Driver", "SQL syntax: MySQL", "Npgsql.", "org.firebirdsql.jdbc", "Syntax error (missing operator) in query expression", "unclosed quotation mark after the character string", "unsupported nested scalar subselect", "valid MySQL result", "valid PostgreSQL result", "warning: mysql", "Warning: Wibase_", "Warning: Wifx_", "Warning: Wpg", "weblogic.jdbc.informix", "you have an error in your sql syntax", "Zend_Db_Adapter_Db2_Exception", "Zend_Db_Statement_Db2_Exception", "Zend_Db_Adapter_Mysqli_Exception", "Zend_Db_Statement_Mysqli_Exception", "Zend_Db_Adapter_Oracle_Exception", "Zend_Db_Statement_Oracle_Exception", "Zend_Db_Adapter_Sqlsrv_Exception," "Zend_Db_Statement_Sqlsrv_Exception"}
+    error_mesage = {"Access Database Engine", "check the manual that corresponds to your Drizzle server version", "check the manual that fits your Drizzle server version", "check the manual that corresponds to your MariaDB server version", "check the manual that fits your MariaDB server version", "check the manual that corresponds to your MySQL server version", "check the manual that fits your MySQL server version", "CLI Driver: DB2", "com.ibm.db2.jcc", "com.informix.jdbc", "com.microsoft.sqlserver.jdbc", "com.mysql.jdbc", "com.jnetdirect.jsql", "DB2Exception", "DB2 SQL error", "Dynamic SQL Error", "ERROR: parser: parse error at or near", "ERROR:sssyntax error at or near", "Exception: Informix", "ibm_db_dbi.ProgrammingError", "IfxException", "Informix ODBC Driver", "is not supported by MemSQL", "JET Database Engine", "macromedia.jdbc.oracle", "macromedia.jdbc.sqlserver", "MemSQL does not support this type of query",  "Microsoft.Data.SQLite.SQLiteException", "MySqlClient", "MySqlException", "MySQLSyntaxErrorException", "ODBC Informix driver", "ODBC Microsoft Access", "Oracle: Driver", "Oracle error", "OracleException", "oracle.jdbc", "org.postgresql.jdbc", "org.postgresql.util.PSQLException", "PG::SyntaxError:", "PostgreSQL: ERROR", "PostgreSQL query failed", "PSQLException", "quoted string not properly terminated", "SQL command not properly ended", "SQL Server", "SQLSrvException", "SQLServerException","SQLServer JDBC Driver", "SQL syntax: MySQL", "Npgsql.", "org.firebirdsql.jdbc", "org.sqlite.JDBC", "sqlite3.OperationalError:", "SQLite3::SQLException", "SQLITE_ERROR", "SQLite error", "SQLite.Exception", "SQLiteException", "SQLite/JDBCDriver", "Syntax error (missing operator) in query expression", "System.Data.SQLite.SQLiteException", "unclosed quotation mark after the character string", "unsupported nested scalar subselect", "valid MySQL result", "valid PostgreSQL result", "warning: mysql", "Warning: sqlite", "Warning: SQLite3","Warning: Wibase_", "Warning: Wifx_", "Warning: Wpg", "weblogic.jdbc.informix", "you have an error in your sql syntax", "Zend_Db_Adapter_Db2_Exception", "Zend_Db_Statement_Db2_Exception", "Zend_Db_Adapter_Mysqli_Exception", "Zend_Db_Statement_Mysqli_Exception", "Zend_Db_Adapter_Oracle_Exception", "Zend_Db_Statement_Oracle_Exception", "Zend_Db_Adapter_Sqlsrv_Exception," "Zend_Db_Statement_Sqlsrv_Exception"}
 
     #malicious sql code
     mal_sql = ["\"", "\'", ";"]
@@ -3025,7 +3025,7 @@ def sql_injection_scanner(url):
                 continue
 
         try:
-            print("Checking forms on: " + my_url)
+            print("Checking for forms on: " + my_url)
             
             if termux_tor_boolean == True or tor_boolean == True:
                 result = web_session.get(my_url, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
@@ -3186,7 +3186,7 @@ def sql_injection_scanner(url):
                 for mal in mal_sql:
                     form_dict = {forms: mal}
 
-                    print("Checking form: " + forms)
+                    print("Checking form (" + mal + "): " + forms)
 
                     if termux_tor_boolean == True or tor_boolean == True:
                         send_data = web_session.post(my_url, data = form_dict, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
@@ -3313,7 +3313,7 @@ def sql_injection_scanner(url):
                     pass
                 
             try:
-                print("Checking forms on: " + j)
+                print("Checking for forms on: " + j)
 
                 if termux_tor_boolean == True or tor_boolean == True:
                     result = web_session.get(j, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
@@ -3474,7 +3474,7 @@ def sql_injection_scanner(url):
                     for mal in mal_sql:
                         form_dict = {forms: mal}
 
-                        print("Checking form: " + forms)
+                        print("Checking form (" + mal + "): " + forms)
 
                         if termux_tor_boolean == True or tor_boolean == True:
                             send_data = web_session.post(j, data = form_dict, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
