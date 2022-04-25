@@ -2951,8 +2951,8 @@ def sql_injection_scanner(url):
     my_url = https_string + url
 
     #sql errors
-    error_mesage = {"Access Database Engine", "check the manual that corresponds to your Drizzle server version", "check the manual that fits your Drizzle server version", "check the manual that corresponds to your MariaDB server version", "check the manual that fits your MariaDB server version", "check the manual that corresponds to your MySQL server version", "check the manual that fits your MySQL server version", "CLI Driver: DB2", "com.ibm.db2.jcc", "com.informix.jdbc", "com.microsoft.sqlserver.jdbc", "com.mysql.jdbc", "com.jnetdirect.jsql", "DB2Exception", "DB2 SQL error", "Dynamic SQL Error", "ERROR: parser: parse error at or near", "ERROR:sssyntax error at or near", "Exception: Informix", "ibm_db_dbi.ProgrammingError", "IfxException", "Informix ODBC Driver", "is not supported by MemSQL", "JET Database Engine", "macromedia.jdbc.oracle", "macromedia.jdbc.sqlserver", "MemSQL does not support this type of query",  "Microsoft.Data.SQLite.SQLiteException", "MySqlClient", "MySqlException", "MySQLSyntaxErrorException", "ODBC Informix driver", "ODBC Microsoft Access", "Oracle: Driver", "Oracle error", "OracleException", "oracle.jdbc", "org.postgresql.jdbc", "org.postgresql.util.PSQLException", "PG::SyntaxError:", "PostgreSQL: ERROR", "PostgreSQL query failed", "PSQLException", "quoted string not properly terminated", "SQL command not properly ended", "SQL Server", "SQLSrvException", "SQLServerException","SQLServer JDBC Driver", "SQL syntax: MySQL", "Npgsql.", "org.firebirdsql.jdbc", "org.sqlite.JDBC", "sqlite3.OperationalError:", "SQLite3::SQLException", "SQLITE_ERROR", "SQLite error", "SQLite.Exception", "SQLiteException", "SQLite/JDBCDriver", "Syntax error (missing operator) in query expression", "System.Data.SQLite.SQLiteException", "unclosed quotation mark after the character string", "unsupported nested scalar subselect", "valid MySQL result", "valid PostgreSQL result", "warning: mysql", "Warning: sqlite", "Warning: SQLite3","Warning: Wibase_", "Warning: Wifx_", "Warning: Wpg", "weblogic.jdbc.informix", "you have an error in your sql syntax", "Zend_Db_Adapter_Db2_Exception", "Zend_Db_Statement_Db2_Exception", "Zend_Db_Adapter_Mysqli_Exception", "Zend_Db_Statement_Mysqli_Exception", "Zend_Db_Adapter_Oracle_Exception", "Zend_Db_Statement_Oracle_Exception", "Zend_Db_Adapter_Sqlsrv_Exception," "Zend_Db_Statement_Sqlsrv_Exception"}
-
+    error_mesage = {"SQL syntax.*?MySQL", "Warning.*?\Wmysqli?_", "MySQLSyntaxErrorException", "valid MySQL result", "check the manual that (corresponds to|fits) your MySQL server version", "check the manual that (corresponds to|fits) your MariaDB server version", "check the manual that (corresponds to|fits) your Drizzle server version", "Unknown column '[^ ]+' in 'field list'", "MySqlClient\.", "com\.mysql\.jdbc", "Zend_Db_(Adapter|Statement)_Mysqli_Exception", "Pdo\[./_\\]Mysql", "MySqlException", "SQLSTATE\[\d+\]: Syntax error or access violation", "MemSQL does not support this type of query", "is not supported by MemSQL", "unsupported nested scalar subselect", "PostgreSQL.*?ERROR", "Warning.*?\Wpg_", "valid PostgreSQL result", "Npgsql\.", "PG::SyntaxError:", "org\.postgresql\.util\.PSQLException", "ERROR:\s\ssyntax error at or near", "ERROR: parser: parse error at or near", "PostgreSQL query failed", "org\.postgresql\.jdbc", "Pdo\[./_\\]Pgsql", "PSQLException", "OLE DB.*? SQL Server", "\bSQL Server[^&lt;&quot;]+Driver", "Warning.*?\W(mssql|sqlsrv)_", "\bSQL Server[^&lt;&quot;]+[0-9a-fA-F]{8}", "System\.Data\.SqlClient\.(SqlException|SqlConnection\.OnError)", "(?s)Exception.*?\bRoadhouse\.Cms\.", "Microsoft SQL Native Client error '[0-9a-fA-F]{8}", "\[SQL Server\]", "ODBC SQL Server Driver", "ODBC Driver \d+ for SQL Server", "SQLServer JDBC Driver", "com\.jnetdirect\.jsql", "macromedia\.jdbc\.sqlserver", "Zend_Db_(Adapter|Statement)_Sqlsrv_Exception", "com\.microsoft\.sqlserver\.jdbc", "Pdo\[./_\\](Mssql|SqlSrv)", "SQL(Srv|Server)Exception", "Unclosed quotation mark after the character string", "Microsoft Access (\d+ )?Driver", "JET Database Engine", "Access Database Engine", "ODBC Microsoft Access", "Syntax error \(missing operator\) in query expression", "\bORA-\d{5}", "Oracle error", "Oracle.*?Driver", "Warning.*?\W(oci|ora)_", "quoted string not properly terminated", "SQL command not properly ended", "macromedia\.jdbc\.oracle", "oracle\.jdbc", "Zend_Db_(Adapter|Statement)_Oracle_Exception", "Pdo\[./_\\](Oracle|OCI)", "OracleException", "CLI Driver.*?DB2", "DB2 SQL error", "\bdb2_\w+\(", "SQLCODE[=:\d, -]+SQLSTATE", "com\.ibm\.db2\.jcc", "Zend_Db_(Adapter|Statement)_Db2_Exception", "Pdo\[./_\\]Ibm", "DB2Exception", "ibm_db_dbi\.ProgrammingError", "Warning.*?\Wifx_", "Exception.*?Informix", "Informix ODBC Driver", "ODBC Informix driver", "com\.informix\.jdbc", "weblogic\.jdbc\.informix", "Pdo\[./_\\]Informix", "IfxException", "Dynamic SQL Error", "Warning.*?\Wibase_", "org\.firebirdsql\.jdbc", "Pdo\[./_\\]Firebird", "SQLite/JDBCDriver", "SQLite\.Exception", "(Microsoft|System)\.Data\.SQLite\.SQLiteException", "Warning.*?\W(sqlite_|SQLite3::)", "\[SQLITE_ERROR\]", "SQLite error \d+:", "sqlite3.OperationalError:", "SQLite3::SQLException", "org\.sqlite\.JDBC", "Pdo\[./_\\]Sqlite", "SQLiteException", "SQL error.*?POS([0-9]+)", "Warning.*?\Wmaxdb_", "DriverSapDB", "-3014.*?Invalid end of SQL statement", "com\.sap\.dbtech\.jdbc", "\[-3008\].*?: Invalid keyword or missing delimiter", "Warning.*?\Wsybase_", "Sybase message", "Sybase.*?Server message", "SybSQLException", "Sybase\.Data\.AseClient", "com\.sybase\.jdbc", "Warning.*?\Wingres_", "Ingres SQLSTATE", "Ingres\W.*?Driver", "com\.ingres\.gcf\.jdbc", "Exception (condition )?\d+\. Transaction rollback", "com\.frontbase\.jdbc", "Syntax error 1. Missing", "(Semantic|Syntax) error [1-4]\d{2}\.", "Unexpected end of command in statement \[", "Unexpected token.*?in statement \[", "org\.hsqldb\.jdbc", "org\.h2\.jdbc", "\[42000-192\]", "![0-9]{5}![^\n]+(failed|unexpected|error|syntax|expected|violation|exception)", "\[MonetDB\]\[ODBC Driver", "nl\.cwi\.monetdb\.jdbc", "Syntax error: Encountered", "org\.apache\.derby", "ERROR 42X01", ", Sqlstate: (3F|42).{3}, (Routine|Hint|Position):", "/vertica/Parser/scan", "com\.vertica\.jdbc", "org\.jkiss\.dbeaver\.ext\.vertica", "com\.vertica\.dsi\.dataengine", "com\.mckoi\.JDBCDriver", "com\.mckoi\.database\.jdbc", "&lt;REGEX_LITERAL&gt;", "com\.facebook\.presto\.jdbc", "io\.prestosql\.jdbc", "com\.simba\.presto\.jdbc", "UNION query has different number of fields: \d+, \d+", "Altibase\.jdbc\.driver", "com\.mimer\.jdbc", "Syntax error,[^\n]+assumed to mean", "io\.crate\.client\.jdbc", "encountered after end of query", "A comparison operator is required here", "-10048: Syntax error", "rdmStmtPrepare\(.+?\) returned", "SQ074: Line \d+:", "SR185: Undefined procedure", "SQ200: No table ", "Virtuoso S0002 Error", "\[(Virtuoso Driver|Virtuoso iODBC Driver)\]\[Virtuoso Server\]"}
+    
     #malicious sql code
     mal_sql = ["\"", "\'", ";"]
 
@@ -2974,15 +2974,16 @@ def sql_injection_scanner(url):
                     result = web_session.get(new_url, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
                 for i in error_mesage:
+                    my_regex = re.search(i, result.text)
                     my_boolean = False
 
                     try:
-                        if i in result.content.decode().lower():
+                        if my_regex:
                             my_boolean = True
                             break
 
                     except UnicodeDecodeError:
-                        continue
+                        break
 
                 if my_boolean == True:
                     print("True: " + new_url)
@@ -3195,10 +3196,11 @@ def sql_injection_scanner(url):
                         send_data = web_session.post(my_url, data = form_dict, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
                     for i in error_mesage:
+                        my_regex = re.search(i, send_data.text)
                         my_boolean = False
 
                         try:
-                            if i in send_data.content.decode().lower():
+                            if my_regex:
                                     my_boolean = True
                                     break
 
@@ -3206,8 +3208,8 @@ def sql_injection_scanner(url):
                             continue
 
                     if my_boolean == True:
-                        print("True: " + url + (" form"))
-                        my_list.append(url + (" form"))
+                        print("True: " + url + " form: " + forms)
+                        my_list.append(url + " form: " + forms)
 
         except requests.exceptions.SSLError:
             print("ERROR: invalid certificate!")
@@ -3262,10 +3264,11 @@ def sql_injection_scanner(url):
                         result = web_session.get(new_url, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
                     for i in error_mesage:
+                        my_regex = re.search(i, result.text)
                         my_boolean = False
 
                         try:
-                            if i in result.content.decode().lower():
+                            if my_regex:
                                 my_boolean = True
                                 break
 
@@ -3483,10 +3486,11 @@ def sql_injection_scanner(url):
                             send_data = web_session.post(j, data = form_dict, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
                         for i in error_mesage:
+                            my_regex = re.search(i, send_data.text)
                             my_boolean = False
 
                             try:
-                                if i in send_data.content.decode().lower():
+                                if my_regex:
                                         my_boolean = True
                                         break
 
@@ -3494,8 +3498,8 @@ def sql_injection_scanner(url):
                                 continue
 
                         if my_boolean == True:
-                            print("True: " + url + (" form"))
-                            my_list.append(url + (" form"))
+                            print("True: " + url + " form: " + forms)
+                            my_list.append(url + " form: " + forms)
 
             except requests.exceptions.SSLError:
                 print("ERROR: invalid certificate!")
