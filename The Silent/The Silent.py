@@ -4058,6 +4058,8 @@ def xss_scanner(url):
     my_list = list(dict.fromkeys(my_list))
     my_list.sort()
 
+    os.system("clear")
+
     return my_list
 
 #scans for emails on website
