@@ -3596,6 +3596,56 @@ def xss_scanner(url):
 
     if user_input == "1":
         try:
+            super_result = my_url.split("=")
+            print("Checking: " + super_result[0] + "=" + mal_script)
+            
+            if termux_tor_boolean == True or tor_boolean == True:
+                result = web_session.get(super_result[0] + "=" + mal_script, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                result = web_session.get(super_result[0] + "=" + mal_script, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+            if mal_script in result.text:
+                    print("True: " + super_result[0] + "=" + mal_script + " (script in url)")
+                    my_list.append(super_result[0] + "=" + mal_script + " (script in url)")
+
+        except requests.exceptions.SSLError:
+            print("ERROR: invalid certificate!")
+            pass
+
+        except urllib3.exceptions.LocationParseError:
+            print("ERROR: location parse error!")
+            pass
+
+        except requests.exceptions.ConnectionError:
+            print("ERROR: connection error!")
+            pass
+
+        except requests.exceptions.ConnectTimeout:
+            print("ERROR: connect timeout!")
+            pass
+
+        except requests.exceptions.InvalidSchema:
+            print("ERROR: invalid schema!")
+            pass
+
+        except requests.exceptions.InvalidURL:
+            print("ERROR: invalid url!")
+            pass
+
+        except requests.exceptions.MissingSchema:
+            print("ERROR: missing schema!")
+            pass
+
+        except requests.exceptions.TooManyRedirects:
+            print("ERROR: too many redirects!")
+            pass
+
+        except requests.exceptions.ReadTimeout:
+            print("ERROR: read timeout!")
+            pass
+        
+        try:
             print("Checking: " + my_url + mal_script)
             
             if termux_tor_boolean == True or tor_boolean == True:
@@ -3604,7 +3654,7 @@ def xss_scanner(url):
             if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
                 result = web_session.get(my_url + mal_script, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
-            if mal_script in result:
+            if mal_script in result.text:
                     print("True: " + my_url + mal_script + " (script in url)")
                     my_list.append(my_url + mal_script + " (script in url)")
 
@@ -3872,11 +3922,59 @@ def xss_scanner(url):
             pass
 
     if user_input == "2":
-        my_result = link_scanner(url)
-
-        print(my_result) 
+        my_result = link_scanner(url) 
 
         for links in my_result:
+            try:
+                super_result = links.split("=")
+                print("Checking: " + super_result[0] + "=" + mal_script)
+                
+                if termux_tor_boolean == True or tor_boolean == True:
+                    result = web_session.get(super_result[0] + "=" + mal_script, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+                if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                    result = web_session.get(super_result[0] + "=" + mal_script, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+                if mal_script in result.text:
+                        print("True: " + super_result[0] + "=" + mal_script + " (script in url)")
+                        my_list.append(super_result[0] + "=" + mal_script + " (script in url)")
+
+            except requests.exceptions.SSLError:
+                print("ERROR: invalid certificate!")
+                pass
+
+            except urllib3.exceptions.LocationParseError:
+                print("ERROR: location parse error!")
+                pass
+
+            except requests.exceptions.ConnectionError:
+                print("ERROR: connection error!")
+                pass
+
+            except requests.exceptions.ConnectTimeout:
+                print("ERROR: connect timeout!")
+                pass
+
+            except requests.exceptions.InvalidSchema:
+                print("ERROR: invalid schema!")
+                pass
+
+            except requests.exceptions.InvalidURL:
+                print("ERROR: invalid url!")
+                pass
+
+            except requests.exceptions.MissingSchema:
+                print("ERROR: missing schema!")
+                pass
+
+            except requests.exceptions.TooManyRedirects:
+                print("ERROR: too many redirects!")
+                pass
+
+            except requests.exceptions.ReadTimeout:
+                print("ERROR: read timeout!")
+                pass
+                
             try:
                 print("Checking: " + links + mal_script)
                 
@@ -3886,7 +3984,7 @@ def xss_scanner(url):
                 if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
                     result = web_session.get(links + mal_script, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
 
-                if mal_script in result:
+                if mal_script in result.text:
                         print("True: " + links  + mal_script + " (script in url)")
                         my_list.append(links  + mal_script + " (script in url)")
 
