@@ -3051,8 +3051,6 @@ def sql_injection_scanner(url):
                         parse_name_start = str(i).index("name=\"")
                         parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
 
-                    
-
                         for ii in range(parse_name_start + 6, parse_name_end):
                             form_name = form_name + str(i)[ii]
 
@@ -3067,8 +3065,6 @@ def sql_injection_scanner(url):
                     try:
                         parse_name_start = str(i).index("name=\"")
                         parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
-
-                    
 
                         for ii in range(parse_name_start + 6, parse_name_end):
                             form_name = form_name + str(i)[ii]
@@ -3085,8 +3081,6 @@ def sql_injection_scanner(url):
                         parse_name_start = str(i).index("name=\"")
                         parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
 
-                    
-
                         for ii in range(parse_name_start + 6, parse_name_end):
                             form_name = form_name + str(i)[ii]
 
@@ -3102,7 +3096,20 @@ def sql_injection_scanner(url):
                         parse_name_start = str(i).index("name=\"")
                         parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
 
-                    
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "query" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
 
                         for ii in range(parse_name_start + 6, parse_name_end):
                             form_name = form_name + str(i)[ii]
@@ -3118,9 +3125,7 @@ def sql_injection_scanner(url):
                     try:
                         parse_name_start = str(i).index("name=\"")
                         parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
-
-                    
-
+                        
                         for ii in range(parse_name_start + 6, parse_name_end):
                             form_name = form_name + str(i)[ii]
 
@@ -3135,8 +3140,6 @@ def sql_injection_scanner(url):
                     try:
                         parse_name_start = str(i).index("name=\"")
                         parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
-
-                    
 
                         for ii in range(parse_name_start + 6, parse_name_end):
                             form_name = form_name + str(i)[ii]
@@ -3153,8 +3156,6 @@ def sql_injection_scanner(url):
                         parse_name_start = str(i).index("name=\"")
                         parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
 
-                    
-
                         for ii in range(parse_name_start + 6, parse_name_end):
                             form_name = form_name + str(i)[ii]
 
@@ -3169,8 +3170,6 @@ def sql_injection_scanner(url):
                     try:
                         parse_name_start = str(i).index("name=\"")
                         parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
-
-                    
 
                         for ii in range(parse_name_start + 6, parse_name_end):
                             form_name = form_name + str(i)[ii]
@@ -3197,6 +3196,28 @@ def sql_injection_scanner(url):
 
                     for i in error_mesage:
                         my_regex = re.search(i, send_data.text)
+                        my_boolean = False
+
+                        try:
+                            if my_regex:
+                                    my_boolean = True
+                                    break
+
+                        except UnicodeDecodeError:
+                            continue
+
+                    if my_boolean == True:
+                        print("True: " + url + " form: " + forms)
+                        my_list.append(url + " form: " + forms)
+
+                    if termux_tor_boolean == True or tor_boolean == True:
+                        get_data = web_session.get(my_url, params = form_dict, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+                    if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                        get_data = web_session.get(my_url, params = form_dict, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+                    for i in error_mesage:
+                        my_regex = re.search(i, get_data.text)
                         my_boolean = False
 
                         try:
@@ -3341,8 +3362,6 @@ def sql_injection_scanner(url):
                             parse_name_start = str(i).index("name=\"")
                             parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
 
-                        
-
                             for ii in range(parse_name_start + 6, parse_name_end):
                                 form_name = form_name + str(i)[ii]
 
@@ -3357,8 +3376,6 @@ def sql_injection_scanner(url):
                         try:
                             parse_name_start = str(i).index("name=\"")
                             parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
-
-                        
 
                             for ii in range(parse_name_start + 6, parse_name_end):
                                 form_name = form_name + str(i)[ii]
@@ -3375,8 +3392,6 @@ def sql_injection_scanner(url):
                             parse_name_start = str(i).index("name=\"")
                             parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
 
-                        
-
                             for ii in range(parse_name_start + 6, parse_name_end):
                                 form_name = form_name + str(i)[ii]
 
@@ -3391,9 +3406,22 @@ def sql_injection_scanner(url):
                         try:
                             parse_name_start = str(i).index("name=\"")
                             parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+                            
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
 
-                        
+                            form_list.append(form_name)
 
+                        except:
+                            pass
+
+                    if "query" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+                            
                             for ii in range(parse_name_start + 6, parse_name_end):
                                 form_name = form_name + str(i)[ii]
 
@@ -3408,8 +3436,6 @@ def sql_injection_scanner(url):
                         try:
                             parse_name_start = str(i).index("name=\"")
                             parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
-
-                        
 
                             for ii in range(parse_name_start + 6, parse_name_end):
                                 form_name = form_name + str(i)[ii]
@@ -3426,8 +3452,6 @@ def sql_injection_scanner(url):
                             parse_name_start = str(i).index("name=\"")
                             parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
 
-                        
-
                             for ii in range(parse_name_start + 6, parse_name_end):
                                 form_name = form_name + str(i)[ii]
 
@@ -3443,8 +3467,6 @@ def sql_injection_scanner(url):
                             parse_name_start = str(i).index("name=\"")
                             parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
 
-                        
-
                             for ii in range(parse_name_start + 6, parse_name_end):
                                 form_name = form_name + str(i)[ii]
 
@@ -3459,8 +3481,6 @@ def sql_injection_scanner(url):
                         try:
                             parse_name_start = str(i).index("name=\"")
                             parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
-
-                        
 
                             for ii in range(parse_name_start + 6, parse_name_end):
                                 form_name = form_name + str(i)[ii]
@@ -3487,6 +3507,28 @@ def sql_injection_scanner(url):
 
                         for i in error_mesage:
                             my_regex = re.search(i, send_data.text)
+                            my_boolean = False
+
+                            try:
+                                if my_regex:
+                                        my_boolean = True
+                                        break
+
+                            except UnicodeDecodeError:
+                                continue
+
+                        if my_boolean == True:
+                            print("True: " + url + " form: " + forms)
+                            my_list.append(url + " form: " + forms)
+
+                        if termux_tor_boolean == True or tor_boolean == True:
+                            get_data = web_session.get(j, params = form_dict, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+                        if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                            get_data = web_session.get(j, params = form_dict, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+                        for i in error_mesage:
+                            my_regex = re.search(i, get_data.text)
                             my_boolean = False
 
                             try:
@@ -3539,6 +3581,483 @@ def sql_injection_scanner(url):
 
     os.system("clear")
     
+    return my_list
+
+def xss_scanner(url):
+    os.system("clear")
+    my_list = []
+    my_url = https_string + url
+    
+    #malicious script
+    mal_script = "<script>alert('The Silent')</script>"
+
+    user_input = input("1 = scan url | 2 = scan url and hyperlinks\n")
+    os.system("clear")
+
+    if user_input == "1":
+        print("Checking for forms on: " + my_url)
+
+        try:
+            if termux_tor_boolean == True or tor_boolean == True:
+                result = web_session.get(my_url, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+            if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                result = web_session.get(my_url, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+            try:
+                soup = BeautifulSoup(result.text, "html.parser")
+                get_input = soup.find_all("input")
+
+            except:
+                pass
+
+            form_list = []
+
+            for i in get_input:
+                if "email" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+                        
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "hidden" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+                    
+                if "number" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "password" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "query" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+                        
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "search" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "search" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+                        
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "tel" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+                        
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "text" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+                        
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                if "url" in str(i):
+                    form_name = ""
+
+                    try:
+                        parse_name_start = str(i).index("name=\"")
+                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+                        
+                        for ii in range(parse_name_start + 6, parse_name_end):
+                            form_name = form_name + str(i)[ii]
+
+                        form_list.append(form_name)
+
+                    except:
+                        pass
+
+                form_list = list(dict.fromkeys(form_list))
+                form_list.sort()
+
+                for forms in form_list:
+                    mal_dict = {forms: mal_script}
+
+                    if termux_tor_boolean == True or tor_boolean == True:
+                        get_data = web_session.get(my_url, params = mal_dict, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+                    if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                        get_data = web_session.get(my_url, params = mal_dict, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+                    if termux_tor_boolean == True or tor_boolean == True:
+                        send_data = web_session.post(my_url, data = mal_dict, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+                    if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                        send_data = web_session.post(my_url, data = mal_dict, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+                    if mal_script in send_data.text or mal_script in get_data.text:
+                        print("True: " + url + " form: " + forms)
+                        my_list.append(url + " form: " + forms)
+
+        except requests.exceptions.SSLError:
+            print("ERROR: invalid certificate!")
+            pass
+
+        except urllib3.exceptions.LocationParseError:
+            print("ERROR: location parse error!")
+            pass
+
+        except requests.exceptions.ConnectionError:
+            print("ERROR: connection error!")
+            pass
+
+        except requests.exceptions.ConnectTimeout:
+            print("ERROR: connect timeout!")
+            pass
+
+        except requests.exceptions.InvalidSchema:
+            print("ERROR: invalid schema!")
+            pass
+
+        except requests.exceptions.InvalidURL:
+            print("ERROR: invalid url!")
+            pass
+
+        except requests.exceptions.MissingSchema:
+            print("ERROR: missing schema!")
+            pass
+
+        except requests.exceptions.TooManyRedirects:
+            print("ERROR: too many redirects!")
+            pass
+
+        except requests.exceptions.ReadTimeout:
+            print("ERROR: read timeout!")
+            pass
+
+    if user_input == "2":
+        my_result = link_scanner(url)
+
+        print(my_result) 
+
+        for links in my_result:
+            print("Checking for forms on: " + links)
+
+            try:
+                if termux_tor_boolean == True or tor_boolean == True:
+                    result = web_session.get(links, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+                if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                    result = web_session.get(links, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+                try:
+                    soup = BeautifulSoup(result.text, "html.parser")
+                    get_input = soup.find_all("input")
+
+                except:
+                    pass
+
+                form_list = []
+
+                for i in get_input:
+                    if "email" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+                            
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                    if "hidden" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+                        
+                    if "number" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                    if "password" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                    if "query" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+                            
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                    if "search" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                    if "search" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+                            
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                    if "tel" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+                            
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                    if "text" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+                            
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                    if "url" in str(i):
+                        form_name = ""
+
+                        try:
+                            parse_name_start = str(i).index("name=\"")
+                            parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
+                            
+                            for ii in range(parse_name_start + 6, parse_name_end):
+                                form_name = form_name + str(i)[ii]
+
+                            form_list.append(form_name)
+
+                        except:
+                            pass
+
+                form_list = list(dict.fromkeys(form_list))
+                form_list.sort()
+
+                for forms in form_list:
+                    mal_dict = {forms: mal_script}
+
+                    if termux_tor_boolean == True or tor_boolean == True:
+                        get_data = web_session.get(links, params = mal_dict, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+                    if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                        get_data = web_session.get(links, params = mal_dict, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+                    if termux_tor_boolean == True or tor_boolean == True:
+                        send_data = web_session.post(links, data = mal_dict, verify = valid_certificate, headers = user_agent, proxies = tor_proxy, timeout = (5, 30))
+
+                    if tor_boolean == False and termux_tor_boolean == False and tor_boolean == False:
+                        send_data = web_session.post(links, data = mal_dict, verify = valid_certificate, headers = user_agent, timeout = (5, 30))
+
+                    if mal_script in send_data.text or mal_script in get_data.text:
+                        print("True: " + links + " form: " + forms)
+                        my_list.append(links + " form: " + forms)
+
+            except requests.exceptions.SSLError:
+                print("ERROR: invalid certificate!")
+                pass
+
+            except urllib3.exceptions.LocationParseError:
+                print("ERROR: location parse error!")
+                pass
+
+            except requests.exceptions.ConnectionError:
+                print("ERROR: connection error!")
+                pass
+
+            except requests.exceptions.ConnectTimeout:
+                print("ERROR: connect timeout!")
+                pass
+
+            except requests.exceptions.InvalidSchema:
+                print("ERROR: invalid schema!")
+                pass
+
+            except requests.exceptions.InvalidURL:
+                print("ERROR: invalid url!")
+                pass
+
+            except requests.exceptions.MissingSchema:
+                print("ERROR: missing schema!")
+                pass
+
+            except requests.exceptions.TooManyRedirects:
+                print("ERROR: too many redirects!")
+                pass
+
+            except requests.exceptions.ReadTimeout:
+                print("ERROR: read timeout!")
+                pass
+
+    my_list = list(dict.fromkeys(my_list))
+    my_list.sort()
+
     return my_list
 
 #scans for emails on website
@@ -4911,7 +5430,7 @@ def file_finder(file, directory):
 #mainloop
 while True:
     os.system("clear")
-    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\n17 = twitter\n18 = security questions\n19 = generate list of server names\n20 = sql injection scanner\n21 = link scanner (selenium)\ne = exit\n")
+    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\n17 = twitter\n18 = security questions\n19 = generate list of server names\n20 = sql injection scanner\n21 = link scanner (selenium)\n22 = xss scanner\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -5355,6 +5874,13 @@ while True:
         os.system("clear")
         url = input("Enter url: ")
         print(link_scanner_selenium(url))
+
+    if user_input == "22":
+        os.system("clear")
+        url = input("Enter url: ")
+        print(xss_scanner(url))
+        print("Done!")
+        pause = input()
         
     if user_input == "e":
         exit()
