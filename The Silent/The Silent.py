@@ -3867,6 +3867,7 @@ def xss_scanner(url):
                 form_list.sort()
 
                 for forms in form_list:
+                    print("Checking form: " + forms)
                     mal_dict = {forms: mal_script}
 
                     if termux_tor_boolean == True or tor_boolean == True:
@@ -4197,6 +4198,7 @@ def xss_scanner(url):
                 form_list.sort()
 
                 for forms in form_list:
+                    print("Checking form: " + forms)
                     mal_dict = {forms: mal_script}
 
                     if termux_tor_boolean == True or tor_boolean == True:
