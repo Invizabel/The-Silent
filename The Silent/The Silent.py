@@ -3644,6 +3644,9 @@ def xss_scanner(url):
         except requests.exceptions.ReadTimeout:
             print("ERROR: read timeout!")
             pass
+
+        except UnicodeError:
+            pass
         
         try:
             print("Checking: " + my_url + mal_script)
@@ -3692,6 +3695,9 @@ def xss_scanner(url):
 
         except requests.exceptions.ReadTimeout:
             print("ERROR: read timeout!")
+            pass
+
+        except UnicodeError:
             pass
 
         try:
@@ -3922,6 +3928,9 @@ def xss_scanner(url):
             print("ERROR: read timeout!")
             pass
 
+        except UnicodeError:
+            pass
+
     if user_input == "2":
         my_result = link_scanner(url) 
 
@@ -3975,6 +3984,9 @@ def xss_scanner(url):
             except requests.exceptions.ReadTimeout:
                 print("ERROR: read timeout!")
                 pass
+
+            except UnicodeError:
+                pass
                 
             try:
                 print("Checking: " + links + mal_script)
@@ -4023,6 +4035,9 @@ def xss_scanner(url):
 
             except requests.exceptions.ReadTimeout:
                 print("ERROR: read timeout!")
+                pass
+
+            except UnicodeError:
                 pass
 
             try:
@@ -4251,6 +4266,9 @@ def xss_scanner(url):
 
             except requests.exceptions.ReadTimeout:
                 print("ERROR: read timeout!")
+                pass
+
+            except UnicodeError:
                 pass
 
     my_list = list(dict.fromkeys(my_list))
