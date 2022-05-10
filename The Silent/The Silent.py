@@ -176,7 +176,7 @@ def security():
 
     if user_input == "1":
         os.system("clear")
-        print("https =", https, "\nvalid certificate =", valid_certificate, "\ntor (non termux users) =", tor_boolean, "\ntor (termux users) =", termux_tor_boolean)
+        print("https =", https, "\nvalid certificate =", valid_certificate, "\ntor (linux/macOS (homebrew) users) =", tor_boolean, "\ntor (termux users) =", termux_tor_boolean)
         pause = input()
 
     if user_input == "2":
@@ -201,15 +201,17 @@ def security():
             valid_certificate = False
 
         os.system("clear")
-        user_tor = input("tor (non termux users)? y/n\n")
+        user_tor = input("tor (linux/macOS (homebrew) users)? y/n\n")
 
         if user_tor == "y":
             tor_boolean = True
             os.system("sudo service tor start")
+            os.system("brew services start tor")
 
         if user_tor == "n":
             tor_boolean = False
             os.system("sudo service tor stop")
+            os.system("brew services stop tor")
 
         os.system("clear")
         user_tor = input("tor (termux users)? y/n\n")
@@ -224,7 +226,7 @@ def security():
 
     if user_input == "3":
         os.system("clear")
-        user_tor = input("1 = debian\n2 = fedora\n3 = termux\n")
+        user_tor = input("1 = debian\n2 = fedora\n3 = termux\n4 = macOS (homebrew)\n")
 
         if user_tor == "1":
             os.system("clear")
@@ -243,9 +245,14 @@ def security():
             os.system("apt update")
             os.system("apt install tor")
 
+        if user_tor == "4":
+            os.system("clear")
+            print("installing tor")
+            os.system("brew install tor")
+
     if user_input == "4":
         os.system("clear")
-        user_tor = input("1 = debian\n2 = fedora\n3 = termux\n")
+        user_tor = input("1 = debian\n2 = fedora\n3 = termux\n4 = macOS (homebrew)\n")
 
         if user_tor == "1":
             os.system("clear")
@@ -261,6 +268,11 @@ def security():
             os.system("clear")
             print("removing tor")
             os.system("apt remove tor")
+
+        if user_tor == "4":
+            os.system("clear")
+            print("installing tor")
+            os.system("brew remove tor")
 
 #make a request not using a log
 def no_log():
