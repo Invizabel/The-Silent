@@ -2709,7 +2709,7 @@ def link_scanner(url):
                 
             found = str(final.status_code)
 
-            if found == "200":
+            if found == "200" and len(final.text) <= 1000000:
                 try:
                     print(total_web_list[i])
                     result = str(final.text)
