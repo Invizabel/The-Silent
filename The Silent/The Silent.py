@@ -5579,9 +5579,15 @@ def data_recovery(image):
 
 def hex_editor(file):
     os.system("clear")
+    
     with open(file, "rb") as f:
         for chunk in iter(lambda: f.read(32), b""):
-            print(codecs.encode(chunk, "hex"))
+            hex_code = codecs.encode(chunk, "hex")
+            ascii_convert = codecs.decode(hex_code, "hex")
+            clean = str(ascii_convert).replace("b", "")
+            clean = clean.replace("'", "")
+            result = clean.replace("\\x", "")
+            print(result)
 
 #file finder finds files based on hash signatures
 def file_finder(file, directory):
