@@ -38,6 +38,8 @@ from bs4 import BeautifulSoup
 from collections import *
 from hashlib import *
 from itertools import *
+from PIL import Image
+from PIL.ExifTags import *
 from urllib.parse import urljoin
 
 import codecs
@@ -5663,11 +5665,75 @@ def file_finder(file, directory):
 
     os.system("clear")
     return str("errors = " + str(errors) + "\n" + "\n" + "files found: " + str(file_list))
+
+def extract_meta_data(image):
+    image = Image.open(image)
+    exifdata = image.getexif()
+
+    for tagid in exifdata:
+        tagname = TAGS.get(tagid, tagid)
+        value = exifdata.get(tagid)
+        os.system("clear")
+        print(f"{tagname:25}: {value}")
+
+def anti_virus(folder):
+    os.system("clear")
+
+    file_list = []
+
+    mal_code = ["crypt", "fopen", "open", "read", "write"]
+    mal_hits = 0
+    virus_count = 0
+    virus_list = []
+
+    for root, dirs, files in os.walk(folder, topdown = True):
+        for name in files:
+                file_list.append(os.path.join(root, name))
+
+    file_list.sort()
+                
+    for file in file_list:
+        print("checking: " + file)
+        result = ""
+
+        if os.path.isfile(file) and file != "anti-virus.py":
+            try:
+                with open(file, "rb") as f:
+                    for chunk in iter(lambda: f.read(32), b""):
+                        hex_code = codecs.encode(chunk, "hex")
+                        ascii_convert = codecs.decode(hex_code, "hex")
+                        clean = str(ascii_convert).replace("b", "")
+                        clean = clean.replace("'", "")
+                        clean = clean.replace("\\x", "")
+                        clean = clean.replace("00", "")
+
+                        if len(result) <= 1000000000:
+                            result += clean
+
+            except:
+                continue
+
+            for i in mal_code:
+                if i in result:
+                    mal_hits += 1
+
+            chance = mal_hits / len(mal_code) * 100
+
+            if chance == 100:
+                print("detected: " + file)
+                virus_count += 1
+                virus_list.append(file)
+
+    os.system("clear")
+    print("viruses detected: " + str(virus_count))
+
+    for i in virus_list:
+        print(i)
           
 #mainloop
 while True:
     os.system("clear")
-    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\n17 = twitter\n18 = security questions\n19 = generate list of server names\n20 = sql injection scanner\n21 = link scanner (selenium)\n22 = xss scanner\ne = exit\n")
+    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\n17 = twitter\n18 = security questions\n19 = generate list of server names\n20 = sql injection scanner\n21 = link scanner (selenium)\n22 = xss scanner\n23 = extract image meta data\n24 = anti-virus\ne = exit\n")
 
     if user_input == "0":
         security()
@@ -6117,6 +6183,18 @@ while True:
         url = input("Enter url: ")
         print(xss_scanner(url))
         print("Done!")
+        pause = input()
+
+    if user_input == "23":
+        os.system("clear")
+        image = input("Enter image: ")
+        extract_meta_data(image)
+        pause = input()
+
+    if user_input == "24":
+        os.system("clear")
+        folder = input("Enter directory or folder: ")
+        anti_virus(folder)
         pause = input()
         
     if user_input == "e":
