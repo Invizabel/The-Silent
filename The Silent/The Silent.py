@@ -5586,6 +5586,7 @@ def hex_editor(file):
             ascii_convert = codecs.decode(hex_code, "hex")
             clean = str(ascii_convert).replace("b", "")
             clean = clean.replace("'", "")
+            clean = clean.replace("00", "")
             result = clean.replace("\\x", "")
             print(result)
 
