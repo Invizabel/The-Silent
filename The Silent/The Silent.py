@@ -57,6 +57,7 @@ import socks
 import sys
 import time
 import threading
+import twint
 import urllib3
 
 #connect to tor
@@ -798,48 +799,6 @@ def log_server_stats(website):
 
     url.close()
     file.close
-
-#generates list of server names
-def generate_server_list(maximum):
-    os.system("clear")
-
-    domain_list = [".co.uk", ".com", ".es", ".fr", ".gov", ".net", ".onion", ".org", ".tv"]
-    server_list = []
-    
-    dictionary = "0123456789abcdefghijklmnopqrstuvwxyz"
-
-    for i in range (1, maximum):
-        for ii in itertools.product(dictionary, repeat = i):
-            compute = ''.join(ii)
-            for iii in domain_list:
-                output = "https://" + compute + iii
-
-                print(output)
-            
-                try:
-                    url = web_session.get(output, verify = False, headers = user_agent, proxies = tor_proxy, timeout = 1)
-
-                    web = list(url.headers.items())
-                    web.sort()
-
-                    for i in web:
-                        request_string = str(i)
-                        clean_1 = request_string.replace("(", "")
-                        clean_2 = clean_1.replace(")", "")
-                        clean_3 = clean_2.replace(",", ":")
-                        result = clean_3.replace("'", "")
-                        result = result.lower()
-
-                        if "server:" in result:
-                            print(result)
-                            server_list.append(result)
-
-                    url.close()
-
-                except:
-                    continue
-
-    return server_list
 
 #port scanner
 def port_scanner(host):
@@ -5414,9 +5373,7 @@ def password_generator():
     for i in password_storage:
         output += i
 
-    print("Password:", output)
-    result = sha256(output.encode("utf-8")).hexdigest()
-    print("hashed password (sha256): " + result)
+    print("password: " + output)
     pause = input()
 
 #brute force classic
@@ -5666,7 +5623,7 @@ def file_finder(file, directory):
     os.system("clear")
     return str("errors = " + str(errors) + "\n" + "\n" + "files found: " + str(file_list))
 
-def extract_meta_data(image):
+def extract_image_metadata(image):
     image = Image.open(image)
     exifdata = image.getexif()
 
@@ -5729,474 +5686,464 @@ def anti_virus(folder):
     for i in virus_list:
         print(i)
 
-    print("viruses detected: " + str(virus_count))
+    print("possible viruses detected: " + str(virus_count))
           
 #mainloop
 while True:
     os.system("clear")
-    user_input = input("0 = security\n1 = request (no log)\n2 = request (log)\n3 = request file\n4 = password generator\n5 = brute force (dictionary)\n6 = compare perceptual hash\n7 = generate password hash\n8 = device storage\n9 = data recovery\n10 = hex editor\n11 = brute force (classic)\n12 = port scanner\n13 = file finder\n14 = link scanner\n15 = email scanner\n16 = network mapper\n17 = twitter\n18 = security questions\n19 = generate list of server names\n20 = sql injection scanner\n21 = link scanner (selenium)\n22 = xss scanner\n23 = extract image meta data\n24 = anti-virus\ne = exit\n")
+    user_input = input("0 = security\n1 = digital forensics\n2 = osint\n3 = penetration testing\n4 = other\ne = exit\n")
 
+    #security
     if user_input == "0":
         security()
 
+    #digital forensics
     if user_input == "1":
-        no_log()
+        os.system("clear")
+        print("digital forensics tools")
+        my_input = input("1 = compare perceptual hash\n2 = data recovery\n3 = device storage\n4 = extract image metadata\n5 = file finder\n6 = hex editor\ne = exit\n")
 
+        #compare perceptual hash
+        if my_input == "1":
+            os.system("clear")
+            file_1 = input("name of file 1: ")
+            file_2 = input("name of file 2: ")
+            print(compare_perceptual_hash(file_1, file_2))
+            pause = input()
+
+        #data recovery
+        if my_input == "2":
+            os.system("clear")
+            image = input("device name: ")
+            data_recovery(image)
+
+        #device storage
+        if my_input == "3":
+            os.system("clear")
+            directory = input("directory: ")
+            print(device_storage(directory))
+            pause = input()
+
+        #extract image metadata
+        if my_input == "4":
+            os.system("clear")
+            image = input("Enter image: ")
+            extract_image_metadata(image)
+            pause = input()
+
+        #file finder
+        if my_input == "5":
+            os.system("clear")
+            file = input("file to find: ")
+            directory = input("directory to search: ")
+            print(file_finder(file, directory))
+            pause = input()
+
+        #hex editor
+        if my_input == "6":
+            os.system("clear")
+            file = input("file name: ")
+            hex_editor(file)
+            pause = input()
+
+        #exit
+        if my_input == "e":
+            exit()
+
+    #osint
     if user_input == "2":
-        log()
-
-    if user_input == "3":
         os.system("clear")
-        user_file = input("1 = image | 2 = pdf | 3 = html | 4 = all images | 5 = all data\n")
-
-        if user_file == "1":
-            image()
-
-        if user_file == "2":
-            pdf()
-
-        if user_file == "3":
-            html()
-
-        if user_file == "4":
-            all_images()
-
-        if user_file == "5":
-            all_data()
-
-    if user_input == "4":
-        password_generator()
-
-    if user_input == "5":
-        brute_force_dictionary()
-
-    if user_input == "6":
-        os.system("clear")
-        file_1 = input("name of file 1: ")
-        file_2 = input("name of file 2: ")
-        print(compare_perceptual_hash(file_1, file_2))
-        pause = input()
-
-    if user_input == "7":
-        os.system("clear")
-        password = input("password: ")
-        result = sha256(password.encode("utf-8")).hexdigest()
-        print(result)
-        pause = input()
-
-    if user_input == "8":
-        os.system("clear")
-        directory = input("directory: ")
-        print(device_storage(directory))
-        pause = input()
-
-    if user_input == "9":
-        os.system("clear")
-        image = input("device name: ")
-        data_recovery(image)
-
-    if user_input == "10":
-        os.system("clear")
-        file = input("file name: ")
-        hex_editor(file)
-        pause = input()
-
-    if user_input == "11":
-        os.system("clear")
-        password = input("enter password: ")
-        print(brute_force_classic(password))
-        pause = input()
-
-    if user_input == "12":
-        os.system("clear")
-        website = input("website: ")
-        print(port_scanner(website))
-        pause = input()
-
-    if user_input == "13":
-        os.system("clear")
-        file = input("file to find: ")
-        directory = input("directory to search: ")
-        print(file_finder(file, directory))
-        pause = input()
-
-    if user_input == "14":
-        os.system("clear")
-        url = input("url: ")
-        print(link_scanner(url))
-        pause = input()
-
-    if user_input == "15":
-        os.system("clear")
-        url = input("url: ")
-        print(email_scanner(url))
-        pause = input()
-
-    if user_input == "16":
-        os.system("clear")
-
-        ip = input("Enter first two numbers of ip address (default = 192.168): ")
-
-        if ip == "":
-            ip = ("192.168",)
-
-        else:
-            ip = (ip,)
-
-        print("Scanning...\n")
-
-        thread_1 = threading.Thread(name = "network_mapper_1", target = network_mapper_1, args = ip)
-        thread_1.start()
-
-        thread_2 = threading.Thread(name = "network_mapper_2", target = network_mapper_2, args = ip)
-        thread_2.start()
-
-        thread_3 = threading.Thread(name = "network_mapper_3", target = network_mapper_3, args = ip)
-        thread_3.start()
-
-        thread_4 = threading.Thread(name = "network_mapper_4", target = network_mapper_4, args = ip)
-        thread_4.start()
-
-        thread_5 = threading.Thread(name = "network_mapper_5", target = network_mapper_5, args = ip)
-        thread_5.start()
-
-        thread_6 = threading.Thread(name = "network_mapper_6", target = network_mapper_6, args = ip)
-        thread_6.start()
-
-        thread_7 = threading.Thread(name = "network_mapper_7", target = network_mapper_7, args = ip)
-        thread_7.start()
-
-        thread_8 = threading.Thread(name = "network_mapper_8", target = network_mapper_8, args = ip)
-        thread_8.start()
-
-        thread_9 = threading.Thread(name = "network_mapper_9", target = network_mapper_9, args = ip)
-        thread_9.start()
-
-        thread_10 = threading.Thread(name = "network_mapper_10", target = network_mapper_10, args = ip)
-        thread_10.start()
-
-        thread_11 = threading.Thread(name = "network_mapper_11", target = network_mapper_11, args = ip)
-        thread_11.start()
-
-        thread_12 = threading.Thread(name = "network_mapper_12", target = network_mapper_12, args = ip)
-        thread_12.start()
-
-        thread_13 = threading.Thread(name = "network_mapper_13", target = network_mapper_13, args = ip)
-        thread_13.start()
-
-        thread_14 = threading.Thread(name = "network_mapper_14", target = network_mapper_14, args = ip)
-        thread_14.start()
-
-        thread_15 = threading.Thread(name = "network_mapper_15", target = network_mapper_15, args = ip)
-        thread_15.start()
-
-        thread_16 = threading.Thread(name = "network_mapper_16", target = network_mapper_16, args = ip)
-        thread_16.start()
-
-        thread_17 = threading.Thread(name = "network_mapper_17", target = network_mapper_17, args = ip)
-        thread_17.start()
-
-        thread_18 = threading.Thread(name = "network_mapper_18", target = network_mapper_18, args = ip)
-        thread_18.start()
-
-        thread_19 = threading.Thread(name = "network_mapper_19", target = network_mapper_19, args = ip)
-        thread_19.start()
-
-        thread_20 = threading.Thread(name = "network_mapper_20", target = network_mapper_20, args = ip)
-        thread_20.start()
-
-        thread_21 = threading.Thread(name = "network_mapper_21", target = network_mapper_21, args = ip)
-        thread_21.start()
-
-        thread_22 = threading.Thread(name = "network_mapper_22", target = network_mapper_22, args = ip)
-        thread_22.start()
-
-        thread_23 = threading.Thread(name = "network_mapper_23", target = network_mapper_23, args = ip)
-        thread_23.start()
-
-        thread_24 = threading.Thread(name = "network_mapper_24", target = network_mapper_24, args = ip)
-        thread_24.start()
-
-        thread_25 = threading.Thread(name = "network_mapper_25", target = network_mapper_25, args = ip)
-        thread_25.start()
-
-        thread_26 = threading.Thread(name = "network_mapper_26", target = network_mapper_26, args = ip)
-        thread_26.start()
-
-        thread_27 = threading.Thread(name = "network_mapper_27", target = network_mapper_27, args = ip)
-        thread_27.start()
-
-        thread_28 = threading.Thread(name = "network_mapper_28", target = network_mapper_28, args = ip)
-        thread_28.start()
-
-        thread_29 = threading.Thread(name = "network_mapper_29", target = network_mapper_29, args = ip)
-        thread_29.start()
-
-        thread_30 = threading.Thread(name = "network_mapper_30", target = network_mapper_30, args = ip)
-        thread_30.start()
-
-        thread_31 = threading.Thread(name = "network_mapper_31", target = network_mapper_31, args = ip)
-        thread_31.start()
-
-        thread_32 = threading.Thread(name = "network_mapper_32", target = network_mapper_32, args = ip)
-        thread_32.start()
-
-        thread_33 = threading.Thread(name = "network_mapper_33", target = network_mapper_33, args = ip)
-        thread_33.start()
-
-        thread_34 = threading.Thread(name = "network_mapper_34", target = network_mapper_34, args = ip)
-        thread_34.start()
-
-        thread_35 = threading.Thread(name = "network_mapper_35", target = network_mapper_35, args = ip)
-        thread_35.start()
-
-        thread_36 = threading.Thread(name = "network_mapper_36", target = network_mapper_36, args = ip)
-        thread_36.start()
-
-        thread_37 = threading.Thread(name = "network_mapper_37", target = network_mapper_37, args = ip)
-        thread_37.start()
-
-        thread_38 = threading.Thread(name = "network_mapper_38", target = network_mapper_38, args = ip)
-        thread_38.start()
-
-        thread_39 = threading.Thread(name = "network_mapper_39", target = network_mapper_39, args = ip)
-        thread_39.start()
-
-        thread_40 = threading.Thread(name = "network_mapper_40", target = network_mapper_40, args = ip)
-        thread_40.start()
-
-        thread_41 = threading.Thread(name = "network_mapper_41", target = network_mapper_41, args = ip)
-        thread_41.start()
-
-        thread_42 = threading.Thread(name = "network_mapper_42", target = network_mapper_42, args = ip)
-        thread_42.start()
-
-        thread_43 = threading.Thread(name = "network_mapper_43", target = network_mapper_43, args = ip)
-        thread_43.start()
-
-        thread_44 = threading.Thread(name = "network_mapper_44", target = network_mapper_44, args = ip)
-        thread_44.start()
-
-        thread_45 = threading.Thread(name = "network_mapper_45", target = network_mapper_45, args = ip)
-        thread_45.start()
-
-        thread_46 = threading.Thread(name = "network_mapper_46", target = network_mapper_46, args = ip)
-        thread_46.start()
-
-        thread_47 = threading.Thread(name = "network_mapper_47", target = network_mapper_47, args = ip)
-        thread_47.start()
-
-        thread_48 = threading.Thread(name = "network_mapper_48", target = network_mapper_48, args = ip)
-        thread_48.start()
-
-        thread_49 = threading.Thread(name = "network_mapper_49", target = network_mapper_49, args = ip)
-        thread_49.start()
-
-        thread_50 = threading.Thread(name = "network_mapper_50", target = network_mapper_50, args = ip)
-        thread_50.start()
-
-        thread_51 = threading.Thread(name = "network_mapper_51", target = network_mapper_51, args = ip)
-        thread_51.start()
-        
-        thread_1.join()
-        thread_2.join()
-        thread_3.join()
-        thread_4.join()
-        thread_5.join()
-        thread_6.join()
-        thread_7.join()
-        thread_8.join()
-        thread_9.join()
-        thread_10.join()
-        thread_11.join()
-        thread_12.join()
-        thread_13.join()
-        thread_14.join()
-        thread_15.join()
-        thread_16.join()
-        thread_17.join()
-        thread_18.join()
-        thread_19.join()
-        thread_20.join()
-        thread_21.join()
-        thread_22.join()
-        thread_23.join()
-        thread_24.join()
-        thread_25.join()
-        thread_26.join()
-        thread_27.join()
-        thread_28.join()
-        thread_29.join()
-        thread_30.join()
-        thread_31.join()
-        thread_32.join()
-        thread_33.join()
-        thread_34.join()
-        thread_35.join()
-        thread_36.join()
-        thread_37.join()
-        thread_38.join()
-        thread_39.join()
-        thread_40.join()
-        thread_41.join()
-        thread_42.join()
-        thread_43.join()
-        thread_44.join()
-        thread_45.join()
-        thread_46.join()
-        thread_47.join()
-        thread_48.join()
-        thread_49.join()
-        thread_50.join()
-        thread_51.join()
-
-        print("Done!")
-
-        pause = input()
-
-    #uses twint library
-    if user_input == "17":
-        import twint
-        
-        os.system("clear")
-        
-        user_name = input("Enter username: ")
-        keyword = input("Enter keyword: ")
-        print()
-
-        #configure
-        result = twint.Config()
-        result.Username = user_name
-        result.Search = keyword
-
-        #run
-        twint.run.Search(result)
-
-        pause = input()
-
-    if user_input == "18":
-        import twint
-        
-        os.system("clear")
-        user_name = input("Enter twitter username: ")
-        print("")
-
-        keywords = ["anniversary", "bff", "birthday", "born", "boyfriend", "brother", "cat", "child", "children", "college", "color", "dad", "daughter", "dog", "elementary", "father", "favorite", "friend", "girlfriend", "husband", "kid", "kitten", "mom", "mother", "pet", "primary", "puppy", "school", "sister", "son", "wife"]
-
-        result = twint.Config()
-        result.Username = user_name
-
-        for i in keywords:
-            print("keyword === " + i)
-            result.Search = i
-            twint.run.Search(result)
+        print("osint tools")
+        my_input = input("1 = email scanner\n2 = get request file\n3 = get request (log)\n4 = get request (no log)\n5 = get security questions (twitter)\n6 = link scanner\n7 = link scanner (selenium)\n8 = network mapper\n9 = scan twitter\ne = exit\n")
+
+        #email scanner
+        if my_input == "1":
+            os.system("clear")
+            url = input("url: ")
+            print(email_scanner(url))
+            pause = input()
+
+        #get request file
+        if my_input == "2":
+            os.system("clear")
+            user_file = input("1 = image | 2 = pdf | 3 = html | 4 = all images | 5 = all data\n")
+
+            if user_file == "1":
+                image()
+
+            if user_file == "2":
+                pdf()
+
+            if user_file == "3":
+                html()
+
+            if user_file == "4":
+                all_images()
+
+            if user_file == "5":
+                all_data()
+
+        #get request (log)
+        if my_input == "3":
+            log()
+
+        #get request (no log)
+        if my_input == "4":
+            no_log()
+
+        #get security questions (twitter)
+        if my_input == "5":
+            os.system("clear")
+            user_name = input("Enter twitter username: ")
             print("")
 
-        print("Done!")
+            keywords = ["anniversary", "bff", "birthday", "born", "boyfriend", "brother", "cat", "child", "children", "college", "color", "dad", "daughter", "dog", "elementary", "father", "favorite", "friend", "girlfriend", "husband", "kid", "kitten", "mom", "mother", "pet", "primary", "puppy", "school", "sister", "son", "wife"]
 
-        pause = input()
+            result = twint.Config()
+            result.Username = user_name
 
-    if user_input == "19":
-        os.system("clear")
+            for i in keywords:
+                print("keyword === " + i)
+                result.Search = i
+                twint.run.Search(result)
+                print("")
 
-        length = int(input("Enter length of domain: "))
+            print("Done!")
 
-        apple = 0
-        centos = 0
-        debian = 0
-        fedora = 0
-        freebsd = 0
-        microsoft = 0
-        openbsd = 0
-        rhel = 0
-        ubuntu = 0
+            pause = input()
 
-        my_list = generate_server_list(length + 1)
-        my_list.sort()
+        #link scanner
+        if my_input == "6":
+            os.system("clear")
+            url = input("url: ")
+            print(link_scanner(url))
+            pause = input()
 
-        for i in my_list:
-            if "apple" in i:
-                apple += 1
+        #link scanner (selenium)
+        if my_input == "7":
+            os.system("clear")
+            url = input("Enter url: ")
+            print(link_scanner_selenium(url))
+            pause = input()
 
-            if "centos" in i:
-                centos += 1
+        #network mapper
+        if my_input == "8":
+            os.system("clear")
 
-            if "debian" in i:
-                debian += 1
+            ip = input("Enter first two numbers of ip address (default = 192.168): ")
 
-            if "fedora" in i:
-                fedora += 1
+            if ip == "":
+                ip = ("192.168",)
 
-            if "freebsd" in i:
-                freebsd += 1
+            else:
+                ip = (ip,)
 
-            if "microsoft" in i:
-                microsoft += 1
+            print("Scanning...\n")
 
-            if "openbsd" in i:
-                openbsd += 1
+            thread_1 = threading.Thread(name = "network_mapper_1", target = network_mapper_1, args = ip)
+            thread_1.start()
 
-            if "red hat enterprise linux" in i:
-                rhel += 1
+            thread_2 = threading.Thread(name = "network_mapper_2", target = network_mapper_2, args = ip)
+            thread_2.start()
 
-            if "ubuntu" in i:
-                ubuntu += 1
+            thread_3 = threading.Thread(name = "network_mapper_3", target = network_mapper_3, args = ip)
+            thread_3.start()
 
-        total_length = apple + centos + debian + fedora + freebsd + microsoft + openbsd + rhel + ubuntu
+            thread_4 = threading.Thread(name = "network_mapper_4", target = network_mapper_4, args = ip)
+            thread_4.start()
 
-        total_apple = (apple / total_length) * 100
-        total_centos = (centos / total_length) * 100
-        total_debian = (debian / total_length) * 100
-        total_fedora = (fedora / total_length) * 100
-        total_freebsd = (freebsd / total_length) * 100
-        total_microsoft = (microsoft / total_length) * 100
-        total_openbsd = (openbsd / total_length) * 100
-        total_rhel = (rhel / total_length) * 100
-        total_ubuntu = (ubuntu / total_length) * 100
+            thread_5 = threading.Thread(name = "network_mapper_5", target = network_mapper_5, args = ip)
+            thread_5.start()
+
+            thread_6 = threading.Thread(name = "network_mapper_6", target = network_mapper_6, args = ip)
+            thread_6.start()
+
+            thread_7 = threading.Thread(name = "network_mapper_7", target = network_mapper_7, args = ip)
+            thread_7.start()
+
+            thread_8 = threading.Thread(name = "network_mapper_8", target = network_mapper_8, args = ip)
+            thread_8.start()
+
+            thread_9 = threading.Thread(name = "network_mapper_9", target = network_mapper_9, args = ip)
+            thread_9.start()
+
+            thread_10 = threading.Thread(name = "network_mapper_10", target = network_mapper_10, args = ip)
+            thread_10.start()
+
+            thread_11 = threading.Thread(name = "network_mapper_11", target = network_mapper_11, args = ip)
+            thread_11.start()
+
+            thread_12 = threading.Thread(name = "network_mapper_12", target = network_mapper_12, args = ip)
+            thread_12.start()
+
+            thread_13 = threading.Thread(name = "network_mapper_13", target = network_mapper_13, args = ip)
+            thread_13.start()
+
+            thread_14 = threading.Thread(name = "network_mapper_14", target = network_mapper_14, args = ip)
+            thread_14.start()
+
+            thread_15 = threading.Thread(name = "network_mapper_15", target = network_mapper_15, args = ip)
+            thread_15.start()
+
+            thread_16 = threading.Thread(name = "network_mapper_16", target = network_mapper_16, args = ip)
+            thread_16.start()
+
+            thread_17 = threading.Thread(name = "network_mapper_17", target = network_mapper_17, args = ip)
+            thread_17.start()
+
+            thread_18 = threading.Thread(name = "network_mapper_18", target = network_mapper_18, args = ip)
+            thread_18.start()
+
+            thread_19 = threading.Thread(name = "network_mapper_19", target = network_mapper_19, args = ip)
+            thread_19.start()
+
+            thread_20 = threading.Thread(name = "network_mapper_20", target = network_mapper_20, args = ip)
+            thread_20.start()
+
+            thread_21 = threading.Thread(name = "network_mapper_21", target = network_mapper_21, args = ip)
+            thread_21.start()
+
+            thread_22 = threading.Thread(name = "network_mapper_22", target = network_mapper_22, args = ip)
+            thread_22.start()
+
+            thread_23 = threading.Thread(name = "network_mapper_23", target = network_mapper_23, args = ip)
+            thread_23.start()
+
+            thread_24 = threading.Thread(name = "network_mapper_24", target = network_mapper_24, args = ip)
+            thread_24.start()
+
+            thread_25 = threading.Thread(name = "network_mapper_25", target = network_mapper_25, args = ip)
+            thread_25.start()
+
+            thread_26 = threading.Thread(name = "network_mapper_26", target = network_mapper_26, args = ip)
+            thread_26.start()
+
+            thread_27 = threading.Thread(name = "network_mapper_27", target = network_mapper_27, args = ip)
+            thread_27.start()
+
+            thread_28 = threading.Thread(name = "network_mapper_28", target = network_mapper_28, args = ip)
+            thread_28.start()
+
+            thread_29 = threading.Thread(name = "network_mapper_29", target = network_mapper_29, args = ip)
+            thread_29.start()
+
+            thread_30 = threading.Thread(name = "network_mapper_30", target = network_mapper_30, args = ip)
+            thread_30.start()
+
+            thread_31 = threading.Thread(name = "network_mapper_31", target = network_mapper_31, args = ip)
+            thread_31.start()
+
+            thread_32 = threading.Thread(name = "network_mapper_32", target = network_mapper_32, args = ip)
+            thread_32.start()
+
+            thread_33 = threading.Thread(name = "network_mapper_33", target = network_mapper_33, args = ip)
+            thread_33.start()
+
+            thread_34 = threading.Thread(name = "network_mapper_34", target = network_mapper_34, args = ip)
+            thread_34.start()
+
+            thread_35 = threading.Thread(name = "network_mapper_35", target = network_mapper_35, args = ip)
+            thread_35.start()
+
+            thread_36 = threading.Thread(name = "network_mapper_36", target = network_mapper_36, args = ip)
+            thread_36.start()
+
+            thread_37 = threading.Thread(name = "network_mapper_37", target = network_mapper_37, args = ip)
+            thread_37.start()
+
+            thread_38 = threading.Thread(name = "network_mapper_38", target = network_mapper_38, args = ip)
+            thread_38.start()
+
+            thread_39 = threading.Thread(name = "network_mapper_39", target = network_mapper_39, args = ip)
+            thread_39.start()
+
+            thread_40 = threading.Thread(name = "network_mapper_40", target = network_mapper_40, args = ip)
+            thread_40.start()
+
+            thread_41 = threading.Thread(name = "network_mapper_41", target = network_mapper_41, args = ip)
+            thread_41.start()
+
+            thread_42 = threading.Thread(name = "network_mapper_42", target = network_mapper_42, args = ip)
+            thread_42.start()
+
+            thread_43 = threading.Thread(name = "network_mapper_43", target = network_mapper_43, args = ip)
+            thread_43.start()
+
+            thread_44 = threading.Thread(name = "network_mapper_44", target = network_mapper_44, args = ip)
+            thread_44.start()
+
+            thread_45 = threading.Thread(name = "network_mapper_45", target = network_mapper_45, args = ip)
+            thread_45.start()
+
+            thread_46 = threading.Thread(name = "network_mapper_46", target = network_mapper_46, args = ip)
+            thread_46.start()
+
+            thread_47 = threading.Thread(name = "network_mapper_47", target = network_mapper_47, args = ip)
+            thread_47.start()
+
+            thread_48 = threading.Thread(name = "network_mapper_48", target = network_mapper_48, args = ip)
+            thread_48.start()
+
+            thread_49 = threading.Thread(name = "network_mapper_49", target = network_mapper_49, args = ip)
+            thread_49.start()
+
+            thread_50 = threading.Thread(name = "network_mapper_50", target = network_mapper_50, args = ip)
+            thread_50.start()
+
+            thread_51 = threading.Thread(name = "network_mapper_51", target = network_mapper_51, args = ip)
+            thread_51.start()
+            
+            thread_1.join()
+            thread_2.join()
+            thread_3.join()
+            thread_4.join()
+            thread_5.join()
+            thread_6.join()
+            thread_7.join()
+            thread_8.join()
+            thread_9.join()
+            thread_10.join()
+            thread_11.join()
+            thread_12.join()
+            thread_13.join()
+            thread_14.join()
+            thread_15.join()
+            thread_16.join()
+            thread_17.join()
+            thread_18.join()
+            thread_19.join()
+            thread_20.join()
+            thread_21.join()
+            thread_22.join()
+            thread_23.join()
+            thread_24.join()
+            thread_25.join()
+            thread_26.join()
+            thread_27.join()
+            thread_28.join()
+            thread_29.join()
+            thread_30.join()
+            thread_31.join()
+            thread_32.join()
+            thread_33.join()
+            thread_34.join()
+            thread_35.join()
+            thread_36.join()
+            thread_37.join()
+            thread_38.join()
+            thread_39.join()
+            thread_40.join()
+            thread_41.join()
+            thread_42.join()
+            thread_43.join()
+            thread_44.join()
+            thread_45.join()
+            thread_46.join()
+            thread_47.join()
+            thread_48.join()
+            thread_49.join()
+            thread_50.join()
+            thread_51.join()
+
+            print("Done!")
+
+            pause = input()
+
+        #scan twitter (twint)
+        if my_input == "9":
+            os.system("clear")
+            
+            user_name = input("Enter username: ")
+            keyword = input("Enter keyword: ")
+            print()
+
+            #configure
+            result = twint.Config()
+            result.Username = user_name
+            result.Search = keyword
+
+            #run
+            twint.run.Search(result)
+
+            pause = input()
+
+        #exit
+        if my_input == "e":
+            exit()
         
+    #penetration testing
+    if user_input == "3":
         os.system("clear")
-        print("apple: " + str(total_apple) + "%")
-        print("centos: " + str(total_centos) + "%")
-        print("debian: " + str(total_debian) + "%")
-        print("fedora: " + str(total_fedora) + "%")
-        print("freebsd: " + str(total_freebsd) + "%")
-        print("microsoft: " + str(total_microsoft) + "%")
-        print("openbsd: " + str(total_openbsd) + "%")
-        print("red hat enterprise linux: " + str(total_rhel) + "%")
-        print("ubuntu: " + str(total_ubuntu) + "%")
+        print("penetration testing tools")
+        my_input = input("1 = brute force (classic)\n2 = brute force (dictionary)\n3 = port scanner\n4 = sql injection scanner\n5 = xss scanner\ne = exit\n")
 
-        pause = input()
+        #brute force (classic)
+        if my_input == "1":
+            os.system("clear")
+            password = input("enter password: ")
+            print(brute_force_classic(password))
+            pause = input()
 
-    if user_input == "20":
-        os.system("clear")
-        url = input("Enter url: ")
-        print(sql_injection_scanner(url))
-        print("Done!")
-        pause = input()
+        #brute force (dictionary)
+        if my_input == "2":
+            brute_force_dictionary()
 
-    if user_input == "21":
-        os.system("clear")
-        url = input("Enter url: ")
-        print(link_scanner_selenium(url))
+        #port scanner
+        if my_input == "3":
+            os.system("clear")
+            website = input("website: ")
+            print(port_scanner(website))
+            pause = input()
 
-    if user_input == "22":
-        os.system("clear")
-        url = input("Enter url: ")
-        print(xss_scanner(url))
-        print("Done!")
-        pause = input()
+        #sql injection scanner
+        if my_input == "4":
+            os.system("clear")
+            url = input("Enter url: ")
+            print(sql_injection_scanner(url))
+            print("Done!")
+            pause = input()
+            
 
-    if user_input == "23":
-        os.system("clear")
-        image = input("Enter image: ")
-        extract_meta_data(image)
-        pause = input()
+        #xss scanner
+        if my_input == "5":
+            os.system("clear")
+            url = input("Enter url: ")
+            print(xss_scanner(url))
+            print("Done!")
+            pause = input()
 
-    if user_input == "24":
-        os.system("clear")
-        folder = input("Enter directory or folder: ")
-        anti_virus(folder)
-        pause = input()
+        #exit
+        if my_input == "e":
+            exit()
         
+    #other
+    if user_input == "4":
+        os.system("clear")
+        print("other tools")
+        my_input = input("1 = anti-virus\n2 = generate password hash\n3 = password generator\ne = exit\n")
+
+        #anti-virus
+        if my_input == "1":
+            os.system("clear")
+            folder = input("Enter directory or folder: ")
+            anti_virus(folder)
+            pause = input()
+
+        #generate password hash
+        if my_input == "2":
+            os.system("clear")
+            password = input("password: ")
+            result = sha256(password.encode("utf-8")).hexdigest()
+            print(result)
+            pause = input()
+
+        #password generator
+        if my_input == "3":
+            password_generator()
+
+        #exit
+        if my_input == "e":
+            exit()
+    
     if user_input == "e":
         exit()
