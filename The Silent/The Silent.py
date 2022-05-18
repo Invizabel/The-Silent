@@ -5696,8 +5696,8 @@ def anti_virus(folder):
         print("checking: " + file)
         result = ""
 
-        if os.path.isfile(file) and file != "anti-virus.py":
-            try:
+        try:
+            if os.path.isfile(file) and file != "anti-virus.py" and os.stat(file).st_size > 0:
                 with open(file, "rb") as f:
                     for chunk in iter(lambda: f.read(32), b""):
                         hex_code = codecs.encode(chunk, "hex")
@@ -5710,25 +5710,26 @@ def anti_virus(folder):
                         if len(result) <= 1000000000:
                             result += clean
 
-            except:
-                continue
+        except:
+            continue
 
-            for i in mal_code:
-                if i in result:
-                    mal_hits += 1
+        for i in mal_code:
+            if i in result:
+                mal_hits += 1
 
-            chance = mal_hits / len(mal_code) * 100
+        chance = mal_hits / len(mal_code) * 100
 
-            if chance == 100:
-                print("detected: " + file)
-                virus_count += 1
-                virus_list.append(file)
+        if chance == 100:
+            print("detected: " + file)
+            virus_count += 1
+            virus_list.append(file)
 
     os.system("clear")
-    print("viruses detected: " + str(virus_count))
 
     for i in virus_list:
         print(i)
+
+    print("viruses detected: " + str(virus_count))
           
 #mainloop
 while True:
