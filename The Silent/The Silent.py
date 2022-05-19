@@ -43,7 +43,6 @@ from PIL.ExifTags import *
 from urllib.parse import urljoin
 
 import codecs
-import gc
 import hashlib
 import itertools
 import math
@@ -3774,21 +3773,6 @@ def xss_scanner(url):
                         parse_name_start = str(i).index("name=\"")
                         parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
 
-                        for ii in range(parse_name_start + 6, parse_name_end):
-                            form_name = form_name + str(i)[ii]
-
-                        form_list.append(form_name)
-
-                    except:
-                        pass
-
-                if "search" in str(i):
-                    form_name = ""
-
-                    try:
-                        parse_name_start = str(i).index("name=\"")
-                        parse_name_end = str(i).index("\"", parse_name_start + 6, len(str(i)))
-                        
                         for ii in range(parse_name_start + 6, parse_name_end):
                             form_name = form_name + str(i)[ii]
 
