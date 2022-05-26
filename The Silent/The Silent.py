@@ -5623,22 +5623,22 @@ def anti_virus(folder):
     file_list = []
 
     mal_code = ["crypt", "fopen", "open", "read", "write"]
-    mal_hits = 0
     virus_count = 0
     virus_list = []
 
     for root, dirs, files in os.walk(folder, topdown = True):
         for name in files:
-                file_list.append(os.path.join(root, name))
+            file_list.append(os.path.join(root, name))
 
     file_list.sort()
                 
     for file in file_list:
         print("checking: " + file)
+        mal_hits = 0
         result = ""
 
         try:
-            if os.path.isfile(file) and file != "anti-virus.py" and os.stat(file).st_size > 0:
+            if os.path.isfile(file) and file != "anti-virus.py" and os.stat(file).st_size > 0 and os.stat(file).st_size <= 1000000000:
                 with open(file, "rb") as f:
                     for chunk in iter(lambda: f.read(32), b""):
                         hex_code = codecs.encode(chunk, "hex")
@@ -5647,9 +5647,7 @@ def anti_virus(folder):
                         clean = clean.replace("'", "")
                         clean = clean.replace("\\x", "")
                         clean = clean.replace("00", "")
-
-                        if len(result) <= 1000000000:
-                            result += clean
+                        result += clean
 
         except:
             continue
