@@ -4382,6 +4382,32 @@ def port_scanner(host):
       
     return socket_list
 
+def sha512():
+    buffer = 1000000
+    sha512 = hashlib.sha512()
+    
+    os.system("clear")
+    file = input("file: ")
+
+    try:
+        if os.stat(file).st_size > 0:
+            with open(file, "rb") as f:
+                while True:
+                    data = f.read(buffer)
+                    
+                    if not data:
+                        break
+
+                    sha512.update(data)
+
+    except:
+        print("ERROR!")
+
+    my_hash = sha512.hexdigest()
+
+    print(my_hash)
+    pause = input()
+
 def sql_injection_scanner(url):
     os.system("clear")
     my_url = https_string + url
@@ -5712,7 +5738,7 @@ while True:
     if user_input == "1":
         os.system("clear")
         print("digital forensics tools")
-        my_input = input("1 = compare perceptual hash\n2 = data recovery\n3 = device storage\n4 = extract image metadata\n5 = file finder\n6 = hex editor\n7 = md5 hash\ne = exit\n")
+        my_input = input("1 = compare perceptual hash\n2 = data recovery\n3 = device storage\n4 = extract image metadata\n5 = file finder\n6 = hex editor\n7 = md5 hash\n8 = sha512\ne = exit\n")
 
         #compare perceptual hash
         if my_input == "1":
@@ -5760,6 +5786,10 @@ while True:
         #md5 hash
         if my_input == "7":
             md5()
+
+        #sha512 hash
+        if my_input == "8":
+            sha512()
 
         #exit
         if my_input == "e":
