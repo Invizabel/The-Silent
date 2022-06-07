@@ -1490,11 +1490,13 @@ def file_finder(file, directory):
     return str("errors = " + str(errors) + "\n" + "\n" + "files found: " + str(file_list))
 
 #simple hex editor
-def hex_editor(file):
+def hex_editor(file, keyword):
     os.system("clear")
+
+    my_boolean = False
     
     with open(file, "rb") as f:
-        for chunk in iter(lambda: f.read(32), b""):
+        for chunk in iter(lambda: f.read(128), b""):
             try:
                 ascii_convert = codecs.decode(chunk, "ascii")
             
@@ -1504,11 +1506,22 @@ def hex_editor(file):
                 my_list = list(clean)
                 my_list = list(set(my_list))
 
-                if len(my_list) != 1 and my_list[0] != "\\x00":
+                if len(my_list) != 1 and my_list[0] != "\\x00" and keyword in clean:
                     print(clean)
                     
             except:
                 pass
+
+        for chunk in iter(lambda: f.read(2), b""):
+            hex_convert = codecs.encode(chunk, "hex")
+
+            clean_hex = str(hex_convert).replace("b", "")
+            clean_hex = clean.replace("'", "")
+
+            if clean_hex == "0a":
+                print("")
+
+    print("done")
 
 #scans for emails on website
 def email_scanner(url):
@@ -5787,7 +5800,8 @@ while True:
         if my_input == "6":
             os.system("clear")
             file = input("file name: ")
-            hex_editor(file)
+            keyword = input("keyword: ")
+            hex_editor(file, keyword)
             pause = input()
 
         #md5 hash
