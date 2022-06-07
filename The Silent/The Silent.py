@@ -1494,6 +1494,8 @@ def hex_editor(file, keyword):
     os.system("clear")
 
     my_boolean = False
+
+    count = 0
     
     with open(file, "rb") as f:
         for chunk in iter(lambda: f.read(128), b""):
@@ -1508,6 +1510,12 @@ def hex_editor(file, keyword):
 
                 if len(my_list) != 1 and my_list[0] != "\\x00" and keyword in clean:
                     print(clean)
+
+                    count += 1
+
+                    if count == 64:
+                        count = 0
+                        pause = input()
                     
             except:
                 pass
