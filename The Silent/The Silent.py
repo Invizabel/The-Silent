@@ -1216,8 +1216,7 @@ def anti_virus(folder):
             if os.path.isfile(file) and file != "anti-virus.py" and os.stat(file).st_size > 0 and os.stat(file).st_size <= 1000000000:
                 with open(file, "rb") as f:
                     for chunk in iter(lambda: f.read(32), b""):
-                        hex_code = codecs.encode(chunk, "hex")
-                        ascii_convert = codecs.decode(hex_code, "hex")
+                        ascii_convert = codecs.decode(chunk, "ascii")
                         clean = str(ascii_convert).replace("b", "")
                         clean = clean.replace("'", "")
                         clean = clean.replace("\\x", "")
@@ -1489,48 +1488,6 @@ def file_finder(file, directory):
     os.system("clear")
     return str("errors = " + str(errors) + "\n" + "\n" + "files found: " + str(file_list))
 
-#simple hex editor
-def hex_editor(file, keyword):
-    os.system("clear")
-
-    my_boolean = False
-
-    count = 0
-    
-    with open(file, "rb") as f:
-        for chunk in iter(lambda: f.read(128), b""):
-            try:
-                ascii_convert = codecs.decode(chunk, "ascii")
-            
-                clean = str(ascii_convert).replace("b", "")
-                clean = clean.replace("'", "")
-
-                my_list = list(clean)
-                my_list = list(set(my_list))
-
-                if len(my_list) != 1 and my_list[0] != "\\x00" and keyword in clean:
-                    print(clean)
-
-                    count += 1
-
-                    if count == 64:
-                        count = 0
-                        pause = input()
-                    
-            except:
-                pass
-
-        for chunk in iter(lambda: f.read(2), b""):
-            hex_convert = codecs.encode(chunk, "hex")
-
-            clean_hex = str(hex_convert).replace("b", "")
-            clean_hex = clean.replace("'", "")
-
-            if clean_hex == "0a":
-                print("")
-
-    print("done")
-
 #scans for emails on website
 def email_scanner(url):
     #variables
@@ -1612,6 +1569,48 @@ def email_scanner(url):
     super_web_result.sort()
     
     return str(super_result) + "\n\n" + str(super_web_result)
+
+#simple hex editor
+def hex_editor(file, keyword):
+    os.system("clear")
+
+    my_boolean = False
+
+    count = 0
+    
+    with open(file, "rb") as f:
+        for chunk in iter(lambda: f.read(128), b""):
+            try:
+                ascii_convert = codecs.decode(chunk, "ascii")
+            
+                clean = str(ascii_convert).replace("b", "")
+                clean = clean.replace("'", "")
+
+                my_list = list(clean)
+                my_list = list(set(my_list))
+
+                if len(my_list) != 1 and my_list[0] != "\\x00" and keyword in clean:
+                    print(clean)
+
+                    count += 1
+
+                    if count == 64:
+                        count = 0
+                        pause = input()
+                    
+            except:
+                pass
+
+        for chunk in iter(lambda: f.read(2), b""):
+            hex_convert = codecs.encode(chunk, "hex")
+
+            clean_hex = str(hex_convert).replace("b", "")
+            clean_hex = clean_hex.replace("'", "")
+
+            if clean_hex == "0a":
+                print("")
+
+    print("done")
 
 #download source from a website
 def html():
