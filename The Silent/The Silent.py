@@ -1495,13 +1495,20 @@ def hex_editor(file):
     
     with open(file, "rb") as f:
         for chunk in iter(lambda: f.read(32), b""):
-            hex_code = codecs.encode(chunk, "hex")
-            ascii_convert = codecs.decode(hex_code, "hex")
-            clean = str(ascii_convert).replace("b", "")
-            clean = clean.replace("'", "")
-            clean = clean.replace("00", "")
-            result = clean.replace("\\x", "")
-            print(result)
+            try:
+                ascii_convert = codecs.decode(chunk, "ascii")
+            
+                clean = str(ascii_convert).replace("b", "")
+                clean = clean.replace("'", "")
+
+                my_list = list(clean)
+                my_list = list(set(my_list))
+
+                if len(my_list) != 1 and my_list[0] != "\\x00":
+                    print(clean)
+                    
+            except:
+                pass
 
 #scans for emails on website
 def email_scanner(url):
