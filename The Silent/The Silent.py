@@ -4383,6 +4383,10 @@ def port_scanner(host):
             except socks.GeneralProxyError:
                 print(False)
                 continue
+
+            except:
+                print(False)
+                continue
         
     
     if termux_tor_boolean == False and tor_boolean == False:
