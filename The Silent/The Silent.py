@@ -4384,7 +4384,7 @@ def port_scanner(host):
                 print(False)
                 continue
 
-            except:
+            except ConnectionRefusedError:
                 print(False)
                 continue
             
@@ -4405,6 +4405,10 @@ def port_scanner(host):
                 print(True)
 
             except TimeoutError:
+                print(False)
+                continue
+
+            except ConnectionRefusedError:
                 print(False)
                 continue
 
