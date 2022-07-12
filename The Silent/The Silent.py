@@ -38,6 +38,7 @@ from bs4 import BeautifulSoup
 from collections import *
 from hashlib import *
 from itertools import *
+from numpy import *
 from PIL import Image
 from PIL.ExifTags import *
 from urllib.parse import urljoin
@@ -46,6 +47,7 @@ import codecs
 import hashlib
 import itertools
 import math
+import numpy as np
 import os
 import random
 import re
@@ -1611,6 +1613,30 @@ def hex_editor(file, keyword):
                 print("")
 
     print("done")
+
+#human detection
+def human_detection(input_image, output):
+    size = (1920,1080)
+    min_range = np.array([100,75,65])
+    max_range = np.array([250,240,235])
+
+    final_list = []
+    final_image = np.array([])
+
+    image = Image.open(input_image)
+
+    size = image.resize(size)
+
+    result = asarray(size)
+
+    super_result = (result > min_range) & (result < max_range)
+
+    result[np.where((super_result == [True, True, True]).all(axis = 2))] = [255,255,255]
+    result[np.where((super_result != [True, True, True]).any(axis = 2))] = [0,0,0]
+
+    data = Image.fromarray(result, "RGB")
+
+    data.save(output)
 
 #download source from a website
 def html():
@@ -6200,7 +6226,7 @@ while True:
     if user_input == "4":
         os.system("clear")
         print("other tools")
-        my_input = input("1 = anti-virus\n2 = generate password hash\n3 = password generator\ne = exit\n")
+        my_input = input("1 = anti-virus\n2 = generate password hash\n3 = human detection\n4 = password generator\ne = exit\n")
 
         #anti-virus
         if my_input == "1":
@@ -6217,8 +6243,15 @@ while True:
             print(result)
             pause = input()
 
-        #password generator
+        #human detection
         if my_input == "3":
+            os.system("clear")
+            input_image = input("enter name of image (input): ")
+            output = input("enter name of image (output): ")
+            human_detection(input_image, output)
+
+        #password generator
+        if my_input == "4":
             password_generator()
 
         #exit
