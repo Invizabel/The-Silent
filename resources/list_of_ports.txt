@@ -1,0 +1,91 @@
+1 # tcpmux
+2 # compressnet
+3 # compressnet
+5 # remote job entry
+7 # echo protocol
+9 # discard protocol/wake-on-lan
+11 # systat service
+13 # daytime protocol
+15 # netstat
+17 # quote of the day
+18 # message send protocol
+19 # character generator protocol
+20 # file transfer protocol data
+21 # file transfer protocol control
+22 # secure shell
+23 # telnet
+25 # simple mail tranfser protocol
+27 # nsw user system fe
+28 # palo alto network's panorama high availability sync over tls
+29 # msg icp
+31 # message authentication
+33 # display support protocol
+37 # time protocol
+38 # route access protocol
+39 # resource location protocol
+41 # graphics
+42 # host name server protocol
+43 # whois protocol
+44 # message proccesing module flags protocol
+45 # message processing module recieve protocol
+46 # message prcoessing module send protocol
+48 # auditd
+49 # tacacs/tacacs+
+50 # remote mail checking
+52 # xerox network systems time
+53 # domain name system
+54 # xerox network systems clearinghouse
+55 # isi graphics language
+56 # xerox network systems authentication
+58 # xerox network systems mail
+62 # aca services
+63 # whois++ protocol
+64 # covia
+65 # tacacs database service
+66 # oracle sql-net
+67 # bootstrap server/dynamic host transfer protocol
+68 # bootstrap client/dynamic host transfer protocol
+69 # trivial file trasnfer protocol
+70 # gopher protocol
+71 # netrjs
+72 # netrjs
+73 # netrjs
+74 # netrjs
+76 distributed external object store
+78 # vettcp
+79 # finger protocol
+80 # hypertext transfer protocol
+82 # xfer utility
+83 # mit ml device
+84 # common trace facility
+85 # mit ml device
+86 # micro focus cobol
+88 # kerberos authentication system
+89 # su/mit telnet gateway
+109 # post office protocol version 2
+110 # post office protocol version 3
+143 # imap4
+443 # https
+464 # kerberos
+465 # smtp over tls
+587 # smtp
+636 # ldap over tls
+691 # ms exchange
+853 # dns over tls
+902 # vmware server
+989 # ftp over tls
+990 # ftp over tls
+993 # imap4 over tls
+995 # pop3 over tls
+1194 # openvpn
+1725 # steam client
+2483 # oracle db
+2484 # oracle db
+3306 # mysql
+5432 # postgresql
+5900 # rfb/vnc server
+8000 # django default debug
+8222 # vmware server
+9050 # tor
+19132 # minecraft ipv4 server
+19133 # minecraft ipv6 server

@@ -1,0 +1,10 @@
+# pypi
+face-recognition
+moviepy
+numpy
+Pillow
+pytesseract
+
+# linux/unix package
+ffmpeg
+tesseract-ocr-all

@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "TheSilent"
+version = "0.0.846"
+authors = [
+  { name="Michael Mueller", email="michael.j.mueller.pro@gmail.com" },
+]
+description = "TheSilent contains free and open source tools similar to hak5! Please see github for more info!"
+readme = "README.md"
+license = { file="LICENSE.txt" }
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    ]
+
+[project.urls]
+"Homepage" = "https://github.com/Invizabel/The-Silent"
+"Bug Tracker" = "https://github.com/Invizabel/The-Silent/issues"
