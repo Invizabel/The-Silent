@@ -1,4 +1,3 @@
-import ssl
 import time
 import urllib
 from urllib.parse import urlparse
@@ -8,10 +7,6 @@ from TheSilent.return_user_agent import return_user_agent
 
 CYAN = "\033[1;36m"
 RED = "\033[1;31m"
-
-verify = ssl.create_default_context()
-verify.check_hostname = False
-verify.verify_mode = ssl.CERT_NONE
 
 def owl(username,delay=0):
     clear()

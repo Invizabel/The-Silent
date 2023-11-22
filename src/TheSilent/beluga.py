@@ -1,105 +1,254 @@
-import ipaddress
-import random
 import re
-import socket
 import time
+import urllib.parse
+from TheSilent.kitten_crawler import kitten_crawler
+from TheSilent.puppy_requests import text
 from TheSilent.clear import clear
 
 RED = "\033[1;31m"
 CYAN = "\033[1;36m"
 GREEN = "\033[0;32m"
 
-def beluga(host,delay=0):
+def beluga(host,delay=0,crawl=1,verbose=True):
+    if verbose:
+        clear()
     hits = []
 
-    mal_command = [r"sleep 60",
+    mal_command = ["sleep 60",
                    r"\s\l\e\e\p \6\0"]
 
-    mal_python = [r"eval(compile('import time\ntime.sleep(60)','beluga','exec'))"]
+    mal_python = [r"eval(compile('import time\ntime.sleep(60)','beluga','exec'))",
+                  r"return beluga"]
+    
+    mal_xss = ["<iframe>beluga</iframe>",
+                "<p>beluga</p>",
+                "<script>alert('beluga')</script>",
+                "<script>prompt('beluga')</script>"]
 
-    mal_sql = [r"SELECT SLEEP(60);",
-               r"WAITFOR DELAY '00:01';"]
+    hosts = kitten_crawler(host,delay,crawl,verbose)
 
-    if re.search("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}$",host):
-        hosts = []
-        for _ in ipaddress.ip_network(host,strict=False):
-            hosts.append(str(_))
-        hosts = random.sample(hosts,len(hosts))
+    for _ in hosts:
+        if verbose:
+            print(CYAN + f"checking: {_}")
+        _.rsplit("/")
+        try:
+            forms = re.findall("<form.+form>",text(_).replace("\n",""))
 
-    else:
-        hosts = [host]
+        except:
+            forms = []
 
-    ports = [23,80,443,1433,3306,8000,8001,8080,8443]
-
-    clear()
-    for host in hosts:
-        print(CYAN + f"checking: {host}")
-        port_list = []
-        ports = random.sample(ports,len(ports))
-        for port in ports:
+        # check for command injection
+        for mal in mal_command:
             time.sleep(delay)
             try:
-                tcp_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-                tcp_socket.settimeout(10)
-                tcp_socket.connect((host,port))
-                tcp_socket.close()
-                port_list.append(port)
+                start = time.time()
+                data = text(_ + "/" + mal)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"command injection: {host}/{mal}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    action_bool = True
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    action_bool = False
+
+                method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                for in_field in input_field:
+                    if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                        name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        try:
+                            value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+
+                        except IndexError:
+                            pass
+
+                        if type_field == "submit" or type_field == "hidden":
+                            field_list.append({name_field:value_field})
+
+                        else:
+                            field_list.append({name_field:mal})
+
+                        field_dict = field_list[0]
+                        for init_field_dict in field_list[1:]:
+                            field_dict.update(init_field_dict)
+
+                        try:
+                            time.sleep(delay)
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"command injection: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"command injection: {_} | {field_dict}")
+
+                        except:
+                            pass
+
+        # check for python injection
+        for mal in mal_python:
+            time.sleep(delay)
+            try:
+                start = time.time()
+                data = text(_ + "/" + mal)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"python injection: {host}/{mal}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    action_bool = True
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    action_bool = False
+
+                method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                for in_field in input_field:
+                    if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                        name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        try:
+                            value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+
+                        except IndexError:
+                            pass
+
+                        if type_field == "submit" or type_field == "hidden":
+                            field_list.append({name_field:value_field})
+
+                        else:
+                            field_list.append({name_field:mal})
+
+                        field_dict = field_list[0]
+                        for init_field_dict in field_list[1:]:
+                            field_dict.update(init_field_dict)
+
+                        try:
+                            time.sleep(delay)
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"python injection: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"python injection: {_} | {field_dict}")
+
+                        except:
+                            pass
+
+        # check for xss
+        for mal in mal_xss:
+            time.sleep(delay)
+            try:
+                data = text(_ + "/" + mal)
+                if mal in data:
+                    hits.append(f"xss: {host}/{mal}")
+
             except:
                 pass
 
-        for port in port_list:
-            for mal in mal_command:
-                time.sleep(delay)
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
                 try:
-                    tcp_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-                    tcp_socket.settimeout(120)
-                    tcp_socket.connect((host,port))
-                    start = time.time()
-                    tcp_socket.send(mal.encode())
-                    data = tcp_socket.recv(4096)
-                    end = time.time()
-                    tcp_socket.close()
-                    if end - start >= 45:
-                        hits.append(f"{host}:{port}/tcp ({mal})- {data}")
-                except:
-                    pass
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    action_bool = True
+                    if action_field.startswith("/"):
+                        action = host + action_field
 
-            for mal in mal_python:
-                time.sleep(delay)
-                try:
-                    tcp_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-                    tcp_socket.settimeout(120)
-                    tcp_socket.connect((host,port))
-                    start = time.time()
-                    tcp_socket.send(mal.encode())
-                    data = tcp_socket.recv(4096)
-                    end = time.time()
-                    tcp_socket.close()
-                    if end - start >= 45:
-                        hits.append(f"{host}:{port}/tcp ({mal})- {data}")
-                except:
-                    pass
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
 
-            for mal in mal_sql:
-                time.sleep(delay)
-                try:
-                    tcp_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-                    tcp_socket.settimeout(120)
-                    tcp_socket.connect((host,port))
-                    start = time.time()
-                    tcp_socket.send(mal.encode())
-                    data = tcp_socket.recv(4096)
-                    end = time.time()
-                    tcp_socket.close()
-                    if end - start >= 45:
-                        hits.append(f"{host}:{port}/tcp ({mal})- {data}")
-                except:
-                    pass
+                    else:
+                        action = action_field
 
+                except IndexError:
+                    action_bool = False
+
+                method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                for in_field in input_field:
+                    if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                        name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        try:
+                            value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+
+                        except IndexError:
+                            pass
+
+                        if type_field == "submit" or type_field == "hidden":
+                            field_list.append({name_field:value_field})
+
+                        else:
+                            field_list.append({name_field:mal})
+
+                        field_dict = field_list[0]
+                        for init_field_dict in field_list[1:]:
+                            field_dict.update(init_field_dict)
+
+                        try:
+                            time.sleep(delay)
+                            if action:
+                                data = text(action,method=method_field,data=field_dict)
+                                if mal in data:
+                                    hits.append(f"xss: {action} | {field_dict}")
+
+                            else:
+                                data = text(_,method=method_field,data=field_dict)
+                                if mal in data:
+                                    hits.append(f"xss: {_} | {field_dict}")
+
+                        except:
+                            pass
+
+    if verbose:
+        clear()
+    hits = list(set(hits[:]))
     hits.sort()
-    clear()
     if len(hits) > 0:
-        for hit in hits:
-            print(RED + hit)
+        return hits
     else:
-        print(GREEN + "we didn't find anything interesting")
+        return [f"we didn't find anything interesting on {host}"]
