@@ -34,7 +34,7 @@ def text(host,method="GET",data=b"",headers=fake_headers,timeout=10,raw=False):
     if raw:
         return simple_response.read()
     else:
-        return simple_response.read().decode(errors="ignore")
+        return simple_response.read().decode("ascii",errors="ignore")
 
 def url(host,method="GET",data=b"",headers=fake_headers,timeout=10):
     simple_request = urllib.request.Request(host,data=urllib.parse.urlencode(data).encode(),method=method,unverifiable=True)
