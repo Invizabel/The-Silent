@@ -215,12 +215,11 @@ def beluga(host,delay=0,crawl=1,verbose=True):
                         type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                         try:
                             value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
 
                         except IndexError:
                             pass
-
-                        if type_field == "submit" or type_field == "hidden":
-                            field_list.append({name_field:value_field})
 
                         else:
                             field_list.append({name_field:mal})
