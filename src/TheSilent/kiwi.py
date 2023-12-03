@@ -82,7 +82,9 @@ def kiwi_juice(dns_host,delay,scripts):
                     my_request = text(link)
                     results = re.findall("[a-zA-Z0-9\_\.]{3,}@[a-zA-Z0-9\_\.]{3,}\.[a-zA-Z0-9\_\.]+",my_request)
                     for result in results:
-                        hits.append(result)
+                        domain = ".".join(dns_host.split(".")[-2:])
+                        if domain in result:
+                            hits.append(result)
                 except:
                     pass
             
@@ -117,7 +119,9 @@ def kiwi_juice(dns_host,delay,scripts):
                     my_request = text(link)
                     results = re.findall("[a-zA-Z0-9\_\.]{3,}@[a-zA-Z0-9\_\.]{3,}\.[a-zA-Z0-9\_\.]+",my_request)
                     for result in results:
-                        hits.append(result)
+                        domain = ".".join(dns_host.split(".")[-2:])
+                        if domain in result:
+                            hits.append(result)
                 except:
                     pass
 
