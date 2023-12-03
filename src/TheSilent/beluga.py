@@ -68,27 +68,23 @@ def beluga(host,delay=0,crawl=1,verbose=True):
                 except IndexError:
                     action_bool = False
 
-                method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
-                for in_field in input_field:
-                    if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        try:
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                             value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                             if type_field == "submit" or type_field == "hidden":
                                 field_list.append({name_field:value_field})
 
-                        except IndexError:
-                            pass
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
 
-                        if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
 
-                        field_dict = field_list[0]
-                        for init_field_dict in field_list[1:]:
-                            field_dict.update(init_field_dict)
-
-                        try:
                             time.sleep(delay)
                             if action:
                                 start = time.time()
@@ -104,8 +100,8 @@ def beluga(host,delay=0,crawl=1,verbose=True):
                                 if end - start >= 45:
                                     hits.append(f"command injection: {_} | {field_dict}")
 
-                        except:
-                            pass
+                except:
+                    pass
 
         # check for python injection
         for mal in mal_python:
@@ -138,27 +134,24 @@ def beluga(host,delay=0,crawl=1,verbose=True):
                 except IndexError:
                     action_bool = False
 
-                method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
-                for in_field in input_field:
-                    if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        try:
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                             value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                             if type_field == "submit" or type_field == "hidden":
                                 field_list.append({name_field:value_field})
 
-                        except IndexError:
-                            pass
 
-                        if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
 
-                        field_dict = field_list[0]
-                        for init_field_dict in field_list[1:]:
-                            field_dict.update(init_field_dict)
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
 
-                        try:
                             time.sleep(delay)
                             if action:
                                 start = time.time()
@@ -174,8 +167,8 @@ def beluga(host,delay=0,crawl=1,verbose=True):
                                 if end - start >= 45:
                                     hits.append(f"python injection: {_} | {field_dict}")
 
-                        except:
-                            pass
+                except:
+                    pass
 
         # check for xss
         for mal in mal_xss:
@@ -206,27 +199,23 @@ def beluga(host,delay=0,crawl=1,verbose=True):
                 except IndexError:
                     action_bool = False
 
-                method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
-                for in_field in input_field:
-                    if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        try:
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                             value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                             if type_field == "submit" or type_field == "hidden":
                                 field_list.append({name_field:value_field})
 
-                        except IndexError:
-                            pass
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
 
-                        if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
 
-                        field_dict = field_list[0]
-                        for init_field_dict in field_list[1:]:
-                            field_dict.update(init_field_dict)
-
-                        try:
                             time.sleep(delay)
                             if action:
                                 data = text(action,method=method_field,data=field_dict)
@@ -238,8 +227,8 @@ def beluga(host,delay=0,crawl=1,verbose=True):
                                 if mal in data:
                                     hits.append(f"xss: {_} | {field_dict}")
 
-                        except:
-                            pass
+                except:
+                    pass
 
     if verbose:
         clear()
