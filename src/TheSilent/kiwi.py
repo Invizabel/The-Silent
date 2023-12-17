@@ -8,7 +8,7 @@ import ssl
 import threading
 import time
 from ftplib import FTP,FTP_TLS
-from TheSilent.beluga import beluga
+from TheSilent.cobra import cobra
 from TheSilent.clear import clear
 from TheSilent.kitten_crawler import kitten_crawler
 from TheSilent.puppy_requests import text
@@ -104,9 +104,9 @@ def kiwi_juice(dns_host,delay,scripts):
             except:
                 pass
 
-            # run beluga web vulnerability scanner
+            # run cobra web python injection scanner
             time.sleep(delay)
-            results = beluga(f"http://{dns_host}",delay,1000,False)
+            results = cobra(f"http://{dns_host}",delay,1000,False)
             for result in results:
                 hits.append(f"{dns_host}- {result}")
 
@@ -143,9 +143,9 @@ def kiwi_juice(dns_host,delay,scripts):
                 pass
 
         if scripts == "vuln":
-            # run beluga web vulnerability scanner
+            # run cobra web vulnerability scanner
             time.sleep(delay)
-            results = beluga(f"http://{dns_host}",delay,1000,False)
+            results = cobra(f"http://{dns_host}",delay,1000,False)
             for result in results:
                 hits.append(f"{dns_host}- {result}")
 
