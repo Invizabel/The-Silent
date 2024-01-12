@@ -1,4 +1,3 @@
-import argparse
 import re
 import time
 import urllib.parse
@@ -7,19 +6,19 @@ from TheSilent.puppy_requests import text
 
 CYAN = "\033[1;36m"
 
-def kitten_crawler(host,delay=0,crawl=1000,verbose=True):
-    if verbose:
-        clear()
+def kitten_crawler(host,delay=0):
+    clear()
     hits = [host]
     total = []
-    for depth in range(crawl):
+    depth = -1
+    while True:
+        depth += 1
         hits = list(dict.fromkeys(hits[:]))
         try:
             if urllib.parse.urlparse(host).netloc in hits[depth] or ".js" in hits[depth]:
                 valid = bytes(hits[depth],"ascii")
                 time.sleep(delay)
-                if verbose:
-                    print(CYAN + hits[depth])
+                print(CYAN + hits[depth])
                 data = text(hits[depth])
                 total.append(hits[depth])
 
@@ -58,6 +57,5 @@ def kitten_crawler(host,delay=0,crawl=1000,verbose=True):
         except UnicodeDecodeError:
             pass
 
-    if verbose:
-        clear()
+    clear()
     return results

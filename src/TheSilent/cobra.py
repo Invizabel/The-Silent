@@ -1,8 +1,6 @@
 import re
-import socket
 import time
 import urllib.parse
-from TheSilent.dolphin import dolphin
 from TheSilent.kitten_crawler import kitten_crawler
 from TheSilent.puppy_requests import text
 from TheSilent.clear import clear
@@ -11,21 +9,19 @@ RED = "\033[1;31m"
 CYAN = "\033[1;36m"
 GREEN = "\033[0;32m"
 
-def cobra(host,delay=0,crawl=1,verbose=True):
+def cobra(host,delay=0):
     hits = []
 
-    mal_python = ["__import__('time').sleep(60)",
-                          "__import__('os').system('sleep 60')"]
-        
+    mal_python = [r"__import__('time').sleep(60)", r"__import__('os').system('sleep 60')",r'eval("__import__(\'time\').sleep(15)")',r'eval("__import__(\'os\').system(\'sleep 60\')")',r'exec("__import__(\'time\').sleep(15)")',r'exec("__import__(\'os\').system(\'sleep 60\')")']
+    
     if re.search("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",host):
-        hosts = kitten_crawler("http://" + host,delay,crawl,verbose)
+        hosts = kitten_crawler("http://" + host,delay,crawl)
 
     else:
-        hosts = kitten_crawler(host,delay,crawl,verbose)
+        hosts = kitten_crawler(host,delay)
 
     for _ in hosts:
-        if verbose:
-            print(CYAN + f"checking: {_}")
+        print(CYAN + f"checking: {_}")
 
         try:
             forms = re.findall("<form.+form>",text(_).replace("\n",""))
@@ -134,12 +130,13 @@ def cobra(host,delay=0,crawl=1,verbose=True):
                 except:
                     pass
 
-    if verbose:
-        clear()
-
+    clear()
     hits = list(set(hits[:]))
     hits.sort()
+
     if len(hits) > 0:
-        return hits
+        for hit in hits:
+            print(RED + hit)
+
     else:
-        return [f"we didn't find anything interesting on {host}"]
+        print(GREEN + f"we didn't find anything interesting on {host}")
