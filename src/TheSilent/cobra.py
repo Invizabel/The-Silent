@@ -16,36 +16,6 @@ def cobra(host,delay=0,crawl=1,verbose=True):
 
     mal_python = ["__import__('time').sleep(60)",
                           "__import__('os').system('sleep 60')"]
-
-    if verbose:
-        clear()
-        print(CYAN + "port scanning")
-
-    if re.search("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",host):
-        ports = dolphin(host)
-
-    else:
-        ports = dolphin(urllib.parse.urlparse(host).netloc)
-
-    for port in ports:
-        if verbose:
-            print(CYAN + f"checking port: {port}")
-
-        for mal in mal_python:
-            time.sleep(delay)
-            my_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-            my_socket.settimeout(120)
-            try:
-                my_socket.connect((urllib.parse.urlparse(host).netloc,port))
-                start = time.time()
-                my_socket.send(mal.encode())
-                data = my_socket.recv(65535).decode()
-                end = time.time()
-                if end - start > 45:
-                    hits.append(f"python injection found on port {port} with payload {mal}: {data}")
-
-            except TimeoutError:
-                pass
         
     if re.search("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",host):
         hosts = kitten_crawler("http://" + host,delay,crawl,verbose)
