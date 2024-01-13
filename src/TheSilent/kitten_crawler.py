@@ -15,7 +15,7 @@ def kitten_crawler(host,delay=0):
         depth += 1
         hits = list(dict.fromkeys(hits[:]))
         try:
-            if urllib.parse.urlparse(host).netloc in hits[depth] or ".js" in hits[depth]:
+            if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(hits[depth]).netloc or ".js" in hits[depth]:
                 valid = bytes(hits[depth],"ascii")
                 time.sleep(delay)
                 print(CYAN + hits[depth])
