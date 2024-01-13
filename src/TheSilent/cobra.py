@@ -12,7 +12,7 @@ GREEN = "\033[0;32m"
 def cobra(host,delay=0):
     hits = []
 
-    mal_python = [r"__import__('time').sleep(60)", r"__import__('os').system('sleep 60')",r'eval("__import__(\'time\').sleep(15)")',r'eval("__import__(\'os\').system(\'sleep 60\')")',r'exec("__import__(\'time\').sleep(15)")',r'exec("__import__(\'os\').system(\'sleep 60\')")']
+    mal_python = [r"__import__('time').sleep(60)", r"__import__('os').system('sleep 60')",r'eval("__import__(\'time\').sleep(15)")',r'eval("__import__(\'os\').system(\'sleep 60\')")',r'exec("__import__(\'time\').sleep(15)")',r'exec("__import__(\'os\').system(\'sleep 60\')")','exec("import time\ntime.sleep(60)"','exec("import os\nos.system(\'sleep 60\')")']
     
     if re.search("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",host):
         hosts = kitten_crawler("http://" + host,delay,crawl)
