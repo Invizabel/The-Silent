@@ -32,7 +32,7 @@ def kitten_crawler(host,delay=0):
             links = re.findall("content\s*=\s*[\"\'](\S+)(?=[\"\'])|href\s*=\s*[\"\'](\S+)(?=[\"\'])|src\s*=\s*[\"\'](\S+)(?=[\"\'])",data.lower())
             for link in links:
                 for _ in link:
-                    _ = re.split("[\"\'\<\>]",_)[0]
+                    _ = re.split("[\"\'\<\>\;\{\}]",_)[0]
                     if _.startswith("/") and not _.startswith("//"):
                         hits.append(f"{host}{_}")
 
