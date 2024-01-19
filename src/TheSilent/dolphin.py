@@ -1,4 +1,5 @@
 import asyncio
+import urllib.parse
 
 ports = []
 
@@ -6,7 +7,7 @@ async def bottlenose(host, port):
     global ports
 
     try:
-        reader, writer = await asyncio.wait_for(asyncio.open_connection(host, port),10)
+        reader, writer = await asyncio.wait_for(asyncio.open_connection(host, port), 15)
         ports.append(port)
         writer.close()
 

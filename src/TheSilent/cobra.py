@@ -1,8 +1,11 @@
 import re
+import socket
 import time
+import urllib.parse
+from TheSilent.clear import clear
+from TheSilent.dolphin import dolphin
 from TheSilent.kitten_crawler import kitten_crawler
 from TheSilent.puppy_requests import text
-from TheSilent.clear import clear
 
 RED = "\033[1;31m"
 CYAN = "\033[1;36m"
@@ -37,7 +40,9 @@ def cobra(host,delay=0):
     
     mal_powershell = [r"start-sleep -seconds 60"]
 
-    mal_python = [r"time.sleep(60)",
+    mal_python = [r"return beluga",
+                  r"time.sleep(60)",
+                  r"eval(compile('import time\ntime.sleep(60)','cobra','exec'))"
                   r"__import__('time').sleep(60)",
                   r"__import__('os').system('sleep 60')",
                   r'eval("__import__(\'time\').sleep(60)")',
@@ -57,6 +62,266 @@ def cobra(host,delay=0):
                r"<strong>cobra</strong>",
                r"<style>body{background-color:red;}</style>",
                r"<title>cobra</title>"]
+
+    clear()
+    print(CYAN + "port scanning")
+    ports = dolphin(urllib.parse.urlparse(host).netloc)
+
+    for port in ports:
+        print(CYAN + f"checking: {port}")
+        for mal in mal_adobe_groovy:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                start = time.time()
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"adobe groovy injection in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
+        for mal in mal_apple_script:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                start = time.time()
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"apple script injection in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
+        for mal in mal_command:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                start = time.time()
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"command injection in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
+        for mal in mal_go_lang:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                start = time.time()
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"go lang injection in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
+        for mal in mal_ms_sql:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                start = time.time()
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"ms sql injection in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
+        for mal in mal_my_sql:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                start = time.time()
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"my sql injection in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
+        for mal in mal_oracle_sql:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                start = time.time()
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"oracle sql injection in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
+        for mal in mal_perl:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                start = time.time()
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"perl injection in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
+        for mal in mal_php:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                start = time.time()
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"php injection in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
+        for mal in mal_postgresql:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                start = time.time()
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"postgresql injection in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
+        for mal in mal_powershell:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                start = time.time()
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"powershell injection in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
+        for mal in mal_powershell:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                start = time.time()
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"powershell injection in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
+        for mal in mal_python:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                start = time.time()
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"python injection in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
+        for mal in mal_ruby:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                start = time.time()
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"ruby injection in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
+        for mal in mal_xss:
+            time.sleep(delay)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(120)
+            try:
+                tcp_socket.connect((urllib.parse.urlparse(host).netloc, port))
+                tcp_socket.send(mal.encode())
+                data = tcp_socket.recv(65535)
+                tcp_socket.close()
+                if mal in data:
+                    hits.append(f"xss in port {port}:{mal}- {data}")
+
+            except:
+                pass
+
 
     if re.search("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",host):
         hosts = kitten_crawler("http://" + host,delay,crawl)
