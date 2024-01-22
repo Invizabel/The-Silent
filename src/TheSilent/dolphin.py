@@ -1,15 +1,10 @@
 import asyncio
-import urllib.parse
-
-ports = []
 
 async def bottlenose(host, port):
-    global ports
-
     try:
         reader, writer = await asyncio.wait_for(asyncio.open_connection(host, port), 15)
-        ports.append(port)
         writer.close()
+        return port
 
     except:
         pass
@@ -19,8 +14,14 @@ async def pink_dolphin(host):
     for port in range(1,65535):
         tasks.append(bottlenose(host, port))
 
-    await asyncio.gather(*tasks)
+    hits = await asyncio.gather(*tasks)
+    result = []
+    for hit in hits:
+        if hit != None:
+            result.append(hit)
+
+    return result
 
 def dolphin(host):
-    asyncio.run(pink_dolphin(host))
+    ports = asyncio.run(pink_dolphin(host))
     return ports

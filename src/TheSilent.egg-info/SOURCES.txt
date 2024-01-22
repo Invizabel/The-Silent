@@ -2,7 +2,6 @@ LICENSE
 README.md
 pyproject.toml
 src/TheSilent/__init__.py
-src/TheSilent/beluga.py
 src/TheSilent/clear.py
 src/TheSilent/cobra.py
 src/TheSilent/dolphin.py
