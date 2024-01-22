@@ -170,7 +170,8 @@ def cobra(host,delay=0):
                         time.sleep(delay)
                         tcp_socket.send(mal_enum.encode())
                         data = tcp_socket.recv(65535)
-                        hits.append(f"command injection in port {port}:{mal_enum}- {data}")
+                        if len(data) > 0:
+                            hits.append(f"command injection in port {port}:{mal_enum}- {data}")
 
                 tcp_socket.close()
 
@@ -347,7 +348,8 @@ def cobra(host,delay=0):
                         time.sleep(delay)
                         tcp_socket.send(mal_enum.encode())
                         data = tcp_socket.recv(65535)
-                        hits.append(f"python injection in port {port}:{mal_enum}- {data}")
+                        if len(data) > 0:
+                            hits.append(f"python injection in port {port}:{mal_enum}- {data}")
 
                 tcp_socket.close()
 
