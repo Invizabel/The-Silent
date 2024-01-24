@@ -19,12 +19,13 @@ def owl_crawler(host,delay=0):
         hits = list(dict.fromkeys(hits[:]))
         try:
             if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(hits[depth]).netloc or ".js" in hits[depth] or ".gif" in hit or ".jpeg" in hit or ".jpg" in hit or ".png" in hit or ".webp" in hit:
-                valid = bytes(hits[depth],"ascii")
                 time.sleep(delay)
+                valid = bytes(hits[depth],"ascii")
                 print(CYAN + hits[depth])
                 driver.get(hits[depth])
+                time.seep(5)
                 data = driver.page_source
-                total.append(hits[depth])
+                total.append(hits[delay])
 
         except IndexError:
             break
