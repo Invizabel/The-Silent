@@ -15,12 +15,12 @@ async def pink_dolphin(host):
         tasks.append(bottlenose(host, port))
 
     hits = await asyncio.gather(*tasks)
-    result = []
+    results = []
     for hit in hits:
         if hit != None:
-            result.append(hit)
+            results.append(hit)
 
-    return result
+    return results
 
 def dolphin(host):
     ports = asyncio.run(pink_dolphin(host))
