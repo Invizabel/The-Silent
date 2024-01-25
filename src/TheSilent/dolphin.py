@@ -24,4 +24,5 @@ async def pink_dolphin(host):
 
 def dolphin(host):
     ports = asyncio.run(pink_dolphin(host))
+    ports = list(dict.fromkeys(ports[:]))
     return ports

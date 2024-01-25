@@ -24,6 +24,10 @@ def cobra(host,delay=0):
                              r"whoami",
                              r"\w\h\o\a\m\i"]
 
+    mal_emoji = ["\U0001F600",
+                 "\U0001F47C",
+                 "\U0001F525"]
+
     mal_python = [r"time.sleep(60)",
                   r"eval(compile('import time\ntime.sleep(60)','cobra','exec'))",
                   r"eval(compile('import os\nos.system('sleep 60')','cobra','exec'))",
@@ -77,14 +81,6 @@ def cobra(host,delay=0):
                             r'exec("import os\nos.system(\'whoami\')")',
                             r'exec("import os\nos.system(\'\w\h\o\a\m\i\')")']
 
-    mal_special = [r"\n",
-                   r"\r",
-                   r"\033[1;36m",
-                   r"\033[0;32m",
-                   r"\033[1;31m",
-                   r"\U0001F600",
-                   r"\U0001F47C",
-                   r"\U0001F525"]
 
     clear()
     
@@ -115,10 +111,26 @@ def cobra(host,delay=0):
                                 data = tcp_socket.recv(65535)
                                 tcp_socket.close()
                                 if len(data) > 0:
-                                    if not data.startswith(b"HTTP/1.0") and not data.startswith(b"HTTP/1.1") and not data.startswith(b"HTTP/1.2"):
-                                        hits.append(f"command injection on host {ip} in port {port}:{mal_enum}- {data}")
+                                    if not re.search("^HTTP/1\.[0-2]\s+4[0-9]{1,2}",data):
+                                        hits.append(f"command injection in {ip}:{port} (payload: {mal_enum})- {data}")
 
                         tcp_socket.close()
+
+                    except:
+                        pass
+
+                for mal in mal_emoji:
+                    time.sleep(delay)
+                    tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    tcp_socket.settimeout(15)
+                    try:
+                        tcp_socket.connect((host, port))
+                        tcp_socket.send(mal.encode())
+                        data = tcp_socket.recv(65535)
+                        tcp_socket.close()
+                        if len(data) > 0:
+                            if not re.search("^HTTP/1\.[0-2]\s+4[0-9]{1,2}",data):
+                                hits.append(f"emoji injection in {ip}:{port} (payload: {mal})- {data}")
 
                     except:
                         pass
@@ -139,26 +151,10 @@ def cobra(host,delay=0):
                                 tcp_socket.send(mal_enum.encode())
                                 data = tcp_socket.recv(65535)
                                 if len(data) > 0:
-                                    if not data.startswith(b"HTTP/1.0") and not data.startswith(b"HTTP/1.1") and not data.startswith(b"HTTP/1.2"):
-                                        hits.append(f"python injection on host {ip} in port {port}:{mal_enum}- {data}")
+                                    if not re.search("^HTTP/1\.[0-2]\s+4[0-9]{1,2}",data):
+                                        hits.append(f"emoji injection in {ip}:{port} (payload: {mal_enum})- {data}")
 
                         tcp_socket.close()
-
-                    except:
-                        pass
-
-                for mal in mal_special:
-                    time.sleep(delay)
-                    tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    tcp_socket.settimeout(15)
-                    try:
-                        tcp_socket.connect((ip, port))
-                        tcp_socket.send(mal.encode())
-                        data = tcp_socket.recv(65535)
-                        tcp_socket.close()
-                        if len(data) > 0:
-                            if not data.startswith(b"HTTP/1.0") and not data.startswith(b"HTTP/1.1") and not data.startswith(b"HTTP/1.2"):
-                                hits.append(f"recieved data with payload {ip} on host {host} in port {port}: {data}")
 
                     except:
                         pass
@@ -186,10 +182,26 @@ def cobra(host,delay=0):
                             data = tcp_socket.recv(65535)
                             tcp_socket.close()
                             if len(data) > 0:
-                                if not data.startswith(b"HTTP/1.0") and not data.startswith(b"HTTP/1.1") and not data.startswith(b"HTTP/1.2"):
+                                if not re.search("^HTTP/1\.[0-2]\s+4[0-9]{1,2}",data):
                                     hits.append(f"command injection in port {port}:{mal_enum}- {data}")
 
                     tcp_socket.close()
+
+                except:
+                    pass
+
+            for mal in mal_emoji:
+                time.sleep(delay)
+                tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                tcp_socket.settimeout(15)
+                try:
+                    tcp_socket.connect((host, port))
+                    tcp_socket.send(mal.encode())
+                    data = tcp_socket.recv(65535)
+                    tcp_socket.close()
+                    if len(data) > 0:
+                        if not re.search("^HTTP/1\.[0-2]\s+4[0-9]{1,2}",data):
+                            hits.append(f"emoji injection in port {port}:{mal}- {data}")
 
                 except:
                     pass
@@ -210,26 +222,10 @@ def cobra(host,delay=0):
                             tcp_socket.send(mal_enum.encode())
                             data = tcp_socket.recv(65535)
                             if len(data) > 0:
-                                if not data.startswith(b"HTTP/1.0") and not data.startswith(b"HTTP/1.1") and not data.startswith(b"HTTP/1.2"):
+                                if not re.search("^HTTP/1\.[0-2]\s+4[0-9]{1,2}",data):
                                     hits.append(f"python injection in port {port}:{mal_enum}- {data}")
 
                     tcp_socket.close()
-
-                except:
-                    pass
-
-            for mal in mal_special:
-                time.sleep(delay)
-                tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                tcp_socket.settimeout(15)
-                try:
-                    tcp_socket.connect((host, port))
-                    tcp_socket.send(mal.encode())
-                    data = tcp_socket.recv(65535)
-                    tcp_socket.close()
-                    if len(data) > 0:
-                        if not data.startswith(b"HTTP/1.0") and not data.startswith(b"HTTP/1.1") and not data.startswith(b"HTTP/1.2"):
-                            hits.append(f"recieved data with payload {mal} on port {port}: {data}")
 
                 except:
                     pass
