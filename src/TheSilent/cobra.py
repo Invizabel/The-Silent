@@ -154,7 +154,8 @@ def cobra(host,delay=0):
                         tcp_socket.send(mal.encode())
                         data = tcp_socket.recv(65535)
                         tcp_socket.close()
-                        hits.append(f"recieved data with payload {ip} on host {host} in port {port}: {data}")
+                        if not data.startswith(b"HTTP/1.0") and not data.startswith(b"HTTP/1.1") and not data.startswith(b"HTTP/1.2"):
+                            hits.append(f"recieved data with payload {ip} on host {host} in port {port}: {data}")
 
                     except:
                         pass
@@ -221,7 +222,8 @@ def cobra(host,delay=0):
                     tcp_socket.send(mal.encode())
                     data = tcp_socket.recv(65535)
                     tcp_socket.close()
-                    hits.append(f"recieved data with payload {mal} on port {port}: {data}")
+                    if not data.startswith(b"HTTP/1.0") and not data.startswith(b"HTTP/1.1") and not data.startswith(b"HTTP/1.2"):
+                        hits.append(f"recieved data with payload {mal} on port {port}: {data}")
 
                 except:
                     pass
