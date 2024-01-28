@@ -8,6 +8,7 @@ CYAN = "\033[1;36m"
 
 def kitten_crawler(host,delay=0):
     clear()
+    host = host.rstrip("/")
     hits = [host]
     total = []
     depth = -1
