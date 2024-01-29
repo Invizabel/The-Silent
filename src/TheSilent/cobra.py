@@ -9,7 +9,7 @@ RED = "\033[1;31m"
 CYAN = "\033[1;36m"
 GREEN = "\033[0;32m"
 
-def cobra(host,delay=0):
+def cobra(host,delay=0,crawl=1):
     hits = []
 
     mal_adobe_groovy = [r"sleep(60)"]
@@ -61,7 +61,7 @@ def cobra(host,delay=0):
                r"<style>body{background-color:red;}</style>",
                r"<title>cobra</title>"]
     
-    hosts = kitten_crawler(host,delay)
+    hosts = kitten_crawler(host,delay,crawl)
 
     for _ in hosts:
         print(CYAN + f"checking: {_}")

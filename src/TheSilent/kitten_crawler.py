@@ -6,27 +6,21 @@ from TheSilent.puppy_requests import text, url
 
 CYAN = "\033[1;36m"
 
-def kitten_crawler(host,delay=0):
+def kitten_crawler(host,delay=0,crawl=1):
     clear()
     host = host.rstrip("/")
     hits = [host]
     total = []
     depth = -1
-    while True:
-        depth += 1
+    for depth in range(crawl):
         hits = list(dict.fromkeys(hits[:]))
         try:
             if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(hits[depth]).netloc or ".js" in hits[depth]:
                 valid = bytes(hits[depth],"ascii")
                 time.sleep(delay)
                 print(CYAN + hits[depth])
-                check_redirect = url(hits[depth])
-                if urllib.parse.urlparse(check_redirect.rstrip("/")).path == urllib.parse.urlparse(hits[depth].rstrip("/")).path:
-                    data = text(hits[depth])
-                    total.append(hits[depth])
-
-                else:
-                    continue
+                data = text(hits[depth])
+                total.append(hits[depth])
 
         except IndexError:
             break
