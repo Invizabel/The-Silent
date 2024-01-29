@@ -4,6 +4,7 @@ import ssl
 import time
 import urllib.parse
 import urllib.request
+from urllib.response import *
 from TheSilent.return_user_agent import *
 
 verify = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
@@ -19,26 +20,32 @@ fake_headers = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,
                 "User-Agent":return_user_agent(),
                 "UPGRADE-INSECURE-REQUESTS":"1"}
 
-def getheaders(host,method="GET",data=b"",headers=fake_headers,timeout=10):
+# make the request
+def simple_request(host,method="GET",data=b"",headers=fake_headers,timeout=10):
     simple_request = urllib.request.Request(host,data=urllib.parse.urlencode(data).encode(),method=method,unverifiable=True)
     for _,__ in headers.items():
         simple_request.add_header(_,__)
-    simple_response = urllib.request.urlopen(simple_request,timeout=timeout)
-    return simple_response.headers
+    return urllib.request.urlopen(simple_request,timeout=timeout)
 
+# get header from request
+def header(host,method="GET",data=b"",headers=fake_headers,timeout=10):
+    my_simple_request = simple_request(host,method="GET",data=b"",headers=fake_headers,timeout=10)
+    return my_simple_request.headers
+
+# get status code from request
+def status_code(host,method="GET",data=b"",headers=fake_headers,timeout=10,raw=False):
+    my_simple_request = simple_request(host,method="GET",data=b"",headers=fake_headers,timeout=10)
+    return my_simple_request.status
+
+# get contents from request
 def text(host,method="GET",data=b"",headers=fake_headers,timeout=10,raw=False):
-    simple_request = urllib.request.Request(host,data=urllib.parse.urlencode(data).encode(),method=method,unverifiable=True)
-    for _,__ in headers.items():
-        simple_request.add_header(_,__)
-    simple_response = urllib.request.urlopen(simple_request,timeout=timeout)
+    my_simple_request = simple_request(host,method="GET",data=b"",headers=fake_headers,timeout=10)
     if raw:
-        return simple_response.read()
+        return my_simple_request.read()
     else:
-        return simple_response.read().decode("ascii",errors="ignore")
+        return my_simple_request.read().decode("ascii",errors="ignore")
 
+# get url from request
 def url(host,method="GET",data=b"",headers=fake_headers,timeout=10):
-    simple_request = urllib.request.Request(host,data=urllib.parse.urlencode(data).encode(),method=method,unverifiable=True)
-    for _,__ in headers.items():
-        simple_request.add_header(_,__)
-    simple_response = urllib.request.urlopen(simple_request,timeout=timeout)
-    return simple_response.url
+    my_simple_request = simple_request(host,method="GET",data=b"",headers=fake_headers,timeout=10)
+    return my_simple_request.url

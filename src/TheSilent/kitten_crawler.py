@@ -2,7 +2,7 @@ import re
 import time
 import urllib.parse
 from TheSilent.clear import clear
-from TheSilent.puppy_requests import text
+from TheSilent.puppy_requests import text, url
 
 CYAN = "\033[1;36m"
 
@@ -20,8 +20,13 @@ def kitten_crawler(host,delay=0):
                 valid = bytes(hits[depth],"ascii")
                 time.sleep(delay)
                 print(CYAN + hits[depth])
-                data = text(hits[depth])
-                total.append(hits[depth])
+                check_redirect = url(hits[depth])
+                if urllib.parse.urlparse(check_redirect.rstrip("/")).path == urllib.parse.urlparse(hits[depth].rstrip("/")).path:
+                    data = text(hits[depth])
+                    total.append(hits[depth])
+
+                else:
+                    continue
 
         except IndexError:
             break
