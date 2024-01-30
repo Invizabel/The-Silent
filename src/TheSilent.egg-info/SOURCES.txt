@@ -16,4 +16,3 @@ src/TheSilent.egg-info/SOURCES.txt
 src/TheSilent.egg-info/dependency_links.txt
 src/TheSilent.egg-info/top_level.txt
 src/TheSilentExt/owl.py
-src/TheSilentExt/owl_crawler.py
