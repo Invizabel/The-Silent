@@ -97,6 +97,3 @@ def https(host,port=443,timeout=10,mode="text"):
 
                 elif mode == "status":
                     return int(re.findall("http/1.1\s*(\d+)?", data.decode().lower())[0])
-                    
-
-print(https("https://www.tiktok.com/explore",mode="header"))
