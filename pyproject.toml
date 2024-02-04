@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "TheSilent"
-version = "0.0.899"
+version = "0.0.901"
 authors = [
-  { name="Michael Mueller", email="michael.j.mueller.pro@gmail.com" },
+  { name="Michael Mueller"},
 ]
 description = "TheSilent contains free and open source hacking and osint tools!"
 readme = "README.md"

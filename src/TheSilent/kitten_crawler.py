@@ -34,13 +34,13 @@ def kitten_crawler(host,delay=0,crawl=1):
                 for _ in link:
                     _ = re.split("[\"\'\<\>\;\{\}\,\(\)]",_)[0]
                     if _.startswith("/") and not _.startswith("//"):
-                        hits.append(f"{host}{_}")
+                        hits.append(f"{host}{_}".rstrip("/"))
 
                     elif not _.startswith("/") and not _.startswith("http://") and not _.startswith("https://"):
-                        hits.append(f"{host}/{_}")
+                        hits.append(f"{host}/{_}".rstrip("/"))
 
                     elif _.startswith("http://") or _.startswith("https://"):
-                        hits.append(_)
+                        hits.append(_.rstrip("/"))
 
         except:
             pass

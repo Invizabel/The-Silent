@@ -1,8 +1,8 @@
 Metadata-Version: 2.1
 Name: TheSilent
-Version: 0.0.899
+Version: 0.0.901
 Summary: TheSilent contains free and open source hacking and osint tools!
-Author-email: Michael Mueller <michael.j.mueller.pro@gmail.com>
+Author: Michael Mueller
 Project-URL: Homepage, https://github.com/Invizabel/The-Silent
 Project-URL: Bug Tracker, https://github.com/Invizabel/The-Silent/issues
 Classifier: Programming Language :: Python :: 3
