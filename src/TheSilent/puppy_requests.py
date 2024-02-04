@@ -3,9 +3,7 @@ import urllib.parse
 import urllib.request
 from TheSilent.return_user_agent import *
 
-verify = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-verify.check_hostname = False
-verify.verify_mode = ssl.CERT_NONE
+ssl._create_default_https_context = ssl._create_unverified_context
 
 fake_headers = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
                 "Accept-Language":"en-US,en;q=0.5",
