@@ -14,9 +14,6 @@ def cobra(host,delay=0,crawl=1):
     
     hits = []
 
-    mal_emoji = ["\U0001F47C",
-                 "\U0001F525"]
-
     mal_python = [r"time.sleep(60)",
                   r"eval(compile('import time\ntime.sleep(60)','cobra','exec'))",
                   r"eval(compile('import os\nos.system('sleep 60')','cobra','exec'))",
@@ -30,12 +27,14 @@ def cobra(host,delay=0,crawl=1):
                   r'exec("import os\nos.system(\'sleep 60\')")']
     
     mal_subdomain = ["ad",
+                     "dev",
                      "hr",
                      "internal",
                      "intranet",
                      "it",
                      "lan",
                      "ldap",
+                     "local",
                      "test"]
     
     mal_xss = [r"<iframe>Cobra</iframe>",
