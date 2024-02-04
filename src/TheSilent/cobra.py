@@ -251,17 +251,17 @@ def cobra(host,delay=0,crawl=1):
                     except:
                         pass
 
-        clear()
-        hits = list(set(hits[:]))
-        hits.sort()
+    clear()
+    hits = list(set(hits[:]))
+    hits.sort()
 
-        if len(hits) > 0:
-            for hit in hits:
-                print(RED + hit)
-                with open("cobra.log", "a") as file:
-                    file.write(hit + "\n")
-
-        else:
-            print(GREEN + f"we didn't find anything interesting on {host}")
+    if len(hits) > 0:
+        for hit in hits:
+            print(RED + hit)
             with open("cobra.log", "a") as file:
-                    file.write(f"we didn't find anything interesting on {host}\n")
+                file.write(hit + "\n")
+
+    else:
+        print(GREEN + f"we didn't find anything interesting on {host}")
+        with open("cobra.log", "a") as file:
+                file.write(f"we didn't find anything interesting on {host}\n")
