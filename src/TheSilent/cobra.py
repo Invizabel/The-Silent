@@ -2,6 +2,7 @@ import re
 import time
 import urllib.parse
 from TheSilent.clear import clear
+from TheSilent.dolphin import dolphin
 from TheSilent.kitten_crawler import kitten_crawler
 from TheSilent.puppy_requests import text
 
@@ -50,11 +51,12 @@ def cobra(host,delay=0,crawl=1):
     for mal in mal_subdomain:
         time.sleep(delay)
         try:
-            print(f"checking: " + urllib.parse.urlparse(host).scheme + "://" + mal + "." + ".".join(urllib.parse.urlparse(host).netloc.split('.')[-2:]))
-            text(urllib.parse.urlparse(host).scheme + "://" + mal + "." + ".".join(urllib.parse.urlparse(host).netloc.split('.')[-2:]))
-            hits.append("found sensitive subdomain: " + urllib.parse.urlparse(host).scheme + "://" + mal + "." + ".".join(urllib.parse.urlparse(host).netloc.split('.')[-2:]))
+            print(f"checking: " + mal + "." + ".".join(urllib.parse.urlparse(host).netloc.split('.')[-2:]))
+            ports = dolphin(mal + "." + ".".join(urllib.parse.urlparse(host).netloc.split('.')[-2:]))
+            for port in ports:
+                hits.append("found sensitive subdomain: " + mal + "." + ".".join(urllib.parse.urlparse(host).netloc.split('.')[-2:]) + f":{port}")
 
-        except:
+        except PermissionError:
             pass
 
     print(CYAN + f"crawling: {host}")
