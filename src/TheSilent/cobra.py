@@ -51,9 +51,9 @@ def cobra(host,delay=0,crawl=1):
     for mal in mal_subdomain:
         time.sleep(delay)
         try:
-            print(f"checking: " + urllib.parse.urlparse(host).scheme + "://" + mal + "." + ".".join(host.split('.')[-2:]))
-            text(urllib.parse.urlparse(host).scheme + "://" + mal + "." + ".".join(host.split('.')[-2:]))
-            hits.append("found sensitive subdomain: " + urllib.parse.urlparse(host).scheme + "://" + mal + "." + ".".join(host.split('.')[-2:]))
+            print(f"checking: " + urllib.parse.urlparse(host).scheme + "://" + mal + "." + ".".join(urllib.parse.urlparse(host).netloc.split('.')[-2:]))
+            text(urllib.parse.urlparse(host).scheme + "://" + mal + "." + ".".join(urllib.parse.urlparse(host).netloc.split('.')[-2:]))
+            hits.append("found sensitive subdomain: " + urllib.parse.urlparse(host).scheme + "://" + mal + "." + ".".join(urllib.parse.urlparse(host).netloc.split('.')[-2:]))
 
         except:
             pass
