@@ -1,4 +1,5 @@
 import re
+import time
 import urllib.parse
 from TheSilent.clear import clear
 from TheSilent.kitten_crawler import kitten_crawler
