@@ -15,7 +15,7 @@ def kitten_crawler(host,delay=0,crawl=1):
     for depth in range(crawl):
         hits = list(dict.fromkeys(hits[:]))
         try:
-            if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(hits[depth]).netloc or ".js" in hits[depth] or ".gif" in hits[depth] or ".jpeg" in hits[depth] or ".jpg" in hits[depth] or ".png" in hits[depth] or ".webp" in hits[depth]:
+            if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(hits[depth]).netloc or ".js" in hits[depth]:
                 valid = bytes(hits[depth],"ascii")
                 time.sleep(delay)
                 print(CYAN + hits[depth])
@@ -50,7 +50,7 @@ def kitten_crawler(host,delay=0,crawl=1):
     results = []
     for hit in total:
         try:
-            if urllib.parse.urlparse(host).netloc in hit or ".gif" in hit or ".jpeg" in hit or ".jpg" in hit or ".png" in hit or ".webp" in hit:
+            if urllib.parse.urlparse(host).netloc in hit:
                 valid = bytes(hit,"ascii")
                 results.append(hit)
 
