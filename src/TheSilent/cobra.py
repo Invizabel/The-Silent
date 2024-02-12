@@ -107,13 +107,13 @@ def cobra(host,delay=0,crawl=1):
 
                                 time.sleep(delay)
 
-                                if action:
+                                if action and urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(action).netloc:
                                     data = text(action,method=method_field,data=field_dict)
                                     if mal in data:
                                         hits.append(f"emoji injection in forms: {action} | {field_dict}")
 
                                 else:
-                                    data = text(action,method=method_field,data=field_dict)
+                                    data = text(_,method=method_field,data=field_dict)
                                     if mal in data:
                                         hits.append(f"emoji injection in forms: {_} | {field_dict}")
 
