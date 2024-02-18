@@ -32,7 +32,6 @@ def cobra(host,delay=0,crawl=1):
     clear()
     for _ in hosts:
         if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(_).netloc:
-            print(CYAN + f"checking: {_}")
             try:
                 forms = re.findall("<form.+form>",text(_).replace("\n",""))
 
@@ -41,7 +40,7 @@ def cobra(host,delay=0,crawl=1):
 
             # check for emoji injection
             for mal in mal_emoji:
-                print(CYAN + f"checking {_} with payload {mal}")
+                print(CYAN + f"checking: {_} with payload {mal}")
                 try:
                     time.sleep(delay)
                     data = text(_ + "/" + mal)
