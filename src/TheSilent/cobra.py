@@ -13,6 +13,8 @@ def cobra(host,delay=0,crawl=1):
     clear()
     
     hits = []
+
+    mal_command = [r"$(echo -e '\x73\x6C\x65\x65\x70\x20\x36\x30')"]
     
     mal_emoji = [r"&#128124;",
                  r"&#128293;",
@@ -38,14 +40,110 @@ def cobra(host,delay=0,crawl=1):
             except:
                 forms = []
 
+            # check for command injection
+            for mal in mal_command:
+                print(CYAN + f"checking: {_} with payload {mal}")
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_ + "/" + urllib.parse.quote(mal))
+                    end = time.time()
+                    if end - start >= 45:
+                        hits.append(f"command injection in url: {_}/{urllib.parse.quote(mal)}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, headers = {"Cookie",mal})
+                    end = time.time()
+                    if end - start >= 45:
+                        hits.append(f"command injection in cookie ({mal}): {_}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, headers = {"Referer",mal})
+                    end = time.time()
+                    if end - start >= 45:
+                        hits.append(f"command injection in referer ({mal}): {_}")
+
+                except:
+                    pass
+                
+                for form in forms:
+                    field_list = []
+                    input_field = re.findall("<input.+?>",form)
+                    try:
+                        action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                        if action_field.startswith("/"):
+                            action = _ + action_field
+
+                        elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                            action = _ + "/" + action_field
+
+                        else:
+                            action = action_field
+                            
+                    except IndexError:
+                        pass
+
+                    try:
+                        method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                        for in_field in input_field:
+                            if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                                name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                
+                                try:
+                                    value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                
+                                except IndexError:
+                                    value_field = ""
+                                
+                                if type_field == "submit" or type_field == "hidden":
+                                    field_list.append({name_field:value_field})
+
+
+                                if type_field != "submit" and type_field != "hidden":
+                                    field_list.append({name_field:mal})
+
+                                field_dict = field_list[0]
+                                for init_field_dict in field_list[1:]:
+                                    field_dict.update(init_field_dict)
+
+                                time.sleep(delay)
+
+                                if action and urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(action).netloc:
+                                    start = time.time()
+                                    data = text(action,method=method_field,data=field_dict)
+                                    end = time.time()
+                                    if end - start >= 45:
+                                        hits.append(f"command injection in forms: {action} | {field_dict}")
+
+                                else:
+                                    start = time.time()
+                                    data = text(_,method=method_field,data=field_dict)
+                                    end = time.time()
+                                    if end - start >= 45:
+                                        hits.append(f"command injection in forms: {_} | {field_dict}")
+
+                    except:
+                        pass
+
             # check for emoji injection
             for mal in mal_emoji:
                 print(CYAN + f"checking: {_} with payload {mal}")
                 try:
                     time.sleep(delay)
-                    data = text(_ + "/" + mal)
+                    data = text(_ + "/" + urllib.parse.quote(mal))
                     if mal in data:
-                        hits.append(f"emoji injection in url: {_}/{mal}")
+                        hits.append(f"emoji injection in url: {_}/{urllib.parse.quote(mal)}")
 
                 except:
                     pass
