@@ -72,24 +72,7 @@ def cobra(host,delay=0,crawl=1):
                r"<strong>cobra</strong>",
                r"<style>body{background-color:red;}</style>",
                r"<title>cobra</title>"]
-    
-    print(CYAN + f"scanning: {host}")
 
-    root_domain = ".".join(urllib.parse.urlparse(host).netloc.split(".")[-2:])
-    for mal in mal_subdomain:
-        time.sleep(delay)
-        print(CYAN + f"checking for sensitive subdomain: http://{mal}.{root_domain}")
-
-        try:
-            text(f"http://{mal}.{root_domain}")
-            hits.append(f"found sensitive subdomain {mal}.{root_domain}")
-        except HTTPError as error:
-            pass
-
-        except:
-            pass
-
-    clear()
     hosts = kitten_crawler(host,delay,crawl)
     clear()
     for _ in hosts:
