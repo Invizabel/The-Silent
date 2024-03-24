@@ -99,6 +99,7 @@ def kiwi(host):
                       "denodo-sm",
                       "denodo-stg",
                       "denodo-vcs",
+                      "destiny",
                       "dev",
                       "distance",
                       "dl",
@@ -109,6 +110,7 @@ def kiwi(host):
                       "eduphoria",
                       "eduuploader",
                       "emas3",
+                      "enteliweb",
                       "enterprise",
                       "entuity-ha",
                       "entuity-wa",
@@ -126,9 +128,11 @@ def kiwi(host):
                       "flightsim",
                       "fod-infobase-com",
                       "fog",
+                      "forms",
                       "frontend-480",
                       "fs",
                       "ftp",
+                      "ftp2",
                       "games",
                       "gatekeeper",
                       "gateway",
@@ -152,6 +156,7 @@ def kiwi(host):
                       "helpme",
                       "hip",
                       "horizon",
+                      "idautoarms",
                       "idp",
                       "internal",
                       "intranet",
@@ -160,7 +165,6 @@ def kiwi(host):
                       "kbox",
                       "ldap",
                       "local",
-                      "localhost",
                       "login",
                       "lokai",
                       "mail",
@@ -206,6 +210,7 @@ def kiwi(host):
                       "uisp",
                       "vault",
                       "vpn",
+                      "vpn2",
                       "web",
                       "webadvisor",
                       "webadvisortest",
@@ -218,17 +223,19 @@ def kiwi(host):
 
     for mal in mal_subdomains:
         try:
-            if host.count(".") == 2:
-                data = socket.gethostbyname_ex(mal + "." + ".".join(host.split(".")[1:]))
-                print(CYAN + f"found: {data}")
-                total += 1
-
-            else:
-                data = socket.gethostbyname_ex(mal + "." + host)
-                print(CYAN + f"found: {data}")
-                total += 1
+            data = socket.gethostbyname_ex(mal + "." + ".".join(host.split(".")[1:]))
+            print(CYAN + f"found: {data}")
+            total += 1
 
         except:
             pass
 
-    print(GREEN + f"found: {total} out of {len(mal_subdomains)} possible")
+        try:
+            data = socket.gethostbyname_ex(mal + "." + host)
+            print(CYAN + f"found: {data}")
+            total += 1
+
+        except:
+            pass
+
+    print(GREEN + f"found: {total} out of {2 * len(mal_subdomains)} possible")
