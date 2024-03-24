@@ -73,7 +73,7 @@ def text(host,method="GET",data=None,headers={},timeout=15,raw=False):
                 else:
                     return gzip.decompress(data).decode(errors="ignore")
 
-            else:
+            elif "deflate" in content_encoding:
                 try:
                     if raw:
                         return zlib.decompress(data, -zlib.MAX_WBITS)
@@ -87,6 +87,13 @@ def text(host,method="GET",data=None,headers={},timeout=15,raw=False):
 
                     else:
                         return zlib.decompress(data).decode(errors="ignore")
+
+            else:
+                if raw:
+                    return data
+
+                else:
+                    return data.decode(errors="ignore")
 
         except TimeoutError:
             pass

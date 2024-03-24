@@ -1,3 +1,4 @@
+import random
 import re
 import time
 import urllib.parse
@@ -10,8 +11,20 @@ CYAN = "\033[1;36m"
 GREEN = "\033[0;32m"
 RED = "\033[1;31m"
 
+
+def random_case(mal):
+    my_random = ""
+    for char in mal:
+        if random.choice([True, False]):
+            my_random += char.upper()
+        else:
+            my_random += char.lower()
+    
+    return my_random
+
 def cobra(host,delay=0,crawl=1):
     clear()
+    host = host.rstrip("/")
     
     hits = []
 
@@ -54,17 +67,6 @@ def cobra(host,delay=0,crawl=1):
                   r'exec("import time\ntime.sleep(60)',
                   r'exec("import os\nos.system(\'sleep 60\')")']
 
-    mal_subdomain = [r"ad",
-                     r"admin",
-                     r"camera",
-                     r"cameras",
-                     r"cctv",
-                     r"extranet",
-                     r"internal",
-                     r"intranet",
-                     r"it",
-                     r"ldap"]
-
     mal_xss = [r"<iframe>cobra</iframe>",
                r"<p>cobra</p>",
                r"<script>alert('cobra')</script>",
@@ -73,7 +75,194 @@ def cobra(host,delay=0,crawl=1):
                r"<style>body{background-color:red;}</style>",
                r"<title>cobra</title>"]
 
+    init_mal_bash = mal_bash[:]
+    for mal in init_mal_bash:
+        mal_bash.append(random_case(mal))
+        mal_bash.append(f"./{mal}")
+        mal_bash.append(f"../{mal}")
+        mal_bash.append(urllib.parse.quote(mal))
+        mal_bash.append(urllib.parse.quote(urllib.parse.quote(mal)))
+        mal_bash.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
+        mal_bash.append(urllib.parse.quote_plus(mal))
+        mal_bash.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
+        mal_bash.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
+        mal_bash.append(random_case(f"./{mal}"))
+        mal_bash.append(random_case(f"../{mal}"))
+        mal_bash.append(random_case(urllib.parse.quote(mal)))
+        mal_bash.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
+        mal_bash.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
+        mal_bash.append(random_case(urllib.parse.quote_plus(mal)))
+        mal_bash.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
+        mal_bash.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+    
+    init_mal_mssql = mal_mssql[:]
+    for mal in init_mal_mssql:
+        mal_mssql.append(random_case(mal))
+        mal_mssql.append(f"./{mal}")
+        mal_mssql.append(f"../{mal}")
+        mal_mssql.append(urllib.parse.quote(mal))
+        mal_mssql.append(urllib.parse.quote(urllib.parse.quote(mal)))
+        mal_mssql.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
+        mal_mssql.append(urllib.parse.quote_plus(mal))
+        mal_mssql.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
+        mal_mssql.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
+        mal_mssql.append(random_case(f"./{mal}"))
+        mal_mssql.append(random_case(f"../{mal}"))
+        mal_mssql.append(random_case(urllib.parse.quote(mal)))
+        mal_mssql.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
+        mal_mssql.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
+        mal_mssql.append(random_case(urllib.parse.quote_plus(mal)))
+        mal_mssql.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
+        mal_mssql.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+
+    init_mal_mysql = mal_mysql[:]
+    for mal in init_mal_mysql:
+        mal_mysql.append(random_case(mal))
+        mal_mysql.append("".join(["&#{:x};".format(ord(char)) for char in mal]))
+        mal_mysql.append("".join(["&#x{:x}".format(ord(char)) for char in mal]))
+        mal_mysql.append(f"./{mal}")
+        mal_mysql.append(f"../{mal}")
+        mal_mysql.append(urllib.parse.quote(mal))
+        mal_mysql.append(urllib.parse.quote(urllib.parse.quote(mal)))
+        mal_mysql.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
+        mal_mysql.append(urllib.parse.quote_plus(mal))
+        mal_mysql.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
+        mal_mysql.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
+        mal_mysql.append(random_case("".join(["&#{:x};".format(ord(char)) for char in mal])))
+        mal_mysql.append(random_case("".join(["&#x{:x}".format(ord(char)) for char in mal])))
+        mal_mysql.append(random_case(f"./{mal}"))
+        mal_mysql.append(random_case(f"../{mal}"))
+        mal_mysql.append(random_case(urllib.parse.quote(mal)))
+        mal_mysql.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
+        mal_mysql.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
+        mal_mysql.append(random_case(urllib.parse.quote_plus(mal)))
+        mal_mysql.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
+        mal_mysql.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+
+    init_mal_oracle = mal_oracle[:]
+    for mal in init_mal_oracle:
+        mal_oracle.append(random_case(mal))
+        mal_oracle.append(f"./{mal}")
+        mal_oracle.append(f"../{mal}")
+        mal_oracle.append(urllib.parse.quote(mal))
+        mal_oracle.append(urllib.parse.quote(urllib.parse.quote(mal)))
+        mal_oracle.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
+        mal_oracle.append(urllib.parse.quote_plus(mal))
+        mal_oracle.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
+        mal_oracle.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
+        mal_oracle.append(random_case(f"./{mal}"))
+        mal_oracle.append(random_case(f"../{mal}"))
+        mal_oracle.append(random_case(urllib.parse.quote(mal)))
+        mal_oracle.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
+        mal_oracle.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
+        mal_oracle.append(random_case(urllib.parse.quote_plus(mal)))
+        mal_oracle.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
+        mal_oracle.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+
+    init_mal_php = mal_php[:]
+    for mal in init_mal_php:
+        mal_php.append(random_case(mal))
+        mal_php.append(f"./{mal}")
+        mal_php.append(f"../{mal}")
+        mal_php.append(urllib.parse.quote(mal))
+        mal_php.append(urllib.parse.quote(urllib.parse.quote(mal)))
+        mal_php.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
+        mal_php.append(urllib.parse.quote_plus(mal))
+        mal_php.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
+        mal_php.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
+        mal_php.append(random_case(f"./{mal}"))
+        mal_php.append(random_case(f"../{mal}"))
+        mal_php.append(random_case(urllib.parse.quote(mal)))
+        mal_php.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
+        mal_php.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
+        mal_php.append(random_case(urllib.parse.quote_plus(mal)))
+        mal_php.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
+        mal_php.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+
+    init_mal_postgresql = mal_postgresql[:]
+    for mal in init_mal_postgresql:
+        mal_postgresql.append(random_case(mal))
+        mal_postgresql.append(f"./{mal}")
+        mal_postgresql.append(f"../{mal}")
+        mal_postgresql.append(urllib.parse.quote(mal))
+        mal_postgresql.append(urllib.parse.quote(urllib.parse.quote(mal)))
+        mal_postgresql.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
+        mal_postgresql.append(urllib.parse.quote_plus(mal))
+        mal_postgresql.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
+        mal_postgresql.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
+        mal_postgresql.append(random_case(f"./{mal}"))
+        mal_postgresql.append(random_case(f"../{mal}"))
+        mal_postgresql.append(random_case(urllib.parse.quote(mal)))
+        mal_postgresql.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
+        mal_postgresql.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
+        mal_postgresql.append(random_case(urllib.parse.quote_plus(mal)))
+        mal_postgresql.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
+        mal_postgresql.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+
+    init_mal_powershell = mal_powershell[:]
+    for mal in init_mal_powershell:
+        mal_powershell.append(random_case(mal))
+        mal_powershell.append(f"./{mal}")
+        mal_powershell.append(f"../{mal}")
+        mal_powershell.append(urllib.parse.quote(mal))
+        mal_powershell.append(urllib.parse.quote(urllib.parse.quote(mal)))
+        mal_powershell.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
+        mal_powershell.append(urllib.parse.quote_plus(mal))
+        mal_powershell.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
+        mal_powershell.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
+        mal_powershell.append(random_case(f"./{mal}"))
+        mal_powershell.append(random_case(f"../{mal}"))
+        mal_powershell.append(random_case(urllib.parse.quote(mal)))
+        mal_powershell.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
+        mal_powershell.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
+        mal_powershell.append(random_case(urllib.parse.quote_plus(mal)))
+        mal_powershell.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
+        mal_powershell.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+
+    init_mal_python = mal_python[:]
+    for mal in init_mal_python:
+        mal_python.append(random_case(mal))
+        mal_python.append(f"./{mal}")
+        mal_python.append(f"../{mal}")
+        mal_python.append(urllib.parse.quote(mal))
+        mal_python.append(urllib.parse.quote(urllib.parse.quote(mal)))
+        mal_python.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
+        mal_python.append(urllib.parse.quote_plus(mal))
+        mal_python.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
+        mal_python.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
+        mal_python.append(random_case(f"./{mal}"))
+        mal_python.append(random_case(f"../{mal}"))
+        mal_python.append(random_case(urllib.parse.quote(mal)))
+        mal_python.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
+        mal_python.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
+        mal_python.append(random_case(urllib.parse.quote_plus(mal)))
+        mal_python.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
+        mal_python.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+
+    init_mal_xss = mal_xss[:]
+    for mal in init_mal_xss:
+        mal_xss.append(random_case(mal))
+        mal_xss.append("".join(["&#x{:x};".format(ord(char)) for char in mal]))
+        mal_xss.append(f"./{mal}")
+        mal_xss.append(f"../{mal}")
+        mal_xss.append(urllib.parse.quote(mal))
+        mal_xss.append(urllib.parse.quote(urllib.parse.quote(mal)))
+        mal_xss.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
+        mal_xss.append(urllib.parse.quote_plus(mal))
+        mal_xss.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
+        mal_xss.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
+        mal_xss.append(random_case("".join(["&#x{:x};".format(ord(char)) for char in mal])))
+        mal_xss.append(random_case(f"./{mal}"))
+        mal_xss.append(random_case(f"../{mal}"))
+        mal_xss.append(random_case(urllib.parse.quote(mal)))
+        mal_xss.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
+        mal_xss.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
+        mal_xss.append(random_case(urllib.parse.quote_plus(mal)))
+        mal_xss.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
+        mal_xss.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+
     hosts = kitten_crawler(host,delay,crawl)
+
     clear()
     for _ in hosts:
         if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(_).netloc:
@@ -1116,101 +1305,102 @@ def cobra(host,delay=0,crawl=1):
 
             # check for xss
             for mal in mal_xss:
-                print(CYAN + f"checking: {_} with xss payload {mal}")
-                try:
-                    time.sleep(delay)
-                    data = text(_ + "/" + mal)
-                    if mal in data:
-                        hits.append(f"xss in url: {_}/{mal}")
-
-                except HTTPError as error:
-                    pass
-
-                except:
-                    pass
-
-                try:
-                    time.sleep(delay)
-                    data = text(_, headers = {"Cookie",mal})
-                    if mal in data:
-                        hits.append(f"xss in cookie ({mal}): {_}")
-
-                except HTTPError as error:
-                    pass
-
-                except:
-                    pass
-
-                try:
-                    time.sleep(delay)
-                    data = text(_, headers = {"Referer",mal})
-                    if mal in data:
-                        hits.append(f"xss in referer ({mal}): {_}")
-
-                except HTTPError as error:
-                    pass
-
-                except:
-                    pass
-                
-                for form in forms:
-                    field_list = []
-                    input_field = re.findall("<input.+?>",form)
+                if "%" not in mal:
+                    print(CYAN + f"checking: {_} with xss payload {mal}")
                     try:
-                        action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
-                        if action_field.startswith("/"):
-                            action = _ + action_field
-
-                        elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
-                            action = _ + "/" + action_field
-
-                        else:
-                            action = action_field
-                            
-                    except IndexError:
-                        pass
-
-                    try:
-                        method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
-                        for in_field in input_field:
-                            if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                                name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                
-                                try:
-                                    value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                
-                                except IndexError:
-                                    value_field = ""
-                                
-                                if type_field == "submit" or type_field == "hidden":
-                                    field_list.append({name_field:value_field})
-
-
-                                if type_field != "submit" and type_field != "hidden":
-                                    field_list.append({name_field:mal})
-
-                                field_dict = field_list[0]
-                                for init_field_dict in field_list[1:]:
-                                    field_dict.update(init_field_dict)
-
-                                time.sleep(delay)
-
-                                if action and urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(action).netloc:
-                                    data = text(action,method=method_field,data=field_dict)
-                                    if mal in data:
-                                        hits.append(f"xss in forms: {action} | {field_dict}")
-
-                                else:
-                                    data = text(_,method=method_field,data=field_dict)
-                                    if mal in data:
-                                        hits.append(f"xss in forms: {_} | {field_dict}")
+                        time.sleep(delay)
+                        data = text(_ + "/" + mal)
+                        if mal in data:
+                            hits.append(f"xss in url: {_}/{mal}")
 
                     except HTTPError as error:
                         pass
 
                     except:
                         pass
+
+                    try:
+                        time.sleep(delay)
+                        data = text(_, headers = {"Cookie",mal})
+                        if mal in data:
+                            hits.append(f"xss in cookie ({mal}): {_}")
+
+                    except HTTPError as error:
+                        pass
+
+                    except:
+                        pass
+
+                    try:
+                        time.sleep(delay)
+                        data = text(_, headers = {"Referer",mal})
+                        if mal in data:
+                            hits.append(f"xss in referer ({mal}): {_}")
+
+                    except HTTPError as error:
+                        pass
+
+                    except:
+                        pass
+                    
+                    for form in forms:
+                        field_list = []
+                        input_field = re.findall("<input.+?>",form)
+                        try:
+                            action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                            if action_field.startswith("/"):
+                                action = _ + action_field
+
+                            elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                                action = _ + "/" + action_field
+
+                            else:
+                                action = action_field
+                                
+                        except IndexError:
+                            pass
+
+                        try:
+                            method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                            for in_field in input_field:
+                                if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                                    name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                    type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                    
+                                    try:
+                                        value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                    
+                                    except IndexError:
+                                        value_field = ""
+                                    
+                                    if type_field == "submit" or type_field == "hidden":
+                                        field_list.append({name_field:value_field})
+
+
+                                    if type_field != "submit" and type_field != "hidden":
+                                        field_list.append({name_field:mal})
+
+                                    field_dict = field_list[0]
+                                    for init_field_dict in field_list[1:]:
+                                        field_dict.update(init_field_dict)
+
+                                    time.sleep(delay)
+
+                                    if action and urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(action).netloc:
+                                        data = text(action,method=method_field,data=field_dict)
+                                        if mal in data:
+                                            hits.append(f"xss in forms: {action} | {field_dict}")
+
+                                    else:
+                                        data = text(_,method=method_field,data=field_dict)
+                                        if mal in data:
+                                            hits.append(f"xss in forms: {_} | {field_dict}")
+
+                        except HTTPError as error:
+                            pass
+
+                        except:
+                            pass
 
     clear()
     hits = list(set(hits[:]))
