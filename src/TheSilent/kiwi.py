@@ -222,13 +222,14 @@ def kiwi(host):
                       "www"]
 
     for mal in mal_subdomains:
-        try:
-            data = socket.gethostbyname_ex(mal + "." + ".".join(host.split(".")[1:]))
-            print(CYAN + f"found: {data}")
-            total += 1
+        if host.count(".") > 1:
+            try:
+                data = socket.gethostbyname_ex(mal + "." + ".".join(host.split(".")[1:]))
+                print(CYAN + f"found: {data}")
+                total += 1
 
-        except:
-            pass
+            except:
+                pass
 
         try:
             data = socket.gethostbyname_ex(mal + "." + host)
