@@ -218,7 +218,7 @@ def kiwi(host):
 
     for mal in mal_subdomains:
         try:
-            if host.count(".") > 1:
+            if host.count(".") == 2:
                 data = socket.gethostbyname_ex(mal + "." + ".".join(host.split(".")[1:]))
                 print(CYAN + f"found: {data}")
                 total += 1
