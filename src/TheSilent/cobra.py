@@ -1336,7 +1336,7 @@ def cobra(host,delay=0,crawl=1):
 
             # check for xss
             for mal in mal_xss:
-                if "%" not in mal and "\\u" not in mal.lower() and not re.search("cu.*%" not in mal.lower()) and not re.search("%.*cu" not in mal.lower()):
+                if "%" not in mal and "\\u" not in mal.lower() and not re.search("cu.*%", mal.lower()) and not re.search("%.*cu", mal.lower()):
                     print(CYAN + f"checking: {_} with xss payload {mal}")
                     try:
                         time.sleep(delay)
