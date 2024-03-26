@@ -8,7 +8,7 @@ def kiwi(host):
     clear()
     total = 0
     
-    mal_subdomains = ["ab-dns-cach1","ab-dns-cach2","accord-100","acs","adc","adc-03","adfs","alertus","autodiscover","bananajr6000","barracuda","bele","cameras","cereg","citrixweb","cloudpath","cms","cv-teams","datatel","demo100","demo200","destiny","dmm","eduphoria","enteliweb","esphac","espsms","ex-san-and-switches-3","ezproxy","ffepurchasing","fod200","forms","ftp2","ftp201","gateway","gluu","google-proxy-66-249-80-0","google-proxy-74-125-211-0","gtm100","gtm200","hac","help","helpdesk","helpme","hip","idautoarms","iddesign","idp","ipac","ironport","its10","its20","jpextfs","library","mail","mcc-mpx1","mcc-ucxn1","mccmail","mccsim","midfp-eac1","misdfsc","mlink","mobile","mx","mx-in-hfd","mx-in-mdn","mx-in-rno","mx-in-vib","mylocker","ns01","ns1","ns2","ns3","ns4","ns45","ns46","ns75","ns76","pdns11","pdns12","pnn","prime","rate-limited-proxy-108-177-71-0","rate-limited-proxy-74-125-151-0","relayp","schoology","secureforms","selfservice","sharepoint","smtp","smtp2","speedtest","sso","staffldap","support","tac","uisp","vault","vpn","vpn-211-120","vpn-211-20","vpn2","web","webadvisor","webadvisortest","webtest","winapi","winapitest","ww3"]
+    mal_subdomains = ["ab-dns-cach1","ab-dns-cach2","accord-100","acs","adc","adc-03","adfs","afl","alertus","autodiscover","avl","bananajr6000","barracuda","bd","bele","bisd-vcse","bpemp","cameras","cereg","citrixweb","ckf01","ckf02","ckf03","ckf04","ckm","ckm01","ckr01","cloudpath","cms","compass","compasslearning","content","cv-teams","datatel","demo100","demo200","destiny","dev-sync-use","dls","dmm","dns1","dns2","dns4","duckduckbot-1","duckduckbot-2","duckduckbot-4","duckduckbot-5","duckduckbot-6","duckduckbot-7","duckduckbot-8","duckduckbot-9","eduphoria","email","emaildev","employeeinfo","enteliweb","esb00","esphac","espsms","eun-dng1","everyday","ex-san-and-switches-3","expe","external-content","ezproxy","ffepurchasing","fod200","forms","ftp2","ftp201","gateway","gluu","google-proxy-66-249-80-0","google-proxy-74-125-211-0","gp","gtm100","gtm200","hac","harhac","help","helpdesk","helpme","hip","hr","idauto-portal","idautoarms","iddesign","idp","idp00","iepplusnlb","iepptest","ipac","ironport","its10","its20","jobs","jpextfs","kltn","library","links","mail","mailer","mcc-mpx1","mcc-ucxn1","mccmail","mccsim","mdm","midfp-eac1","misdfsc","mlink","mobile","msonlineppe2010","mx","mx-in-hfd","mx-in-mdn","mx-in-rno","mx-in-vib","mylocker","ns01","ns02","ns03","ns04","ns1","ns1-39","ns2","ns2-39","ns3","ns3-39","ns4","ns4-39","ns45","ns46","ns47","ns48","ns75","ns76","paspsites2010","pdns11","pdns12","pnn","portal","ppepaspsites2010","prime","rate-limited-proxy-108-177-71-0","rate-limited-proxy-74-125-151-0","rdns1","rdns2","relayp","riverdeep","safe","schoology","secureforms","selfservice","sems","sharepoint","skysrv","skystu","smtp","smtp00","smtp2","smtpmailer1","speedtest","sso","staffldap","subscriptions-dev","support","sync","tac","tide500","timeclockplus","uisp","use-dng1","vault","vendorftp","vpn","vpn-211-120","vpn-211-20","vpn2","warehouse","web","webadvisor","webadvisortest","webcast","webmail","webtest","winapi","winapitest","ww3","www-dev00"]
 
     for mal in mal_subdomains:
         if host.count(".") > 1:
@@ -28,4 +28,12 @@ def kiwi(host):
         except:
             pass
 
-    print(GREEN + f"found: {total} out of {2 * len(mal_subdomains)} possible")
+    try:
+        data = socket.gethostbyname_ex(host)
+        print(CYAN + f"found: {data}")
+        total += 1
+
+    except:
+        pass
+
+    print(GREEN + f"found: {total} out of {2 * len(mal_subdomains) + 1} possible")
