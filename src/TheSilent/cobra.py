@@ -543,7 +543,7 @@ def cobra(host,delay=0,crawl=1):
     for _ in hosts:
         if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(_).netloc:
             try:
-                forms = re.findall("<form.+form>",text(_).replace("\n",""))
+                forms = re.findall("<form[.\n]+form>",text(_).replace("\n",""))
 
             except HTTPError as error:
                 forms = []
