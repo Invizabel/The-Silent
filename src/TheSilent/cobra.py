@@ -65,7 +65,7 @@ def mal_url_parser(mal):
     gather = []
 
     gather.append(random_case(mal))
-    gather.append(random_string() + mal)
+    gather.append(random_string() + " " + mal)
     gather.append(random_case(random_string() + mal))
 
     new_gather = gather[:]
@@ -484,8 +484,7 @@ def cobra(host,delay=0,crawl=1):
         results = mal_url_parser(mal)
         for result in results:
             mal_bash.append(result)
-        
-    
+            
     init_mal_mssql = mal_mssql[:]
     for mal in init_mal_mssql:
         results = mal_url_parser(mal)
@@ -510,7 +509,6 @@ def cobra(host,delay=0,crawl=1):
         for result in results:
             mal_php.append(result)       
         
-
     init_mal_postgresql = mal_postgresql[:]
     for mal in init_mal_postgresql:
         results = mal_url_parser(mal)
@@ -522,9 +520,7 @@ def cobra(host,delay=0,crawl=1):
         results = mal_url_parser(mal)
         for result in results:
             mal_powershell.append(result)
-
-        
-
+            
     init_mal_python = mal_python[:]
     for mal in init_mal_python:
         results = mal_url_parser(mal)
