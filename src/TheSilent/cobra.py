@@ -641,14 +641,14 @@ def cobra(host,delay=0,crawl=1):
                     except:
                         pass
 
-            # check for reflective emoji injection based payload
-            print(CYAN + f"checking: {_} with reflective emoji injection payloads")
+            # check for emoji injection based payload
+            print(CYAN + f"checking: {_} with emoji injection payloads")
             for mal in mal_emoji:
                 try:
                     time.sleep(delay)
                     data = text(_ + "/" + mal)
                     if mal in data:
-                        hits.append(f"reflective emoji injection in url: {_}/{mal}")
+                        hits.append(f"emoji injection in url: {_}/{mal}")
 
                 except HTTPError as error:
                     pass
@@ -675,7 +675,7 @@ def cobra(host,delay=0,crawl=1):
                     time.sleep(delay)
                     data = text(_, headers = {"Cookie",mal})
                     if mal in data:
-                        hits.append(f"reflective emoji injection in cookie ({mal}): {_}")
+                        hits.append(f"emoji injection in cookie ({mal}): {_}")
 
                 except HTTPError as error:
                     pass
@@ -687,7 +687,7 @@ def cobra(host,delay=0,crawl=1):
                     time.sleep(delay)
                     data = text(_, headers = {"Referer",mal})
                     if mal in data:
-                        hits.append(f"reflective emoji injection in referer ({mal}): {_}")
+                        hits.append(f"emoji injection in referer ({mal}): {_}")
 
                 except HTTPError as error:
                     pass
@@ -699,7 +699,7 @@ def cobra(host,delay=0,crawl=1):
                     time.sleep(delay)
                     data = text(_, headers = {"X-Forwarded-For",mal})
                     if mal in data:
-                        hits.append(f"reflective emoji injection in x-forwarded-for ({mal}): {_}")
+                        hits.append(f"emoji injection in x-forwarded-for ({mal}): {_}")
 
                 except HTTPError as error:
                     pass
@@ -753,12 +753,12 @@ def cobra(host,delay=0,crawl=1):
                                 if action and urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(action).netloc:
                                     data = text(action,method=method_field,data=field_dict)
                                     if mal in data:
-                                        hits.append(f"reflective emoji injection in forms: {action} | {field_dict}")
+                                        hits.append(f"emoji injection in forms: {action} | {field_dict}")
 
                                 else:
                                     data = text(_,method=method_field,data=field_dict)
                                     if mal in data:
-                                        hits.append(f"reflective emoji injection in forms: {_} | {field_dict}")
+                                        hits.append(f"emoji injection in forms: {_} | {field_dict}")
 
                     except HTTPError as error:
                         pass
