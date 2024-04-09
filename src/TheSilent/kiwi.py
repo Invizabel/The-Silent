@@ -1,39 +1,146 @@
+import hashlib
+import ipaddress
+import re
 import socket
+import threading
 from TheSilent.clear import clear
+from TheSilent.puppy_requests import *
 
 CYAN = "\033[1;36m"
-GREEN = "\033[0;32m"
 
-def kiwi(host):
-    clear()
-    total = 0
-    
-    mal_subdomains = ["220-s1","ab-dns-cach1","ab-dns-cach2","accord-100","acs","adc","adc-03","adfs","afl","airwatch","alertus","alioweb","articles","atriuum","attachments","autodiscover","avl","bananajr6000","barracuda","bd","bele","bisd-vcse","bpemp","bullyreport","cameras","catalog","cereg","cip","citrixweb","ckf01","ckf02","ckf03","ckf04","ckm","ckm01","ckr01","cloudpath","cms","compass","compasslearning","contacts","content","cpmt","cv-teams","datatel","demo100","demo200","destiny","dev-sync-use","dls","dmm","dns1","dns101","dns102","dns2","dns4","duckduckbot-1","duckduckbot-2","duckduckbot-4","duckduckbot-5","duckduckbot-6","duckduckbot-7","duckduckbot-8","duckduckbot-9","ecisd-ns1","edu","eduphoria","efpeac-2021","elearn","email","emaildev","employeeinfo","enrollment","enteliweb","esb00","eschoolhac","eschoolplus","esp","esphac","espsms","eun-dng1","everyday","ex-san-and-switches-3","ex1","ex2","exchange","exchsrvr","expe","external-content","ezproxy","ffepurchasing","filter","finance","fod200","forms","ftp","ftp2","ftp201","gateway","gcs","gluu","google-proxy-66-249-80-0","google-proxy-74-125-211-0","gp","graduation","gs","gtm100","gtm200","hac","harhac","help","helpdesk","helpme","hip","home","hr","iboss","idauto-portal","idautoarms","iddesign","idp","idp00","iepplusnlb","iepptest","ipac","iron","ironport","itech","its10","its20","jobs","jpextfs","kltn","kronos","library","links","liquidoffice","ljisd","lp","mail","mailer","mailstream-central","mailstream-east","mailstream-eu1","mailstream-west","mcc-mpx1","mcc-ucxn1","mccmail","mccsim","mdm","meniola","midfp-eac1","miles","misdfsc","mlink","mobile","mobilelearning","moodle","msonlineppe2010","mx","mx-in-hfd","mx-in-mdn","mx-in-rno","mx-in-vib","my","mydispense","myinfo","mylocker","ns01","ns02","ns03","ns04","ns1","ns1-39","ns1vwx","ns2","ns2-39","ns27","ns28","ns2lns","ns3","ns3-39","ns3cfp","ns4","ns4-39","ns45","ns46","ns47","ns48","ns49","ns4gvx","ns5","ns50","ns53","ns54","ns69","ns70","ns75","ns76","odyssey2","old","open1","open2","pac","paspsites2010","pdns11","pdns12","pnn","portal","ppepaspsites2010","prime","prtg","purchasing","r3000","rate-limited-proxy-108-177-71-0","rate-limited-proxy-74-125-151-0","rdns1","rdns2","register","relayp","remote","reporter","reset","riverdeep","routing","s1","safe","schoology","secureforms","selfservice","sems","sharepoint","skysrv","skystu","skyward","skyweb","smtp","smtp00","smtp2","smtpmailer1","sped","speedtest","spqr","srironport","sso","staffldap","steam","subscriptions-dev","support","sync","tac","tc-prtg","tcp","tcptraining","tide500","timeclockplus","uisp","usb-smtp-inbound-1","usb-smtp-inbound-2","use-dng1","ussf56","ussf57","vault","vendorftp","versatrans","vm-stxdc","vpn","vpn-211-120","vpn-211-20","vpn2","warehouse","web","webadvisor","webadvisortest","webcast","webmail","webtest","whm","winapi","winapitest","ww3","www-dev00"]
-        
-    for mal in mal_subdomains:
-        if host.count(".") > 1:
-            try:
-                data = socket.gethostbyname_ex(mal + "." + ".".join(host.split(".")[1:]))
-                print(CYAN + f"found: {data}")
-                total += 1
+hits = []
 
-            except:
-                pass
+def juice(host):
+    global hits
 
-        try:
-            data = socket.gethostbyname_ex(mal + "." + host)
-            print(CYAN + f"found: {data}")
-            total += 1
+    fingerprint_images = {"Content Keeper": "06c673c63c930a65265e75e32ea49c6095c3628c5f82c8c06181a93a84e7948f",
+                          "OpenVAS": "2baba8da070e1911ddfae6b4843401b735a9c95e14f72699662e9fe9d9f70b00"}
 
-        except:
-            pass
+    fingerprint_paths = ["/favicon.ico",
+                         "/img/favicon.png"]
+
+    web_ports = [9392,8443,8080,443,80] # 9392 is the default OpenVAS port
 
     try:
-        data = socket.gethostbyname_ex(host)
-        print(CYAN + f"found: {data}")
-        total += 1
+        hits.append(f"{host} | {socket.gethostbyname_ex(host)}")
 
     except:
         pass
 
-    print(GREEN + f"found: {total} out of {2 * len(mal_subdomains) + 1} possible")
+    ports = []
+    for port in web_ports:
+        try:
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(10)
+            tcp_socket.connect((str(host), port))
+            tcp_socket.close()
+            ports.append(port)
+
+        except:
+            pass
+        
+
+    for port in ports:
+        for path in fingerprint_paths:
+            if port == 80:
+                try:
+                    data = text(f"http://{host}{path}", raw=True)
+                    checksum = hashlib.sha256(data).hexdigest()
+                    for fingerprint in fingerprint_images.items():
+                        if checksum == fingerprint[1]:
+                            hits.append(f"{host} | favicon fingerprint: " + fingerprint[0])
+
+                except:
+                    continue
+
+            if port == 443:
+                try:
+                    data = text(f"https://{host}{path}", raw=True)
+                    checksum = hashlib.sha256(data).hexdigest()
+                    for fingerprint in fingerprint_images.items():
+                        if checksum == fingerprint[1]:
+                            hits.append(f"{host} | favicon fingerprint: " + fingerprint[0])
+
+                except:
+                    continue
+
+            else:
+                try:
+                    data = text(f"https://{host}:{port}{path}", raw=True)
+                    checksum = hashlib.sha256(data).hexdigest()
+                    for fingerprint in fingerprint_images.items():
+                        if checksum == fingerprint[1]:
+                            hits.append(f"{host} | favicon fingerprint: " + fingerprint[0])
+
+                except:
+                    continue
+
+        if port == 80:
+            try:
+                hits.append(f"{host} | request headers fingerprint: " + re.findall(f"server:(.+)", str(getheaders(f"http://{host}")).lower())[0])
+
+            except:
+                pass
+
+        if port == 443:
+            try:
+                hits.append(f"{host} | request headers fingerprint: " + re.findall(f"server:(.+)", str(getheaders(f"https://{host}")).lower())[0])
+
+            except:
+                pass
+
+        else:
+            try:
+                hits.append(f"{host} | request headers fingerprint: " + re.findall(f"server:(.+)", str(getheaders(f"http://{host}:{port}")).lower())[0])
+
+            except:
+                pass
+
+def kiwi(host):
+    global hits
+    hits = []
+    
+    clear()
+    
+    if re.search(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}", host):
+        thread_list = []
+        thread_count = 0
+
+        print(f"checking: {host}")
+
+        for ip in list(ipaddress.ip_network(host, strict=False).hosts()):
+            thread_count += 1
+            my_thread = threading.Thread(target = juice, args = (str(ip),))
+            thread_list.append(my_thread)
+            my_thread.start()
+
+            if thread_count == 255:
+                for thread in thread_list:
+                    thread.join()
+
+                thread_count = 0
+                thread_list = []
+
+        
+        for thread in thread_list:
+            thread.join()
+
+        hits = list(set(hits[:]))
+        hits.sort()
+        with open("kiwi.log", "a") as file:
+            for hit in hits:
+                file.write(f"{hit}\n")
+                print(CYAN + hit)
+
+    else:
+        print(CYAN + f"checking: {host}")
+        my_thread = threading.Thread(target = juice, args = (host,))
+        my_thread.start()
+        my_thread.join()
+
+        hits = list(set(hits[:]))
+        hits.sort()
+        with open("kiwi.log", "a") as file:
+            for hit in hits:
+                file.write(f"{hit}\n")
+                print(CYAN + hit)

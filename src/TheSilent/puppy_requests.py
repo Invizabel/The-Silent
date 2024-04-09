@@ -21,7 +21,7 @@ cookie_handler = urllib.request.HTTPCookieProcessor(cookie_jar)
 opener = urllib.request.build_opener(cookie_handler)
 urllib.request.install_opener(opener)
 
-def getheaders(host,method="GET",data=b"",headers=fake_headers,timeout=15):
+def getheaders(host,method="GET",data=b"",headers=fake_headers,timeout=10):
     for i in range(3):
         try:
             socket.setdefaulttimeout(timeout)
@@ -45,7 +45,7 @@ def getheaders(host,method="GET",data=b"",headers=fake_headers,timeout=15):
         except TimeoutError:
             pass
 
-def text(host,method="GET",data=None,headers={},timeout=15,raw=False):
+def text(host,method="GET",data=None,headers={},timeout=10,raw=False):
     for i in range(3):
         try:
             socket.setdefaulttimeout(timeout)
@@ -98,7 +98,7 @@ def text(host,method="GET",data=None,headers={},timeout=15,raw=False):
         except TimeoutError:
             pass
 
-def url(host,method="GET",data=b"",headers=fake_headers,timeout=15):
+def url(host,method="GET",data=b"",headers=fake_headers,timeout=10):
     for i in range(3):
         try:
             socket.setdefaulttimeout(timeout)

