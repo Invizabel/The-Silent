@@ -1,2 +1,0 @@
-deepface # owl
-selenium # owl
