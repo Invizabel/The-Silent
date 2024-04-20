@@ -362,10 +362,10 @@ def simple():
             status_hits.append(200)
             for i in http_headers.items():
                 hits.append(f"{i[0]}: {i[1]}")
-
+                
         except HTTPError as error:
             status_hits.append(error.code)
-
+            
         except:
             pass
             

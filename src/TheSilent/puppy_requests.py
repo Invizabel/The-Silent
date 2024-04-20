@@ -41,7 +41,7 @@ def getheaders(host,method="GET",data=b"",headers={},timeout=10):
 
             simple_response = opener.open(simple_request,timeout=timeout)
 
-            return str(simple_response.headers)
+            return simple_response.headers
 
         except TimeoutError:
             pass
