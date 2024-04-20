@@ -405,11 +405,6 @@ def simple():
     status_results = list(set(status_hits[:]))
     status_results.sort()
 
-    for i in status_results:
-        print(CYAN + f"status {i} count: {status_hits.count(i)}")
-
-    print(CYAN + f"total requests: {len(status_hits)}")
-
     if len(hits) > 0:
         if args.log:
             for hit in hits:
@@ -417,7 +412,21 @@ def simple():
                 with open("simple.log", "a") as file:
                     file.write(hit + "\n")
 
+            for i in status_results:
+                print(RED + f"status {i} count: {status_hits.count(i)}")
+                with open("simple.log", "a") as file:
+                    file.write(f"status {i} count: {status_hits.count(i)}\n")
+
+            print(RED + f"total requests: {len(status_hits)}")
+            with open("simple.log", "a") as file:
+                    file.write(f"total requests: {len(status_hits)}\n")
+
         else:
+            for i in status_results:
+                print(RED + f"status {i} count: {status_hits.count(i)}")
+
+            print(RED + f"total requests: {len(status_hits)}")
+            
             for hit in hits:
                 print(RED + hit)
 
@@ -427,8 +436,22 @@ def simple():
             with open("simple.log", "a") as file:
                 file.write(f"we didn't find anything interesting on {host}\n")
 
+            for i in status_results:
+                print(GREEN + f"status {i} count: {status_hits.count(i)}")
+                with open("simple.log", "a") as file:
+                    file.write(f"status {i} count: {status_hits.count(i)}\n")
+
+            print(GREEN + f"total requests: {len(status_hits)}")
+            with open("simple.log", "a") as file:
+                    file.write(f"total requests: {len(status_hits)}\n")
+                    
         else:
             print(GREEN + f"we didn't find anything interesting on {host}")
+
+            for i in status_results:
+                print(GREEN + f"status {i} count: {status_hits.count(i)}")
+
+            print(GREEN + f"total requests: {len(status_hits)}")
     
         
 if __name__ == "__main__":
