@@ -5,6 +5,7 @@ import ssl
 import urllib.parse
 import urllib.request
 import zlib
+from urllib.error import HTTPError
 from TheSilent.return_user_agent import *
 
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -21,15 +22,15 @@ cookie_handler = urllib.request.HTTPCookieProcessor(cookie_jar)
 opener = urllib.request.build_opener(cookie_handler)
 urllib.request.install_opener(opener)
 
-def getheaders(host,method="GET",data=b"",headers=fake_headers,timeout=10):
+def getheaders(host,method="GET",data=b"",headers={},timeout=10):
     for i in range(3):
         try:
             socket.setdefaulttimeout(timeout)
             if data:
-                simple_request = urllib.request.Request(host,data=urllib.parse.urlencode(data).encode(),method=method.upper(),unverifiable=True)   
+                simple_request = urllib.request.Request(host,data=urllib.parse.urlencode(data).encode(),method=method,unverifiable=True)   
 
             else:
-                simple_request = urllib.request.Request(host,method=method.upper(),unverifiable=True)
+                simple_request = urllib.request.Request(host,method=method,unverifiable=True)
 
             for key,value in fake_headers.items():
                 simple_request.add_header(key,value)
@@ -40,7 +41,36 @@ def getheaders(host,method="GET",data=b"",headers=fake_headers,timeout=10):
 
             simple_response = opener.open(simple_request,timeout=timeout)
 
-            return simple_response.headers
+            return str(simple_response.headers)
+
+        except TimeoutError:
+            pass
+
+def status_code(host,method="GET",data=None,headers={},timeout=10):
+    for i in range(3):
+        try:
+            socket.setdefaulttimeout(timeout)
+            if data:
+                simple_request = urllib.request.Request(host,data=urllib.parse.urlencode(data).encode(),method=method,unverifiable=True)   
+
+            else:
+                simple_request = urllib.request.Request(host,method=method,unverifiable=True)
+
+            for key,value in fake_headers.items():
+                simple_request.add_header(key,value)
+
+            if headers:
+                for key,value in headers.items():
+                    simple_request.add_header(key,value)
+
+            try:
+                simple_response = opener.open(simple_request,timeout=timeout)
+                status_value = int(simple_response.status)
+
+            except HTTPError as error:
+                status_value = int(error.code)
+
+            return status_value
 
         except TimeoutError:
             pass
@@ -50,10 +80,10 @@ def text(host,method="GET",data=None,headers={},timeout=10,raw=False):
         try:
             socket.setdefaulttimeout(timeout)
             if data:
-                simple_request = urllib.request.Request(host,data=urllib.parse.urlencode(data).encode(),method=method.upper(),unverifiable=True)   
+                simple_request = urllib.request.Request(host,data=urllib.parse.urlencode(data).encode(),method=method,unverifiable=True)   
 
             else:
-                simple_request = urllib.request.Request(host,method=method.upper(),unverifiable=True)
+                simple_request = urllib.request.Request(host,method=method,unverifiable=True)
 
             for key,value in fake_headers.items():
                 simple_request.add_header(key,value)
@@ -98,15 +128,15 @@ def text(host,method="GET",data=None,headers={},timeout=10,raw=False):
         except TimeoutError:
             pass
 
-def url(host,method="GET",data=b"",headers=fake_headers,timeout=10):
+def url(host,method="GET",data=None,headers={},timeout=10):
     for i in range(3):
         try:
             socket.setdefaulttimeout(timeout)
             if data:
-                simple_request = urllib.request.Request(host,data=urllib.parse.urlencode(data).encode(),method=method.upper(),unverifiable=True)   
+                simple_request = urllib.request.Request(host,data=urllib.parse.urlencode(data).encode(),method=method,unverifiable=True)   
 
             else:
-                simple_request = urllib.request.Request(host,method=method.upper(),unverifiable=True)
+                simple_request = urllib.request.Request(host,method=method,unverifiable=True)
 
             for key,value in fake_headers.items():
                 simple_request.add_header(key,value)
@@ -116,7 +146,7 @@ def url(host,method="GET",data=b"",headers=fake_headers,timeout=10):
                     simple_request.add_header(key,value)
 
             simple_response = opener.open(simple_request,timeout=timeout)
-            return simple_response.url
+            return str(simple_response.url)
 
         except TimeoutError:
             pass
