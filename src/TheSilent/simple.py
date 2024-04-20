@@ -422,13 +422,13 @@ def simple():
                     file.write(f"total requests: {len(status_hits)}\n")
 
         else:
-            for i in status_results:
-                print(RED + f"status {i} count: {status_hits.count(i)}")
-
-            print(RED + f"total requests: {len(status_hits)}")
-            
             for hit in hits:
                 print(RED + hit)
+                
+            for i in status_results:
+                print(RED + f"status {i} count: {status_hits.count(i)}")
+            
+            print(RED + f"total requests: {len(status_hits)}")
 
     else:
         if args.log:
