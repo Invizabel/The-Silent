@@ -73,9 +73,10 @@ def hits_parser(_, delay, scanner, evasion):
             original_payloads = mal_payloads[:]
             for j in original_payloads:
                 mal_payloads.append(j)
-                evade = evasion_parser(j, evasion)
-                for k in evade:
-                    mal_payloads.append(k)
+                if evasion != None:
+                    evade = evasion_parser(j, evasion)
+                    for k in evade:
+                        mal_payloads.append(k)
                     
             results, status_x = bash_time_scanner(_, delay, mal_payloads, forms)
             for result in results:
@@ -92,9 +93,10 @@ def hits_parser(_, delay, scanner, evasion):
             original_payloads = mal_payloads[:]
             for j in original_payloads:
                 mal_payloads.append(j)
-                evade = evasion_parser(j, evasion)
-                for k in evade:
-                    mal_payloads.append(k)
+                if evasion != None:
+                    evade = evasion_parser(j, evasion)
+                    for k in evade:
+                        mal_payloads.append(k)
                 
             results, status_x = emoji_scanner(_, delay, mal_payloads, forms)
             for result in results:
@@ -111,9 +113,10 @@ def hits_parser(_, delay, scanner, evasion):
             original_payloads = mal_payloads[:]
             for j in original_payloads:
                 mal_payloads.append(j)
-                evade = evasion_parser(j, evasion)
-                for k in evade:
-                    mal_payloads.append(k)
+                if evasion != None:
+                    evade = evasion_parser(j, evasion)
+                    for k in evade:
+                        mal_payloads.append(k)
                 
             results, status_x = mssql_time_scanner(_, delay, mal_payloads, forms)
             for result in results:
@@ -130,9 +133,10 @@ def hits_parser(_, delay, scanner, evasion):
             original_payloads = mal_payloads[:]
             for j in original_payloads:
                 mal_payloads.append(j)
-                evade = evasion_parser(j, evasion)
-                for k in evade:
-                    mal_payloads.append(k)
+                if evasion != None:
+                    evade = evasion_parser(j, evasion)
+                    for k in evade:
+                        mal_payloads.append(k)
                 
             results, status_x = mysql_time_scanner(_, delay, mal_payloads, forms)
             for result in results:
@@ -149,9 +153,10 @@ def hits_parser(_, delay, scanner, evasion):
             original_payloads = mal_payloads[:]
             for j in original_payloads:
                 mal_payloads.append(j)
-                evade = evasion_parser(j, evasion)
-                for k in evade:
-                    mal_payloads.append(k)
+                if evasion != None:
+                    evade = evasion_parser(j, evasion)
+                    for k in evade:
+                        mal_payloads.append(k)
                 
             results, status_x = oracle_sql_time_scanner(_, delay, mal_payloads, forms)
             for result in results:
@@ -168,9 +173,10 @@ def hits_parser(_, delay, scanner, evasion):
             original_payloads = mal_payloads[:]
             for j in original_payloads:
                 mal_payloads.append(j)
-                evade = evasion_parser(j, evasion)
-                for k in evade:
-                    mal_payloads.append(k)
+                if evasion != None:
+                    evade = evasion_parser(j, evasion)
+                    for k in evade:
+                        mal_payloads.append(k)
                 
             results, status_x = php_time_scanner(_, delay, mal_payloads, forms)
             for result in results:
@@ -187,9 +193,10 @@ def hits_parser(_, delay, scanner, evasion):
             original_payloads = mal_payloads[:]
             for j in original_payloads:
                 mal_payloads.append(j)
-                evade = evasion_parser(j, evasion)
-                for k in evade:
-                    mal_payloads.append(k)
+                if evasion != None:
+                    evade = evasion_parser(j, evasion)
+                    for k in evade:
+                        mal_payloads.append(k)
                 
             results, status_x = postgresql_time_scanner(_, delay, mal_payloads, forms)
             for result in results:
@@ -206,9 +213,10 @@ def hits_parser(_, delay, scanner, evasion):
             original_payloads = mal_payloads[:]
             for j in original_payloads:
                 mal_payloads.append(j)
-                evade = evasion_parser(j, evasion)
-                for k in evade:
-                    mal_payloads.append(k)
+                if evasion != None:
+                    evade = evasion_parser(j, evasion)
+                    for k in evade:
+                        mal_payloads.append(k)
                 
             results, status_x = powershell_scanner(_, delay, mal_payloads, forms)
             for result in results:
@@ -225,9 +233,10 @@ def hits_parser(_, delay, scanner, evasion):
             original_payloads = mal_payloads[:]
             for j in original_payloads:
                 mal_payloads.append(j)
-                evade = evasion_parser(j, evasion)
-                for k in evade:
-                    mal_payloads.append(k)
+                if evasion != None:
+                    evade = evasion_parser(j, evasion)
+                    for k in evade:
+                        mal_payloads.append(k)
                     
             results, status_x = python_reflective_scanner(_, delay, mal_payloads, forms)
             for result in results:
@@ -243,9 +252,10 @@ def hits_parser(_, delay, scanner, evasion):
             original_payloads = mal_payloads[:]
             for j in original_payloads:
                 mal_payloads.append(j)
-                evade = evasion_parser(j, evasion)
-                for k in evade:
-                    mal_payloads.append(k)
+                if evasion != None:
+                    evade = evasion_parser(j, evasion)
+                    for k in evade:
+                        mal_payloads.append(k)
                 
             results, status_x = python_time_scanner(_, delay, mal_payloads, forms)
             for result in results:
@@ -262,9 +272,10 @@ def hits_parser(_, delay, scanner, evasion):
             original_payloads = mal_payloads[:]
             for j in original_payloads:
                 mal_payloads.append(j)
-                evade = evasion_parser(j, evasion)
-                for k in evade:
-                    mal_payloads.append(k)
+                if evasion != None:
+                    evade = evasion_parser(j, evasion)
+                    for k in evade:
+                        mal_payloads.append(k)
             
             results, status_x = xss_reflective_scanner(_, delay, mal_payloads, forms)
             for result in results:
