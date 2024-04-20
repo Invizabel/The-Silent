@@ -302,7 +302,37 @@ def simple():
     hits = []
     status_hits = []
     host = args.host.rstrip("/")
+            
+    # yes crawl
+    if args.crawl > 1:
+        hosts = kitten_crawler(args.host, args.delay, args.crawl)
+        clear()
+        for _ in hosts:
+            print(CYAN + f"checking: {_}")
+            if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(_).netloc:
+                results, init_status_hits = hits_parser(_, args.delay, args.scanner, args.evasion)
+                for result in results:
+                    hits.append(result)
 
+                for i in init_status_hits:
+                    status_hits.append(i)
+                
+    # no crawl
+    elif args.crawl == 1:
+        clear()
+        print(CYAN + f"checking: {host}")
+        results, init_status_hits = hits_parser(host, args.delay, args.scanner, args.evasion)
+        for result in results:
+            hits.append(result)
+
+        for i in init_status_hits:
+            status_hits.append(i)
+
+    else:
+        print(RED + f"ERROR! Can't crawl with depth of {args.crawl}")
+        sys.exit()
+
+    # grab banners
     if "banner" in args.scanner  or "all" in args.scanner:
         clear()
         print(CYAN + f"grabbing banners from: {urllib.parse.urlparse(host).netloc}")
@@ -317,6 +347,7 @@ def simple():
         except:
             pass
 
+    # fingerprint server
     if "fingerprint" in args.scanner or "all" in args.scanner:
         paths = ["favicon.ico"]
         fingerprint_dict = {"content-keeper": "06c673c63c930a65265e75e32ea49c6095c3628c5f82c8c06181a93a84e7948f",
@@ -352,6 +383,7 @@ def simple():
             except:
                 pass
 
+    # get log info
     if "info" in args.scanner or "all" in args.scanner:
         clear()
         print(CYAN + f"grabbing log info from: {urllib.parse.urlparse(host).netloc}")
@@ -368,39 +400,9 @@ def simple():
             
         except:
             pass
-            
-    # yes crawl
-    if args.crawl > 1:
-        hosts = kitten_crawler(args.host, args.delay, args.crawl)
-        clear()
-        for _ in hosts:
-            print(CYAN + f"checking: {_}")
-            if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(_).netloc:
-                results, init_status_hits = hits_parser(_, args.delay, args.scanner, args.evasion)
-                for result in results:
-                    hits.append(result)
-
-                for i in init_status_hits:
-                    status_hits.append(i)
-                
-    # no crawl
-    elif args.crawl == 1:
-        clear()
-        print(CYAN + f"checking: {host}")
-        results, init_status_hits = hits_parser(host, args.delay, args.scanner, args.evasion)
-        for result in results:
-            hits.append(result)
-
-        for i in init_status_hits:
-            status_hits.append(i)
-
-    else:
-        print(RED + f"ERROR! Can't crawl with depth of {args.crawl}")
-        sys.exit()
         
     clear()
     hits = list(set(hits[:]))
-    hits.sort()
 
     status_results = list(set(status_hits[:]))
     status_results.sort()
