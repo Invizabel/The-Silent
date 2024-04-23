@@ -48,7 +48,7 @@ def bash_time_scanner(_, delay, mal_bash, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"Cookie",mal}, timeout = 120)
+            data = text(_, headers = {"Cookie": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -65,7 +65,7 @@ def bash_time_scanner(_, delay, mal_bash, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"Referer",mal}, timeout = 120)
+            data = text(_, headers = {"Referer": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -82,7 +82,7 @@ def bash_time_scanner(_, delay, mal_bash, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"X-Forwarded-For",mal}, timeout = 120)
+            data = text(_, headers = {"X-Forwarded-For": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -191,11 +191,9 @@ def emoji_scanner(_, delay, mal_emoji, forms):
 
         try:
             time.sleep(delay)
-            start = time.time()
             data = text(_, method = mal, timeout = 120)
             status_hits.append(200)
-            end = time.time()
-            if end - start >= 55:
+            if mal in data:
                 hits.append(f"emoji injection in method ({mal}): {_}")
 
         except HTTPError as error:
@@ -206,7 +204,7 @@ def emoji_scanner(_, delay, mal_emoji, forms):
 
         try:
             time.sleep(delay)
-            data = text(_, headers = {"Cookie",mal})
+            data = text(_, headers = {"Cookie": mal})
             status_hits.append(200)
             if mal in data:
                 hits.append(f"emoji injection in cookie ({mal}): {_}")
@@ -219,7 +217,7 @@ def emoji_scanner(_, delay, mal_emoji, forms):
 
         try:
             time.sleep(delay)
-            data = text(_, headers = {"Referer",mal})
+            data = text(_, headers = {"Referer": mal})
             status_hits.append(200)
             if mal in data:
                 hits.append(f"emoji injection in referer ({mal}): {_}")
@@ -232,7 +230,7 @@ def emoji_scanner(_, delay, mal_emoji, forms):
 
         try:
             time.sleep(delay)
-            data = text(_, headers = {"X-Forwarded-For",mal})
+            data = text(_, headers = {"X-Forwarded-For": mal})
             status_hits.append(200)
             if mal in data:
                 hits.append(f"emoji injection in x-forwarded-for ({mal}): {_}")
@@ -348,7 +346,7 @@ def mssql_time_scanner(_, delay, mal_mssql, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"Cookie",mal}, timeout = 120)
+            data = text(_, headers = {"Cookie": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -382,7 +380,7 @@ def mssql_time_scanner(_, delay, mal_mssql, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"X-Forwarded-For",mal}, timeout = 120)
+            data = text(_, headers = {"X-Forwarded-For": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -511,7 +509,7 @@ def mysql_time_scanner(_, delay, mal_mysql, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"Cookie",mal}, timeout = 120)
+            data = text(_, headers = {"Cookie": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -545,7 +543,7 @@ def mysql_time_scanner(_, delay, mal_mysql, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"X-Forwarded-For",mal}, timeout = 120)
+            data = text(_, headers = {"X-Forwarded-For": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -674,7 +672,7 @@ def oracle_sql_time_scanner(_, delay, mal_oracle_sql, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"Cookie",mal}, timeout = 120)
+            data = text(_, headers = {"Cookie": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -708,7 +706,7 @@ def oracle_sql_time_scanner(_, delay, mal_oracle_sql, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"X-Forwarded-For",mal}, timeout = 120)
+            data = text(_, headers = {"X-Forwarded-For": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -837,7 +835,7 @@ def php_time_scanner(_, delay, mal_php, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"Cookie",mal}, timeout = 120)
+            data = text(_, headers = {"Cookie": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -871,7 +869,7 @@ def php_time_scanner(_, delay, mal_php, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"X-Forwarded-For",mal}, timeout = 120)
+            data = text(_, headers = {"X-Forwarded-For": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -1000,7 +998,7 @@ def postgresql_time_scanner(_, delay, mal_postgresql, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"Cookie",mal}, timeout = 120)
+            data = text(_, headers = {"Cookie": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -1034,7 +1032,7 @@ def postgresql_time_scanner(_, delay, mal_postgresql, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"X-Forwarded-For",mal}, timeout = 120)
+            data = text(_, headers = {"X-Forwarded-For": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -1163,7 +1161,7 @@ def powershell_scanner(_, delay, mal_powershell, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"Cookie",mal}, timeout = 120)
+            data = text(_, headers = {"Cookie": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -1197,7 +1195,7 @@ def powershell_scanner(_, delay, mal_powershell, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"X-Forwarded-For",mal}, timeout = 120)
+            data = text(_, headers = {"X-Forwarded-For": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -1319,7 +1317,7 @@ def python_reflective_scanner(_, delay, mal_python_reflective, forms):
 
         try:
             time.sleep(delay)
-            data = text(_, headers = {"Cookie",mal}, timeout = 120)
+            data = text(_, headers = {"Cookie": mal}, timeout = 120)
             status_hits.append(200)
             if "<script>prompt(1)</script>" in data:
                 hits.append(f"reflective python in cookie ({mal}): {_}")
@@ -1345,7 +1343,7 @@ def python_reflective_scanner(_, delay, mal_python_reflective, forms):
 
         try:
             time.sleep(delay)
-            data = text(_, headers = {"X-Forwarded-For",mal}, timeout = 120)
+            data = text(_, headers = {"X-Forwarded-For": mal}, timeout = 120)
             status_hits.append(200)
             if "<script>prompt(1)</script>" in data:
                 hits.append(f"reflective python in x-forwarded-for ({mal}): {_}")
@@ -1478,7 +1476,7 @@ def python_time_scanner(_, delay, mal_python_time, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"Cookie",mal}, timeout = 120)
+            data = text(_, headers = {"Cookie": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -1512,7 +1510,7 @@ def python_time_scanner(_, delay, mal_python_time, forms):
         try:
             time.sleep(delay)
             start = time.time()
-            data = text(_, headers = {"X-Forwarded-For",mal}, timeout = 120)
+            data = text(_, headers = {"X-Forwarded-For": mal}, timeout = 120)
             status_hits.append(200)
             end = time.time()
             if end - start >= 55:
@@ -1599,6 +1597,157 @@ def python_time_scanner(_, delay, mal_python_time, forms):
 
     return hits, status_hits
 
+# check for sql errors (used for fingerprinting and hueristics)
+def sql_error_scanner(_, delay, mal_payloads, forms):
+    hits = []
+    status_hits = []
+
+    mal_errors = {"mssql": r"(?s)Exception.*?\bRoadhouse\.Cms\.|Driver.*? SQL[\-\_\ ]*Server|OLE DB.*? SQL Server|\bSQL Server[^&lt;&quot;]+Driver|Warning.*?\W(mssql|sqlsrv)_|\bSQL Server[^&lt;&quot;]+[0-9a-fA-F]{8}|System\.Data\.SqlClient\.(SqlException|SqlConnection\.OnError)|Microsoft SQL Native Client error '[0-9a-fA-F]{8}|\[SQL Server\]|ODBC SQL Server Driver|ODBC Driver \d+ for SQL Server|SQLServer JDBC Driver|com\.jnetdirect\.jsql|macromedia\.jdbc\.sqlserver|Zend_Db_(Adapter|Statement)_Sqlsrv_Exception|com\.microsoft\.sqlserver\.jdbc|Pdo[./_\\](Mssql|SqlSrv)|SQL(Srv|Server)Exception|Unclosed quotation mark after the character string",
+                  "mysql": r"SQL syntax.*?MySQL|Warning.*?\Wmysqli?_|MySQLSyntaxErrorException|valid MySQL result|check the manual that (corresponds to|fits) your MySQL server version|Unknown column '[^ ]+' in 'field list'|MySqlClient\.|com\.mysql\.jdbc|Zend_Db_(Adapter|Statement)_Mysqli_Exception|Pdo[./_\\]Mysql|MySqlException|SQLSTATE\[\d+\]: Syntax error or access violation",
+                  "oracle sql": r"\bORA-\d{5}|Oracle error|Oracle.*?Driver|Warning.*?\W(oci|ora)_|quoted string not properly terminated|SQL command not properly ended|macromedia\.jdbc\.oracle|oracle\.jdbc|Zend_Db_(Adapter|Statement)_Oracle_Exception|Pdo[./_\\](Oracle|OCI)|OracleException",
+                  "postgresql": r"PostgreSQL.*?ERROR|Warning.*?\Wpg_|valid PostgreSQL result|Npgsql\.|PG::SyntaxError:|org\.postgresql\.util\.PSQLException|ERROR:\s\ssyntax error at or near|ERROR: parser: parse error at or near|PostgreSQL query failed|org\.postgresql\.jdbc|Pdo[./_\\]Pgsql|PSQLException"}
+
+    for mal in mal_payloads:
+        try:
+            time.sleep(delay)
+            data = text(_ + "/" + mal)
+            status_hits.append(200)
+            for i, j in mal_errors.items():
+                if re.search(j, data):
+                    hits.append(f"found: {i} in url ({_})")
+
+        except HTTPError as error:
+            status_hits.append(error.code)
+
+        except:
+            pass
+
+        try:
+            time.sleep(delay)
+            data = text(_, method = mal, timeout = 120)
+            status_hits.append(200)
+            for i, j in mal_errors.items():
+                if re.search(j, data):
+                    hits.append(f"found: {i} in method ({_})")
+
+        except HTTPError as error:
+            status_hits.append(error.code)
+
+        except:
+            pass
+
+        try:
+            time.sleep(delay)
+            data = text(_, headers = {"Cookie": mal})
+            status_hits.append(200)
+            for i, j in mal_errors.items():
+                if re.search(j, data):
+                    hits.append(f"found: {i} in cookie ({_})")
+
+        except HTTPError as error:
+            status_hits.append(error.code)
+
+        except:
+            pass
+
+        try:
+            time.sleep(delay)
+            data = text(_, headers = {"Referer": mal})
+            status_hits.append(200)
+            for i, j in mal_errors.items():
+                if re.search(j, data):
+                    hits.append(f"found: {i} in referer ({_})")
+
+        except HTTPError as error:
+            status_hits.append(error.code)
+
+        except:
+            pass
+
+        try:
+            time.sleep(delay)
+            data = text(_, headers = {"X-Forwarded-For": mal})
+            status_hits.append(200)
+            for i, j in mal_errors.items():
+                if re.search(j, data):
+                    hits.append(f"found: {i} in x-forwarded-for ({_})")
+
+        except HTTPError as error:
+            status_hits.append(error.code)
+
+        except:
+            pass
+        
+        for form in forms:
+            field_list = []
+            input_field = re.findall(r"<input.+?>",form)
+            try:
+                action_field = re.findall(r"action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                if action_field.startswith("/"):
+                    action = _ + action_field
+
+                elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                    action = _ + "/" + action_field
+
+                else:
+                    action = action_field
+                    
+            except IndexError:
+                pass
+
+            try:
+                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                for in_field in input_field:
+                    if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        
+                        try:
+                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        
+                        except IndexError:
+                            value_field = ""
+                        
+                        if type_field == "submit" or type_field == "hidden":
+                            field_list.append({name_field:value_field})
+
+
+                        if type_field != "submit" and type_field != "hidden":
+                            field_list.append({name_field:mal})
+
+                        field_dict = field_list[0]
+                        for init_field_dict in field_list[1:]:
+                            field_dict.update(init_field_dict)
+
+                        time.sleep(delay)
+
+                        if action and urllib.parse.urlparse(_).netloc in urllib.parse.urlparse(action).netloc:
+                            data = text(action, method = method_field, data = field_dict)
+                            status_hits.append(200)
+                            for i, j in mal_errors.items():
+                                if re.search(j, data):
+                                    hits.append(f"found: {i} in forms ({_})")
+
+                        else:
+                            data = text(_, method = method_field, data = field_dict, timeout = 120)
+                            status_hits.append(200)
+                            for i, j in mal_errors.items():
+                                if re.search(j, data):
+                                    hits.append(f"found: {i} in forms ({_})")
+
+            except HTTPError as error:
+                status_hits.append(error.code)
+
+            except:
+                pass
+
+    if len(hits) > 0:
+        hits = list(dict.fromkeys(hits[:]))
+        return hits, status_hits
+
+    else:
+        return None, status_hits
+    
 # check for reflective xss
 def xss_reflective_scanner(_, delay, mal_xss_reflective, forms):
     hits = []

@@ -5,9 +5,11 @@ import socket
 import sys
 import time
 import urllib.parse
+from urllib.error import HTTPError
 from TheSilent.banner_scanner import *
 from TheSilent.clear import clear
 from TheSilent.evasion import *
+from TheSilent.fingerprint_scanner import *
 from TheSilent.http_scanners import *
 from TheSilent.kitten_crawler import kitten_crawler
 from TheSilent.payloads import *
@@ -69,11 +71,10 @@ def hits_parser(_, delay, scanner, evasion):
             # check for time based bash injection
             time.sleep(delay)
             mal_payloads = bash_time_payloads()
-            
+
             original_payloads = mal_payloads[:]
-            for j in original_payloads:
-                mal_payloads.append(j)
-                if evasion != None:
+            if evasion != None:
+                for j in original_payloads:
                     evade = evasion_parser(j, evasion)
                     for k in evade:
                         mal_payloads.append(k)
@@ -91,9 +92,8 @@ def hits_parser(_, delay, scanner, evasion):
             mal_payloads = emoji_payloads()
 
             original_payloads = mal_payloads[:]
-            for j in original_payloads:
-                mal_payloads.append(j)
-                if evasion != None:
+            if evasion != None:
+                for j in original_payloads:
                     evade = evasion_parser(j, evasion)
                     for k in evade:
                         mal_payloads.append(k)
@@ -111,9 +111,8 @@ def hits_parser(_, delay, scanner, evasion):
             mal_payloads = mssql_time_payloads()
 
             original_payloads = mal_payloads[:]
-            for j in original_payloads:
-                mal_payloads.append(j)
-                if evasion != None:
+            if evasion != None:
+                for j in original_payloads:
                     evade = evasion_parser(j, evasion)
                     for k in evade:
                         mal_payloads.append(k)
@@ -131,9 +130,8 @@ def hits_parser(_, delay, scanner, evasion):
             mal_payloads = mysql_time_payloads()
 
             original_payloads = mal_payloads[:]
-            for j in original_payloads:
-                mal_payloads.append(j)
-                if evasion != None:
+            if evasion != None:
+                for j in original_payloads:
                     evade = evasion_parser(j, evasion)
                     for k in evade:
                         mal_payloads.append(k)
@@ -151,9 +149,8 @@ def hits_parser(_, delay, scanner, evasion):
             mal_payloads = oracle_sql_time_payloads()
 
             original_payloads = mal_payloads[:]
-            for j in original_payloads:
-                mal_payloads.append(j)
-                if evasion != None:
+            if evasion != None:
+                for j in original_payloads:
                     evade = evasion_parser(j, evasion)
                     for k in evade:
                         mal_payloads.append(k)
@@ -171,9 +168,8 @@ def hits_parser(_, delay, scanner, evasion):
             mal_payloads = php_time_payloads()
 
             original_payloads = mal_payloads[:]
-            for j in original_payloads:
-                mal_payloads.append(j)
-                if evasion != None:
+            if evasion != None:
+                for j in original_payloads:
                     evade = evasion_parser(j, evasion)
                     for k in evade:
                         mal_payloads.append(k)
@@ -191,9 +187,8 @@ def hits_parser(_, delay, scanner, evasion):
             mal_payloads = postgresql_time_payloads()
 
             original_payloads = mal_payloads[:]
-            for j in original_payloads:
-                mal_payloads.append(j)
-                if evasion != None:
+            if evasion != None:
+                for j in original_payloads:
                     evade = evasion_parser(j, evasion)
                     for k in evade:
                         mal_payloads.append(k)
@@ -211,9 +206,8 @@ def hits_parser(_, delay, scanner, evasion):
             mal_payloads = powershell_payloads()
 
             original_payloads = mal_payloads[:]
-            for j in original_payloads:
-                mal_payloads.append(j)
-                if evasion != None:
+            if evasion != None:
+                for j in original_payloads:
                     evade = evasion_parser(j, evasion)
                     for k in evade:
                         mal_payloads.append(k)
@@ -231,9 +225,8 @@ def hits_parser(_, delay, scanner, evasion):
             mal_payloads = python_reflective_payloads()
 
             original_payloads = mal_payloads[:]
-            for j in original_payloads:
-                mal_payloads.append(j)
-                if evasion != None:
+            if evasion != None:
+                for j in original_payloads:
                     evade = evasion_parser(j, evasion)
                     for k in evade:
                         mal_payloads.append(k)
@@ -250,9 +243,8 @@ def hits_parser(_, delay, scanner, evasion):
             mal_payloads = python_time_payloads()
 
             original_payloads = mal_payloads[:]
-            for j in original_payloads:
-                mal_payloads.append(j)
-                if evasion != None:
+            if evasion != None:
+                for j in original_payloads:
                     evade = evasion_parser(j, evasion)
                     for k in evade:
                         mal_payloads.append(k)
@@ -264,15 +256,34 @@ def hits_parser(_, delay, scanner, evasion):
             for status_y in status_x:
                 finish.append(status_y)
 
+        if i == "sql_error" or i == "all":
+            # check for sql injection errors
+            time.sleep(delay)
+            mal_payloads = ["'", '"', ",", "*", ";"]
+
+            original_payloads = mal_payloads[:]
+            if evasion != None:
+                for j in original_payloads:
+                    evade = evasion_parser(j, evasion)
+                    for k in evade:
+                        mal_payloads.append(k)
+                    
+            results, status_x = sql_error_scanner(_, delay, mal_payloads, forms)
+            if results != None:
+                for result in results:
+                    hits.append(result)
+
+            for status_y in status_x:
+                finish.append(status_y)
+
         # check for reflective xss
         if i == "xss" or i == "all":
             time.sleep(delay)
             mal_payloads = xss_reflective_payloads()
 
             original_payloads = mal_payloads[:]
-            for j in original_payloads:
-                mal_payloads.append(j)
-                if evasion != None:
+            if evasion != None:
+                for j in original_payloads:
                     evade = evasion_parser(j, evasion)
                     for k in evade:
                         mal_payloads.append(k)
@@ -289,8 +300,7 @@ def hits_parser(_, delay, scanner, evasion):
 def simple():
     parser = argparse.ArgumentParser()
     parser.add_argument("-host", required = True)
-    parser.add_argument("-scanner", required = True, nargs = "+", type = str, choices = ["all", "banner", "bash", "emoji", "fingerprint", "info", "mssql", "mysql", "oracle_sql", "php", "powershell", "python", "xss"])
-    
+    parser.add_argument("-scanner", required = True, nargs = "+", type = str, choices = ["all", "banner", "bash", "emoji", "fingerprint", "info", "mssql", "mysql", "oracle_sql", "php", "powershell", "python", "sql_error", "xss"])  
 
     parser.add_argument("-crawl", default = 1, type = int)
     parser.add_argument("-delay", default = 0, type = float)
@@ -349,39 +359,15 @@ def simple():
 
     # fingerprint server
     if "fingerprint" in args.scanner or "all" in args.scanner:
-        paths = ["favicon.ico"]
-        fingerprint_dict = {"content-keeper": "06c673c63c930a65265e75e32ea49c6095c3628c5f82c8c06181a93a84e7948f",
-                            "proxmox": "f171ad34a7b8fd7ccc8da32e5afdaecf11f7ab1cfbd57adef22620b242c2a6eb"}
-        
         clear()
         print(CYAN + f"fingerprinting: {host}")
+        init_hits, init_status_hits = fingerprint_server(host, args.delay)
 
-        try:
-            http_banner = re.findall(r"server:\s*(.+)", str(getheaders(host)).lower())[0]
-            hits.append(f"http banner: {http_banner}")
+        for hit in init_hits:
+            hits.append(hit)
 
-        except:
-            pass
-
-        path_bool = True
-        for path in paths:
-            try:
-                if not path_bool:
-                    break
-                
-                data = text(host + "/" + path, raw = True)
-                status_hits.append(200)
-                for i, j in fingerprint_dict.items():
-                    if j == hashlib.sha256(data).hexdigest():
-                        hits.append(f"found: {i}")
-                        path_bool = False
-                        break
-
-            except HTTPError as error:
-                status_hits.append(error.code)
-
-            except:
-                pass
+        for hit in init_status_hits:
+            status_hits.append(hit)
 
     # get log info
     if "info" in args.scanner or "all" in args.scanner:
