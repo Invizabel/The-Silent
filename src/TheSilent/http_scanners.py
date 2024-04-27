@@ -171,6 +171,23 @@ def bash_time_scanner(_, delay, mal_bash, forms):
 
     return hits, status_hits
 
+# check for directory traversal
+def directory_traversal_scanner(_, delay, mal_directory):
+    hits = []
+    status_hits  = []
+    for mal in mal_directory:
+        try:
+            text(_ + mal)
+            hits.append(_ + mal)
+            
+        except HTTPError as error:
+            status_hits.append(error.code)
+
+        except:
+            pass
+
+    return hits, status_hits
+
 # check for emoji injection based payload
 def emoji_scanner(_, delay, mal_emoji, forms):
     hits = []

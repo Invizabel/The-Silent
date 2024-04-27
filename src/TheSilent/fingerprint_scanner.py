@@ -1,4 +1,5 @@
 import hashlib
+import socket
 import time
 import re
 from urllib.error import HTTPError
@@ -14,6 +15,8 @@ def fingerprint_server(host, delay):
     fingerprint_favicon_dict = {"content-keeper": "06c673c63c930a65265e75e32ea49c6095c3628c5f82c8c06181a93a84e7948f",
                                 "proxmox": "f171ad34a7b8fd7ccc8da32e5afdaecf11f7ab1cfbd57adef22620b242c2a6eb"}
 
+    hits.append(f"reverse dns: {socket.gethostbyname_ex(urllib.parse.urlparse(host).netloc)}")
+     
     # get headers
     try:
         http_banner = re.findall(r"server:\s*(.+)", str(getheaders(host)).lower())[0]

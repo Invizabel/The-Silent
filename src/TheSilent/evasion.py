@@ -6,7 +6,7 @@ def append_random_string(mal):
     length = random.randint(35, 101)
     random_string = "".join(random.choices(string.ascii_letters + string.digits, k=length))
     
-    return mal + random_string
+    return [mal + random_string]
 
 def directory_self_reference(mal):
     gather = []
@@ -34,7 +34,7 @@ def prepend_random_string(mal):
     length = random.randint(35, 101)
     random_string = "".join(random.choices(string.ascii_letters + string.digits, k=length))
     
-    return random_string + mal
+    return [random_string + mal]
 
 def random_case(mal):
     my_random = ""
@@ -44,7 +44,7 @@ def random_case(mal):
         else:
             my_random += char.lower()
     
-    return my_random
+    return [my_random]
 
 def utf8_encoding(mal):
     gather = []

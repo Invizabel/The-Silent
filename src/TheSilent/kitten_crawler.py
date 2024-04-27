@@ -1,13 +1,11 @@
 import re
 import time
 import urllib.parse
-from TheSilent.clear import clear
 from TheSilent.puppy_requests import text, url
 
 CYAN = "\033[1;36m"
 
 def kitten_crawler(host,delay=0,crawl=1):
-    clear()
     host = host.rstrip("/")
     hits = [host]
     total = []
@@ -57,5 +55,4 @@ def kitten_crawler(host,delay=0,crawl=1):
         except UnicodeDecodeError:
             pass
 
-    clear()
     return results
