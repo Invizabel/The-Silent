@@ -20,7 +20,7 @@ def fingerprint_server(host, delay):
      
     # get headers
     try:
-        http_banner = re.findall(r"server:\s*(.+)", str(getheaders(host)).lower())[0]
+        http_banner = getheaders(host)["server"]
         hits.append(f"http banner: {http_banner}")
 
     except:

@@ -84,25 +84,6 @@ def hits_parser(_, delay, scanner, evasion):
                 
             for status_y in status_x:
                 finish.append(status_y)
-
-        if i == "directory_traversal" or i == "all":
-            # check for time based bash injection
-            time.sleep(delay)
-            mal_payloads = directory_traversal_payloads()
-
-            original_payloads = mal_payloads[:]
-            if evasion != None:
-                for j in original_payloads:
-                    evade = evasion_parser(j, evasion)
-                    for k in evade:
-                        mal_payloads.append(k)
-                    
-            results, status_x = directory_traversal_scanner(_, delay, mal_payloads)
-            for result in results:
-                hits.append(result)
-                
-            for status_y in status_x:
-                finish.append(status_y)
                 
         if i == "emoji" or i == "all":
             # check for reflective emoji injection
@@ -321,7 +302,7 @@ def cobra():
     parser.add_argument("-host", required = True)
     parser.add_argument("-scanner", required = True, nargs = "+", type = str, choices = ["all", "banner", "bash", "directory_traversal", "emoji", "fingerprint", "mssql", "mysql", "oracle_sql", "php", "powershell", "python", "sql_error", "xss"])  
 
-    parser.add_argument("-crawl", default = 1, type = int)
+    parser.add_argument("-crawl", default = True, type = bool)
     parser.add_argument("-delay", default = 0, type = float)
     parser.add_argument("-evasion", nargs = "+", type = str, choices = ["all", "append_random_string", "directory_self_reference", "percent_encoding", "prepend_random_string", "random_case", "utf8_encoding"])
     parser.add_argument("-log", default = False, type = bool)
@@ -331,10 +312,20 @@ def cobra():
     hits = []
     status_hits = []
     host = args.host.rstrip("/")
+
+    # fingerprint server
+    if "fingerprint" in args.scanner or "all" in args.scanner:
+        init_hits, init_status_hits = fingerprint_server(host, args.delay)
+
+        for hit in init_hits:
+            hits.append(hit)
+
+        for hit in init_status_hits:
+            status_hits.append(hit)
             
     # yes crawl
-    if args.crawl > 1:
-        hosts = kitten_crawler(args.host, args.delay, args.crawl)
+    if args.crawl:
+        hosts = kitten_crawler(host)
         for _ in hosts:
             print(CYAN + f"checking: {_}")
             if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(_).netloc:
@@ -346,7 +337,7 @@ def cobra():
                     status_hits.append(i)
                 
     # no crawl
-    elif args.crawl == 1:
+    elif not args.crawl:
         print(CYAN + f"checking: {host}")
         results, init_status_hits = hits_parser(host, args.delay, args.scanner, args.evasion)
         for result in results:
@@ -355,19 +346,24 @@ def cobra():
         for i in init_status_hits:
             status_hits.append(i)
 
-    else:
-        print(RED + f"ERROR! Can't crawl with depth of {args.crawl}")
-        sys.exit()
+    if i == "directory_traversal" or i == "all":
+        # check for directory traversal
+        time.sleep(delay)
+        mal_payloads = directory_traversal_payloads()
 
-    # fingerprint server
-    if "fingerprint" in args.scanner or "all" in args.scanner:
-        init_hits, init_status_hits = fingerprint_server(host, args.delay)
-
-        for hit in init_hits:
-            hits.append(hit)
-
-        for hit in init_status_hits:
-            status_hits.append(hit)
+        original_payloads = mal_payloads[:]
+        if evasion != None:
+            for j in original_payloads:
+                evade = evasion_parser(j, evasion)
+                for k in evade:
+                    mal_payloads.append(k)
+                
+        results, status_x = directory_traversal_scanner(_, delay, mal_payloads)
+        for result in results:
+            hits.append(result)
+            
+        for status_y in status_x:
+            status_results.append(status_y)
 
     hits = list(set(hits[:]))
 
