@@ -275,6 +275,35 @@ def hits_parser(_, delay, scanner, evasion):
             for status_y in status_x:
                 finish.append(status_y)
 
+        # check for waf
+        if i == "waf":
+            evade_options = ["append_random_string",
+                             "directory_self_reference",
+                             "percent_encoding",
+                             "prepend_random_string",
+                             "random_case",
+                             "utf8_encoding"]
+            
+            time.sleep(delay)
+            mal_payloads = waf_payloads()
+
+            mal_payloads = waf_payloads()
+            original_payloads = mal_payloads.copy()
+            for j in original_payloads.items():
+                for k in evade_options:
+                    evade = evasion_parser(j[1], [k])
+                    count = 0
+                    for l in evade:
+                        count += 1
+                        mal_payloads.update({f"{j[0]} {k.replace('_', ' ')} | {count}": l})
+            
+            results, status_x = waf_scanner(_, delay, mal_payloads, forms)
+            for result in results:
+                hits.append(result)
+
+            for status_y in status_x:
+                finish.append(status_y)
+
         # check for reflective xss
         if i == "xss" or i == "all":
             time.sleep(delay)
@@ -300,7 +329,7 @@ def cobra():
     clear()
     parser = argparse.ArgumentParser()
     parser.add_argument("-host", required = True)
-    parser.add_argument("-scanner", required = True, nargs = "+", type = str, choices = ["all", "banner", "bash", "directory_traversal", "emoji", "fingerprint", "mssql", "mysql", "oracle_sql", "php", "powershell", "python", "sql_error", "xss"])  
+    parser.add_argument("-scanner", required = True, nargs = "+", type = str, choices = ["all", "banner", "bash", "directory_traversal", "emoji", "fingerprint", "mssql", "mysql", "oracle_sql", "php", "powershell", "python", "sql_error", "waf", "xss"])
 
     parser.add_argument("-crawl", default = True, type = bool)
     parser.add_argument("-delay", default = 0, type = float)
@@ -346,7 +375,7 @@ def cobra():
         for i in init_status_hits:
             status_hits.append(i)
 
-    if i == "directory_traversal" or i == "all":
+    if args.scanner == "directory_traversal" or args.scanner == "all":
         # check for directory traversal
         time.sleep(delay)
         mal_payloads = directory_traversal_payloads()
@@ -366,6 +395,7 @@ def cobra():
             status_results.append(status_y)
 
     hits = list(set(hits[:]))
+    hits.sort()
 
     status_results = list(set(status_hits[:]))
     status_results.sort()
@@ -421,3 +451,5 @@ def cobra():
         
 if __name__ == "__main__":
     cobra()
+
+

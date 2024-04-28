@@ -2,7 +2,6 @@ import re
 import time
 import urllib.parse
 from urllib.error import HTTPError
-from TheSilent.kitten_crawler import kitten_crawler
 from TheSilent.payloads import *
 from TheSilent.puppy_requests import text
 
@@ -114,24 +113,24 @@ def bash_time_scanner(_, delay, mal_bash, forms):
                 pass
 
             try:
-                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']", form)[0].upper()
                 for in_field in input_field:
                     if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         try:
-                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         except IndexError:
                             value_field = ""
                         
                         if type_field == "submit" or type_field == "hidden":
-                            field_list.append({name_field:value_field})
+                            field_list.append({name_field: value_field})
 
 
                         if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            field_list.append({name_field: mal})
 
                         field_dict = field_list[0]
                         for init_field_dict in field_list[1:]:
@@ -276,24 +275,24 @@ def emoji_scanner(_, delay, mal_emoji, forms):
                 pass
 
             try:
-                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']", form)[0].upper()
                 for in_field in input_field:
                     if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         try:
-                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         except IndexError:
                             value_field = ""
                         
                         if type_field == "submit" or type_field == "hidden":
-                            field_list.append({name_field:value_field})
+                            field_list.append({name_field: value_field})
 
 
                         if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            field_list.append({name_field: mal})
 
                         field_dict = field_list[0]
                         for init_field_dict in field_list[1:]:
@@ -429,24 +428,24 @@ def mssql_time_scanner(_, delay, mal_mssql, forms):
                 pass
 
             try:
-                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']", form)[0].upper()
                 for in_field in input_field:
                     if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         try:
-                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         except IndexError:
                             value_field = ""
                         
                         if type_field == "submit" or type_field == "hidden":
-                            field_list.append({name_field:value_field})
+                            field_list.append({name_field: value_field})
 
 
                         if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            field_list.append({name_field: mal})
 
                         field_dict = field_list[0]
                         for init_field_dict in field_list[1:]:
@@ -592,24 +591,24 @@ def mysql_time_scanner(_, delay, mal_mysql, forms):
                 pass
 
             try:
-                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']", form)[0].upper()
                 for in_field in input_field:
                     if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         try:
-                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         except IndexError:
                             value_field = ""
                         
                         if type_field == "submit" or type_field == "hidden":
-                            field_list.append({name_field:value_field})
+                            field_list.append({name_field: value_field})
 
 
                         if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            field_list.append({name_field: mal})
 
                         field_dict = field_list[0]
                         for init_field_dict in field_list[1:]:
@@ -755,24 +754,24 @@ def oracle_sql_time_scanner(_, delay, mal_oracle_sql, forms):
                 pass
 
             try:
-                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']", form)[0].upper()
                 for in_field in input_field:
                     if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         try:
-                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         except IndexError:
                             value_field = ""
                         
                         if type_field == "submit" or type_field == "hidden":
-                            field_list.append({name_field:value_field})
+                            field_list.append({name_field: value_field})
 
 
                         if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            field_list.append({name_field: mal})
 
                         field_dict = field_list[0]
                         for init_field_dict in field_list[1:]:
@@ -918,24 +917,24 @@ def php_time_scanner(_, delay, mal_php, forms):
                 pass
 
             try:
-                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']", form)[0].upper()
                 for in_field in input_field:
                     if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         try:
-                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         except IndexError:
                             value_field = ""
                         
                         if type_field == "submit" or type_field == "hidden":
-                            field_list.append({name_field:value_field})
+                            field_list.append({name_field: value_field})
 
 
                         if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            field_list.append({name_field: mal})
 
                         field_dict = field_list[0]
                         for init_field_dict in field_list[1:]:
@@ -1081,24 +1080,24 @@ def postgresql_time_scanner(_, delay, mal_postgresql, forms):
                 pass
 
             try:
-                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']", form)[0].upper()
                 for in_field in input_field:
                     if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         try:
-                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         except IndexError:
                             value_field = ""
                         
                         if type_field == "submit" or type_field == "hidden":
-                            field_list.append({name_field:value_field})
+                            field_list.append({name_field: value_field})
 
 
                         if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            field_list.append({name_field: mal})
 
                         field_dict = field_list[0]
                         for init_field_dict in field_list[1:]:
@@ -1244,24 +1243,24 @@ def powershell_scanner(_, delay, mal_powershell, forms):
                 pass
 
             try:
-                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']", form)[0].upper()
                 for in_field in input_field:
                     if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         try:
-                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         except IndexError:
                             value_field = ""
                         
                         if type_field == "submit" or type_field == "hidden":
-                            field_list.append({name_field:value_field})
+                            field_list.append({name_field: value_field})
 
 
                         if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            field_list.append({name_field: mal})
 
                         field_dict = field_list[0]
                         for init_field_dict in field_list[1:]:
@@ -1389,24 +1388,24 @@ def python_reflective_scanner(_, delay, mal_python_reflective, forms):
                 pass
 
             try:
-                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']", form)[0].upper()
                 for in_field in input_field:
                     if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         try:
-                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         except IndexError:
                             value_field = ""
                         
                         if type_field == "submit" or type_field == "hidden":
-                            field_list.append({name_field:value_field})
+                            field_list.append({name_field: value_field})
 
 
                         if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            field_list.append({name_field: mal})
 
                         field_dict = field_list[0]
                         for init_field_dict in field_list[1:]:
@@ -1559,24 +1558,24 @@ def python_time_scanner(_, delay, mal_python_time, forms):
                 pass
 
             try:
-                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']", form)[0].upper()
                 for in_field in input_field:
                     if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         try:
-                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         except IndexError:
                             value_field = ""
                         
                         if type_field == "submit" or type_field == "hidden":
-                            field_list.append({name_field:value_field})
+                            field_list.append({name_field: value_field})
 
 
                         if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            field_list.append({name_field: mal})
 
                         field_dict = field_list[0]
                         for init_field_dict in field_list[1:]:
@@ -1713,24 +1712,24 @@ def sql_error_scanner(_, delay, mal_payloads, forms):
                 pass
 
             try:
-                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']", form)[0].upper()
                 for in_field in input_field:
                     if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         try:
-                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         except IndexError:
                             value_field = ""
                         
                         if type_field == "submit" or type_field == "hidden":
-                            field_list.append({name_field:value_field})
+                            field_list.append({name_field: value_field})
 
 
                         if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            field_list.append({name_field: mal})
 
                         field_dict = field_list[0]
                         for init_field_dict in field_list[1:]:
@@ -1764,7 +1763,151 @@ def sql_error_scanner(_, delay, mal_payloads, forms):
 
     else:
         return None, status_hits
-    
+
+# check for waf
+def waf_scanner(_, delay, mal_waf, forms):
+    hits = []
+    status_hits = []
+    for mal in mal_waf.items():
+        try:
+            time.sleep(delay)
+            data = text(_ + "/" + mal[1])
+            status_hits.append(200)
+            hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in url")
+
+        except HTTPError as error:
+            status_hits.append(error.code)
+
+            if error.code != 403:
+                hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in url")
+            
+        except:
+            pass
+
+        try:
+            time.sleep(delay)
+            data = text(_, method = mal[1], timeout = 120)
+            status_hits.append(200)
+            hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in method")
+
+        except HTTPError as error:
+            status_hits.append(error.code)
+
+            if error.code != 403:
+                hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in method")
+
+        except:
+            pass
+
+        try:
+            time.sleep(delay)
+            data = text(_, headers = {"Cookie": mal[1]})
+            status_hits.append(200)
+            hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in cookie")
+
+        except HTTPError as error:
+            status_hits.append(error.code)
+
+            if error.code != 403:
+                hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in cookie")
+
+        except:
+            pass
+
+        try:
+            time.sleep(delay)
+            data = text(_, headers = {"Referer": mal[1]})
+            status_hits.append(200)
+            hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in referer")
+
+        except HTTPError as error:
+            status_hits.append(error.code)
+
+            if error.code != 403:
+                hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in referer")
+
+        except:
+            pass
+
+        try:
+            time.sleep(delay)
+            data = text(_, headers = {"X-Forwarded-For": mal[1]})
+            status_hits.append(200)
+            hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in x-forwarded-for")
+
+        except HTTPError as error:
+            status_hits.append(error.code)
+
+            if error.code != 403:
+                hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in x-forwarded-for")
+
+        except:
+            pass
+        
+        for form in forms:
+            field_list = []
+            input_field = re.findall(r"<input.+?>",form)
+            try:
+                action_field = re.findall(r"action\s*=\s*[\"\'](\S+)[\"\']",form)[0]
+                if action_field.startswith("/"):
+                    action = _ + action_field
+
+                elif not action_field.startswith("/") and not action_field.startswith("http://") and not action_field.startswith("https://"):
+                    action = _ + "/" + action_field
+
+                else:
+                    action = action_field
+                    
+            except IndexError:
+                pass
+
+            try:
+                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']", form)[0].upper()
+                for in_field in input_field:
+                    if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
+                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        
+                        try:
+                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        
+                        except IndexError:
+                            value_field = ""
+                        
+                        if type_field == "submit" or type_field == "hidden":
+                            field_list.append({name_field: value_field})
+
+
+                        if type_field != "submit" and type_field != "hidden":
+                            field_list.append({name_field: mal[1]})
+
+                        field_dict = field_list[0]
+                        for init_field_dict in field_list[1:]:
+                            field_dict.update(init_field_dict)
+
+                        time.sleep(delay)
+
+                        if action and urllib.parse.urlparse(_).netloc in urllib.parse.urlparse(action).netloc:
+                            data = text(action, method = method_field, data = field_dict)
+                            status_hits.append(200)
+                            hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in forms")
+
+                        else:
+                            data = text(_, method = method_field, data = field_dict, timeout = 120)
+                            status_hits.append(200)
+                            hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in forms")
+
+            except HTTPError as error:
+                status_hits.append(error.code)
+
+                if error.code != 403:
+                    hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in forms")
+
+            except:
+                pass
+
+    return hits, status_hits
+
 # check for reflective xss
 def xss_reflective_scanner(_, delay, mal_xss_reflective, forms):
     hits = []
@@ -1864,24 +2007,24 @@ def xss_reflective_scanner(_, delay, mal_xss_reflective, forms):
                 pass
 
             try:
-                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']",form)[0].upper()
+                method_field = re.findall(r"method\s*=\s*[\"\'](\S+)[\"\']", form)[0].upper()
                 for in_field in input_field:
                     if re.search(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field) and re.search(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field):
-                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
-                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                        name_field = re.findall(r"name\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
+                        type_field = re.findall(r"type\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         try:
-                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']",in_field)[0]
+                            value_field = re.findall(r"value\s*=\s*[\"\'](\S+)[\"\']", in_field)[0]
                         
                         except IndexError:
                             value_field = ""
                         
                         if type_field == "submit" or type_field == "hidden":
-                            field_list.append({name_field:value_field})
+                            field_list.append({name_field: value_field})
 
 
                         if type_field != "submit" and type_field != "hidden":
-                            field_list.append({name_field:mal})
+                            field_list.append({name_field: mal})
 
                         field_dict = field_list[0]
                         for init_field_dict in field_list[1:]:

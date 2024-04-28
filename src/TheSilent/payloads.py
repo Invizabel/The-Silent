@@ -292,6 +292,11 @@ def python_time_payloads():
             r'return HttpResponse(exec("import time\ntime.sleep(60)) #',
             r'return HttpResponse(exec("import os\nos.system(\'sleep 60\')")) #']
 
+def waf_payloads():
+    return {"sleep": "sleep",
+            "sql": "SELECT",
+            "xss": "script"}
+
 def xss_reflective_payloads():
     return [r"<iframe>cobra</iframe>",r"<p>cobra</p>",
             r"<script>alert('cobra')</script>",
