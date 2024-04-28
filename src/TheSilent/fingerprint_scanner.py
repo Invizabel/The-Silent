@@ -2,6 +2,7 @@ import hashlib
 import socket
 import time
 import re
+import urllib.parse
 from urllib.error import HTTPError
 from TheSilent.puppy_requests import text, getheaders
 
