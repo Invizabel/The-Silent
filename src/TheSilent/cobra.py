@@ -361,7 +361,6 @@ def cobra():
 
     # fingerprint server
     if "fingerprint" in args.scanner or "all" in args.scanner:
-        print(CYAN + f"fingerprinting: {host}")
         init_hits, init_status_hits = fingerprint_server(host, args.delay)
 
         for hit in init_hits:
