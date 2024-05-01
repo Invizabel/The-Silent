@@ -17,7 +17,13 @@ def fingerprint_server(host, delay):
                                 "proxmox": "f171ad34a7b8fd7ccc8da32e5afdaecf11f7ab1cfbd57adef22620b242c2a6eb"}
 
     hits.append(f"reverse dns: {socket.gethostbyname_ex(urllib.parse.urlparse(host).netloc)}")
-     
+
+    try:
+        hits.append(f"host info: {socket.gethostaddr(urllib.parse.urlparse(host).netloc)}")
+
+    except:
+        pass
+    
     # get headers
     try:
         http_banner = getheaders(host)["server"]
