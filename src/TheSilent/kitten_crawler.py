@@ -6,7 +6,7 @@ from TheSilent.puppy_requests import text
 
 CYAN = "\033[1;36m"
 
-def kitten_crawler(host, delay = 0, crawl = 1, ethics = True):
+def kitten_crawler(host, delay = 0, crawl = 1, ethics = False):
     host = host.rstrip("/")
 
     try:
