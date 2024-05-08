@@ -1,12 +1,27 @@
 import re
 import time
 import urllib.parse
-from TheSilent.puppy_requests import text, url
+import urllib.robotparser
+from TheSilent.puppy_requests import text
 
 CYAN = "\033[1;36m"
 
-def kitten_crawler(host, delay, crawl):
+def kitten_crawler(host, delay = 0, crawl = 1, ethics = True):
     host = host.rstrip("/")
+
+    try:
+        if len(text(f"{host}/robots.txt")) > 2:
+            rp = urllib.robotparser.RobotFileParser()
+            rp.set_url(f"{host}/robots.txt")
+            rp.read()
+            crawl_all = False
+
+        else:
+            crawl_all = True
+
+    except:
+        crawl_all = True
+        
     hits = [host]
     total = []
     depth = -1
@@ -14,11 +29,19 @@ def kitten_crawler(host, delay, crawl):
         hits = list(dict.fromkeys(hits[:]))
         try:
             if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(hits[depth]).netloc or ".js" in hits[depth]:
-                valid = bytes(hits[depth],"ascii")
-                time.sleep(delay)
-                print(CYAN + hits[depth])
-                data = text(hits[depth])
-                total.append(hits[depth])
+                if ethics and not crawl_all and rp.can_fetch("*", urllib.parse.urlparse(hits[depth]).path) and rp.can_fetch("GPTBot", urllib.parse.urlparse(hits[depth]).path):
+                    valid = bytes(hits[depth],"ascii")
+                    time.sleep(delay)
+                    print(CYAN + f"crawling: {hits[depth]}")
+                    data = text(hits[depth])
+                    total.append(hits[depth])
+
+                elif not ethics or crawl_all:
+                    valid = bytes(hits[depth],"ascii")
+                    time.sleep(delay)
+                    print(CYAN + f"crawling: {hits[depth]}")
+                    data = text(hits[depth])
+                    total.append(hits[depth])
 
         except IndexError:
             break
@@ -27,10 +50,10 @@ def kitten_crawler(host, delay, crawl):
             continue
 
         try:
-            links = re.findall("content\s*=\s*[\"\'](\S+)(?=[\"\'])|href\s*=\s*[\"\'](\S+)(?=[\"\'])|src\s*=\s*[\"\'](\S+)(?=[\"\'])",data.lower())
+            links = re.findall(r"content\s*=\s*[\"\']([\x21-\x7e]+)(?=[\"\'])|href\s*=\s*[\"\']([\x21-\x7e]+)(?=[\"\'])|src\s*=\s*[\"\']([\x21-\x7e]+)(?=[\"\'])", data.lower())
             for link in links:
                 for _ in link:
-                    _ = re.split("[\"\'\<\>\;\{\}\,\(\)]",_)[0]
+                    _ = re.split(r"[\"\'\<\>\;\{\}\,\(\)]",_)[0]
                     if _.startswith("/") and not _.startswith("//"):
                         hits.append(f"{host}{_}".rstrip("/"))
 
@@ -49,10 +72,10 @@ def kitten_crawler(host, delay, crawl):
     for hit in total:
         try:
             if urllib.parse.urlparse(host).netloc in hit:
-                valid = bytes(hit,"ascii")
+                valid = bytes(hit, "ascii")
                 results.append(hit)
 
-        except UnicodeDecodeError:
+        except:
             pass
 
     return results
