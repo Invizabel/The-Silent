@@ -6,7 +6,7 @@ from TheSilent.puppy_requests import text
 
 CYAN = "\033[1;36m"
 
-def kitten_crawler(host, delay = 0, crawl = 1, ethics = False):
+def kitten_crawler(host, delay = 0, crawl = 1, bot = False):
     host = host.rstrip("/")
 
     try:
@@ -29,14 +29,14 @@ def kitten_crawler(host, delay = 0, crawl = 1, ethics = False):
         hits = list(dict.fromkeys(hits[:]))
         try:
             if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(hits[depth]).netloc or ".js" in hits[depth]:
-                if ethics and not crawl_all and rp.can_fetch("*", urllib.parse.urlparse(hits[depth]).path) and rp.can_fetch("GPTBot", urllib.parse.urlparse(hits[depth]).path):
+                if bot and not crawl_all and rp.can_fetch("*", urllib.parse.urlparse(hits[depth]).path) and rp.can_fetch("GPTBot", urllib.parse.urlparse(hits[depth]).path):
                     valid = bytes(hits[depth],"ascii")
                     time.sleep(delay)
                     print(CYAN + f"crawling: {hits[depth]}")
                     data = text(hits[depth])
                     total.append(hits[depth])
 
-                elif not ethics or crawl_all:
+                elif not bot or crawl_all:
                     valid = bytes(hits[depth],"ascii")
                     time.sleep(delay)
                     print(CYAN + f"crawling: {hits[depth]}")

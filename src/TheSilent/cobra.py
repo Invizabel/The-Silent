@@ -18,7 +18,7 @@ def cobra():
     parser.add_argument("-host", required = True)
     parser.add_argument("-scanner", required = True, nargs = "+", type = str, choices = ["all", "banner", "bash", "directory_traversal", "emoji", "fingerprint", "mssql", "mysql", "oracle_sql", "php", "powershell", "python", "sql_error", "waf", "xss"])
 
-    parser.add_argument("-crawl", default = 1, type = int)
+    parser.add_argument("-crawl", default = 1, help = "enter bot for robots.txt or a number for crawl length of x")
     parser.add_argument("-delay", default = 0, type = float)
     parser.add_argument("-evasion", nargs = "+", type = str, choices = ["all", "append_random_string", "directory_self_reference", "percent_encoding", "prepend_random_string", "random_case", "utf8_encoding"])
     parser.add_argument("-log", default = False, type = bool)
@@ -38,22 +38,12 @@ def cobra():
 
         for hit in init_status_hits:
             status_hits.append(hit)
-            
-    # yes crawl
-    if args.crawl > 1:
+
+    # yes crawl robots.txt
+    if args.crawl == "bot":
         hosts = []
-        hosts.append(f"{host}/admin")
-        hosts.append(f"{host}/login")
-        hosts.append(f"{host}/signin")
-        hosts.append(f"{host}/signup")
-        hosts.append(f"{host}/search")
 
-        new_hosts = kitten_crawler(host, args.delay, args.crawl)
-
-        for i in new_hosts:
-            hosts.append(i)
-
-        hosts = list(dict.fromkeys(hosts))
+        hosts = kitten_crawler(host, args.delay, 1000, True)
 
         for _ in hosts:
             print(CYAN + f"checking: {_}")
@@ -64,20 +54,36 @@ def cobra():
 
                 for i in init_status_hits:
                     status_hits.append(i)
-                
-    # no crawl
-    elif args.crawl == 1:
-        print(CYAN + f"checking: {host}")
-        results, init_status_hits = hits_parser(host, args.delay, args.scanner, args.evasion)
-        for result in results:
-            hits.append(result)
 
-        for i in init_status_hits:
-            status_hits.append(i)
+    # yes crawl length of x
+    elif not args.crawl == "bot":
+        if args.crawl > 1:
+            hosts = []
 
-    elif args.crawl < 1:
-        print(RED + "invalid crawl distance")
-        sys.exit()
+            hosts = kitten_crawler(host, args.delay, args.crawl)
+
+            for _ in hosts:
+                print(CYAN + f"checking: {_}")
+                if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(_).netloc:
+                    results, init_status_hits = hits_parser(_, args.delay, args.scanner, args.evasion)
+                    for result in results:
+                        hits.append(result)
+
+                    for i in init_status_hits:
+                        status_hits.append(i)  
+        # no crawl
+        elif args.crawl == 1:
+            print(CYAN + f"checking: {host}")
+            results, init_status_hits = hits_parser(host, args.delay, args.scanner, args.evasion)
+            for result in results:
+                hits.append(result)
+
+            for i in init_status_hits:
+                status_hits.append(i)
+
+        elif args.crawl < 1:
+            print(RED + "invalid crawl distance")
+            sys.exit()
 
     if args.scanner == "directory_traversal" or args.scanner == "all":
         # check for directory traversal
