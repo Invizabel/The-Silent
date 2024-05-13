@@ -1773,13 +1773,13 @@ def waf_scanner(_, delay, mal_waf, forms):
             time.sleep(delay)
             data = text(_ + "/" + mal[1])
             status_hits.append(200)
-            hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in url")
+            hits.append(re.sub(r"\\s\\d", "", mal[0]) + " injection possible in url")
 
         except HTTPError as error:
             status_hits.append(error.code)
 
             if error.code != 403:
-                hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in url")
+                hits.append(re.sub(r"\\s\\d", "", mal[0]) + " injection possible in url")
             
         except:
             pass
@@ -1788,13 +1788,13 @@ def waf_scanner(_, delay, mal_waf, forms):
             time.sleep(delay)
             data = text(_, method = mal[1], timeout = 120)
             status_hits.append(200)
-            hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in method")
+            hits.append(re.sub(r"\\s\\d", "", mal[0]) + " injection possible in method")
 
         except HTTPError as error:
             status_hits.append(error.code)
 
             if error.code != 403:
-                hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in method")
+                hits.append(re.sub(r"\\s\\d", "", mal[0]) + " injection possible in method")
 
         except:
             pass
@@ -1803,13 +1803,13 @@ def waf_scanner(_, delay, mal_waf, forms):
             time.sleep(delay)
             data = text(_, headers = {"Cookie": mal[1]})
             status_hits.append(200)
-            hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in cookie")
+            hits.append(re.sub(r"\\s\\d", "", mal[0]) + " injection possible in cookie")
 
         except HTTPError as error:
             status_hits.append(error.code)
 
             if error.code != 403:
-                hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in cookie")
+                hits.append(re.sub(r"\\s\\d", "", mal[0]) + " injection possible in cookie")
 
         except:
             pass
@@ -1818,13 +1818,13 @@ def waf_scanner(_, delay, mal_waf, forms):
             time.sleep(delay)
             data = text(_, headers = {"Referer": mal[1]})
             status_hits.append(200)
-            hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in referer")
+            hits.append(re.sub(r"\\s\\d", "", mal[0]) + " injection possible in referer")
 
         except HTTPError as error:
             status_hits.append(error.code)
 
             if error.code != 403:
-                hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in referer")
+                hits.append(re.sub(r"\\s\\d", "", mal[0]) + " injection possible in referer")
 
         except:
             pass
@@ -1833,13 +1833,13 @@ def waf_scanner(_, delay, mal_waf, forms):
             time.sleep(delay)
             data = text(_, headers = {"X-Forwarded-For": mal[1]})
             status_hits.append(200)
-            hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in x-forwarded-for")
+            hits.append(re.sub(r"\\s\\d", "", mal[0]) + " injection possible in x-forwarded-for")
 
         except HTTPError as error:
             status_hits.append(error.code)
 
             if error.code != 403:
-                hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in x-forwarded-for")
+                hits.append(re.sub(r"\\s\\d", "", mal[0]) + " injection possible in x-forwarded-for")
 
         except:
             pass
@@ -1890,18 +1890,18 @@ def waf_scanner(_, delay, mal_waf, forms):
                         if action and urllib.parse.urlparse(_).netloc in urllib.parse.urlparse(action).netloc:
                             data = text(action, method = method_field, data = field_dict)
                             status_hits.append(200)
-                            hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in forms")
+                            hits.append(re.sub(r"\\s\\d", "", mal[0]) + " injection possible in forms")
 
                         else:
                             data = text(_, method = method_field, data = field_dict, timeout = 120)
                             status_hits.append(200)
-                            hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in forms")
+                            hits.append(re.sub(r"\\s\\d", "", mal[0]) + " injection possible in forms")
 
             except HTTPError as error:
                 status_hits.append(error.code)
 
                 if error.code != 403:
-                    hits.append(f"{re.sub(r'\s\d', '', mal[0])} injection possible in forms")
+                    hits.append(re.sub(r"\\s\\d", "", mal[0]) + " injection possible in forms")
 
             except:
                 pass
