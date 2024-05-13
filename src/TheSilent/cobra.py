@@ -41,12 +41,20 @@ def cobra():
             
     # yes crawl
     if args.crawl > 1:
-        hosts = kitten_crawler(host, args.delay, args.crawl)
+        hosts = []
         hosts.append(f"{host}/admin")
         hosts.append(f"{host}/login")
         hosts.append(f"{host}/signin")
         hosts.append(f"{host}/signup")
         hosts.append(f"{host}/search")
+
+        new_hosts = kitten_crawler(host, args.delay, args.crawl)
+
+        for i in new_hosts:
+            hosts.append(i)
+
+        hosts = list(dict.fromkeys(hosts))
+
         for _ in hosts:
             print(CYAN + f"checking: {_}")
             if urllib.parse.urlparse(host).netloc in urllib.parse.urlparse(_).netloc:
