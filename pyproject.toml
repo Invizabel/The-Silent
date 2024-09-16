@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "TheSilent"
-version = "0.0.989"
+version = "0.0.991"
 authors = [
-  { name="Michael Mueller"},
+  { name="Invizabel"},
 ]
-description = "TheSilent contains free and open source hacking and osint tools!"
+description = "TheSilent is an active dns enumeration tool!"
 readme = "README.md"
 license = { file="LICENSE.txt" }
 requires-python = ">=3.8"
