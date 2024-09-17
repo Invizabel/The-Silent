@@ -13,6 +13,7 @@ def TheSilent():
     clear()
     parser = argparse.ArgumentParser()
     parser.add_argument("-host", required = True, type = str, help = "host to scan | string")
+    parser.add_argument("-filename", required = False, type = str, help = "file name to output results as json | string")
     args = parser.parse_args()
 
     context = ssl.create_default_context()
@@ -111,25 +112,14 @@ def TheSilent():
         hits.update({hosts[count]: results})
         
     clear()
-    
-    print(f"{RED}{json.dumps(hits, indent = 4, sort_keys = True)}")
-    
-    if os.path.exists("output.json"):
-        with open("output.json", "r") as json_file:
-            data = json_file.read()
 
-        if len(data) > 0:
-            data = json.loads(data)
-            hits = json.dumps({**data, **hits}, indent = 4, sort_keys = True)
+    hits = json.dumps(hits, indent = 4, sort_keys = True)
 
-        else:
-            hits = json.dumps(hits, indent = 4, sort_keys = True)
+    if args.filename:
+        with open(f"{args.filename}.json", "w") as json_file:
+            json_file.write(hits)
 
-    else:
-        hits = json.dumps(hits, indent = 4, sort_keys = True)
-    
-    with open("output.json", "w") as json_file:
-        json_file.write(hits)
+    print(f"{RED}{hits}")
 
 if __name__ == "__main__":
     TheSilent()
