@@ -1,6 +1,5 @@
 import argparse
 import json
-import os
 import ssl
 import socket
 from clear import clear
@@ -80,27 +79,6 @@ def TheSilent():
         except:
             pass
 
-        try:
-            # get info on host
-            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            tcp_socket.settimeout(10)
-            tcp_socket.connect((hosts[count], 1))
-            tcp_socket.close()
-
-            host_status = "honeypot likely"
-
-        except ConnectionRefusedError:
-            host_status = "host is up"
-
-        except TimeoutError:
-            host_status = "firewall or proxy likely"
-
-        except socket.gaierror:
-            host_status = "host is down"
-
-        except:
-            host_status = "an error has occured"
-
         json_data = list(dict.fromkeys(json_data[:]))
         json_data.sort()
         for i in json_data:
@@ -108,7 +86,6 @@ def TheSilent():
 
         results = {}
         results.update({"RELATIONSHIPS": json_data})
-        results.update({"STATUS": host_status})
         hits.update({hosts[count]: results})
         
     clear()
