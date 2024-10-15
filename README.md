@@ -1,1 +1,1 @@
-﻿# TheSilent contains free and open source hacking and osint tools!
+﻿# TheSilent is an active dns enumeration tool!
