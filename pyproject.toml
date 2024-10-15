@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "TheSilent"
-version = "0.0.994"
+version = "0.0.995"
 authors = [
   { name="Invizabel"},
 ]
-description = "TheSilent is an active dns enumeration tool!"
+description = "TheSilent is an active dns enumeration tool and web server misconfiguration vulnerability scanner!"
 readme = "README.md"
 license = { file="LICENSE.txt" }
 requires-python = ">=3.8"
