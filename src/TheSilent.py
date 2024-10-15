@@ -111,7 +111,7 @@ def TheSilent():
                         details.update({i: True})
 
                     except:
-                        details.update({i: True})
+                        details.update({i: False})
 
             if ssl_support:
                 try:
