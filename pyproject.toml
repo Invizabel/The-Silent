@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "TheSilent"
-version = "0.0.997"
+version = "0.0.998"
 authors = [
   { name="Invizabel"},
 ]
-description = "TheSilent is an active dns enumeration tool!"
+description = "TheSilent is a basic vulnerabilty scanner!"
 readme = "README.md"
 license = { file="LICENSE.txt" }
 requires-python = ">=3.8"
@@ -24,3 +24,4 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/Invizabel/The-Silent"
 "Bug Tracker" = "https://github.com/Invizabel/The-Silent/issues"
+

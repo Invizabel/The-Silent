@@ -1,1 +1,1 @@
-﻿# TheSilent is an active dns enumeration tool!
+﻿# TheSilent is a basic vulnerabilty scanner!
