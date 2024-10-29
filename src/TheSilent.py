@@ -1,127 +1,111 @@
 import argparse
-import ftplib
-import http.cookiejar
+import json
+import ssl
 import socket
-import urllib.request
 from clear import clear
 
 CYAN = "\033[1;36m"
 GREEN = "\033[0;32m"
 RED = "\033[1;31m"
 
-fake_headers = {"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-                "Accept-Language": "en-US,en;q=0.5",
-                "Accept-Encoding": "gzip, deflate",
-                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0",
-                "UPGRADE-INSECURE-REQUESTS": "1"}
-
-cookie_jar = http.cookiejar.CookieJar()
-cookie_handler = urllib.request.HTTPCookieProcessor(cookie_jar)
-opener = urllib.request.build_opener(cookie_handler)
-urllib.request.install_opener(opener)
-
 def TheSilent():
     clear()
-
     parser = argparse.ArgumentParser()
-    parser.add_argument("-host", required = True)
+    parser.add_argument("-host", required = True, type = str, help = "host to scan | string")
+    parser.add_argument("-filename", required = False, type = str, help = "file to output | string")
     args = parser.parse_args()
 
-    hits = []
-
-    methods = ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"]
-
-    print(f"{CYAN}checking: {args.host}")
-
-    dns = socket.getfqdn(args.host)
-    print(f"{RED}FQDN {dns}")
+    context = ssl.create_default_context()
+    count = -1
+    hits = {}
+    hosts = [args.host]
     
-    try:
-        ftp_client = ftplib.FTP(args.host, timeout = 10)
-        ftp_client.login()
-        ftp_client.quit()
-        print(f"{RED}ANONYMOUS FTP ALLOWED")
-
-    except:
-        pass
-
-    try:
-        ftp_client = ftplib.FTP_TLS(args.host, timeout = 10)
-        ftp_client.login()
-        ftp_client.quit()
-        print(f"{RED}ANONYMOUS FTP TLS ALLOWED")
-
-    except:
-        pass
-
-    ssl_support = False
-    try:
-        simple_request = urllib.request.Request(f"https://{args.host}", headers = fake_headers, unverifiable = True, method = "GET")
-        simple_response = opener.open(simple_request, timeout = 10)
-        ssl_support = True
-
-    except:
-        pass
-
-    if ssl_support:
+    while True:
+        count += 1
         try:
-            simple_request = urllib.request.Request(f"https://{args.host}", headers = fake_headers, unverifiable = True, method = "GET")
-            simple_response = opener.open(simple_request, timeout = 10).headers
-            banner = simple_response["server"]
-            print(f"{RED}WEB BANNER {banner}")
+            json_data = []
+            hosts = list(dict.fromkeys(hosts[:]))
+            print(f"{CYAN}checking: {GREEN}{hosts[count]}")
+
+            # fqdn
+            fqdn = socket.getfqdn(hosts[count])
+            json_data.append(fqdn)
+
+            # dns
+            dns = socket.gethostbyname_ex(hosts[count])
+            json_data.append(dns[0])
+            for i in dns[1]:
+                json_data.append(i)
+            for i in dns[2]:
+                json_data.append(i)
+
+            # reverse dns
+            reverse_dns = socket.gethostbyaddr(hosts[count])
+            json_data.append(reverse_dns[0])
+            for i in reverse_dns[1]:
+                json_data.append(i)
+            for i in reverse_dns[2]:
+                json_data.append(i)
+
+        except IndexError:
+            break
 
         except:
             pass
 
-    else:
         try:
-            simple_request = urllib.request.Request(f"http://{args.host}", headers = fake_headers, unverifiable = True, method = "GET")
-            simple_response = opener.open(simple_request, timeout = 10).headers
-            banner = simple_response["server"]
-            print(f"{RED}WEB BANNER {banner}")
+            # ssl cert dns
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(10)
+            tcp_socket.connect((hosts[count], 443))
+            ssl_socket = context.wrap_socket(tcp_socket, server_hostname = hosts[count])
+            cert = ssl_socket.getpeercert()
+            tcp_socket.close()
+            for dns_cert in cert["subject"]:
+                if "commonName" in dns_cert[0]:
+                    json_data.append(dns_cert[1].replace("*.", ""))
 
         except:
             pass
 
-    for i in methods:
-        if ssl_support:
-            try:
-                simple_request = urllib.request.Request(f"https://{args.host}", headers = fake_headers, unverifiable = True, method = i)
-                simple_response = opener.open(simple_request, timeout = 10)
-                print(f"{RED}{i} METHOD ALLOWED")
-
-            except:
-                pass
-
-        else:
-            try:
-                simple_request = urllib.request.Request(f"http://{args.host}", headers = fake_headers, unverifiable = True, method = i)
-                simple_response = opener.open(simple_request, timeout = 10)
-                print(f"{RED}{i} METHOD ALLOWED")
-                
-            except:
-                pass
-
-    if ssl_support:
         try:
-            simple_request = urllib.request.Request(f"https://{args.host}", headers = fake_headers, unverifiable = True, method = "*")
-            simple_response = opener.open(simple_request, timeout = 10)
-            print(f"{RED}ANY METHOD ALLOWED")
+            # ssl cert dns
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(10)
+            tcp_socket.connect((hosts[count], 443))
+            ssl_socket = context.wrap_socket(tcp_socket, server_hostname = hosts[count])
+            cert = ssl_socket.getpeercert()
+            tcp_socket.close()    
+            for dns_cert in cert["subjectAltName"]:
+                if "DNS" in dns_cert[0]:
+                    json_data.append(dns_cert[1].replace("*.", ""))
 
         except:
             pass
+        
+        json_data = list(dict.fromkeys(json_data[:]))
+        json_data.sort()
+        for i in json_data:
+            hosts.append(i)
 
-    else:
-        try:
-            simple_request = urllib.request.Request(f"http://{args.host}", headers = fake_headers, unverifiable = True, method = "*")
-            simple_response = opener.open(simple_request, timeout = 10)
-            print(f"{RED}ANY METHOD ALLOWED")
+        results = {}
+        results.update({"RELATIONSHIPS": json_data})
+        hits.update({hosts[count]: results})
+        
+        
+    clear()
 
-        except:
-            pass
+    hits = json.dumps(hits, indent = 4, sort_keys = True)
+
+    if args.filename:
+        with open(f"{args.filename}.json", "w") as json_file:
+            json_file.write(hits)
+
+        with open(f"{args.filename}.txt", "w") as text_file:
+            for line in json.loads(hits).keys():
+                text_file.write(f"{line}\n")
+
+    print(f"{RED}{hits}")
 
 if __name__ == "__main__":
-
     TheSilent()
-
-
