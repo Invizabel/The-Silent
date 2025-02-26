@@ -1,111 +1,23 @@
-import argparse
-import json
-import ssl
-import socket
-from clear import clear
+import re
 
-CYAN = "\033[1;36m"
-GREEN = "\033[0;32m"
-RED = "\033[1;31m"
-
-def TheSilent():
-    clear()
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-host", required = True, type = str, help = "host to scan | string")
-    parser.add_argument("-filename", required = False, type = str, help = "file to output | string")
-    args = parser.parse_args()
-
-    context = ssl.create_default_context()
-    count = -1
-    hits = {}
-    hosts = [args.host]
-    
-    while True:
-        count += 1
-        try:
-            json_data = []
-            hosts = list(dict.fromkeys(hosts[:]))
-            print(f"{CYAN}checking: {GREEN}{hosts[count]}")
-
-            # fqdn
-            fqdn = socket.getfqdn(hosts[count])
-            json_data.append(fqdn)
-
-            # dns
-            dns = socket.gethostbyname_ex(hosts[count])
-            json_data.append(dns[0])
-            for i in dns[1]:
-                json_data.append(i)
-            for i in dns[2]:
-                json_data.append(i)
-
-            # reverse dns
-            reverse_dns = socket.gethostbyaddr(hosts[count])
-            json_data.append(reverse_dns[0])
-            for i in reverse_dns[1]:
-                json_data.append(i)
-            for i in reverse_dns[2]:
-                json_data.append(i)
-
-        except IndexError:
-            break
-
-        except:
-            pass
-
-        try:
-            # ssl cert dns
-            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            tcp_socket.settimeout(10)
-            tcp_socket.connect((hosts[count], 443))
-            ssl_socket = context.wrap_socket(tcp_socket, server_hostname = hosts[count])
-            cert = ssl_socket.getpeercert()
-            tcp_socket.close()
-            for dns_cert in cert["subject"]:
-                if "commonName" in dns_cert[0]:
-                    json_data.append(dns_cert[1].replace("*.", ""))
-
-        except:
-            pass
-
-        try:
-            # ssl cert dns
-            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            tcp_socket.settimeout(10)
-            tcp_socket.connect((hosts[count], 443))
-            ssl_socket = context.wrap_socket(tcp_socket, server_hostname = hosts[count])
-            cert = ssl_socket.getpeercert()
-            tcp_socket.close()    
-            for dns_cert in cert["subjectAltName"]:
-                if "DNS" in dns_cert[0]:
-                    json_data.append(dns_cert[1].replace("*.", ""))
-
-        except:
-            pass
-        
-        json_data = list(dict.fromkeys(json_data[:]))
-        json_data.sort()
-        for i in json_data:
-            hosts.append(i)
-
-        results = {}
-        results.update({"RELATIONSHIPS": json_data})
-        hits.update({hosts[count]: results})
-        
-        
-    clear()
-
-    hits = json.dumps(hits, indent = 4, sort_keys = True)
-
-    if args.filename:
-        with open(f"{args.filename}.json", "w") as json_file:
-            json_file.write(hits)
-
-        with open(f"{args.filename}.txt", "w") as text_file:
-            for line in json.loads(hits).keys():
-                text_file.write(f"{line}\n")
-
-    print(f"{RED}{hits}")
-
-if __name__ == "__main__":
-    TheSilent()
+class TheSilent:
+    def __init__(self,content):
+        self.content = content
+    def api(self):
+        return dict((key,value) for key,value in {"dsa_private_key":list(dict.fromkeys(re.findall(r"-----BEGIN DSA PRIVATE KEY-----[\s\S]+-----END DSA PRIVATE KEY-----",self.content))),"ec_private_key":list(dict.fromkeys(re.findall(r"-----BEGIN EC PRIVATE KEY-----[\s\S]+-----END EC PRIVATE KEY-----",self.content))),"pgp_private_key":list(dict.fromkeys(re.findall(r"-----BEGIN PGP PRIVATE KEY BLOCK-----[\s\S]+-----END PGP PRIVATE KEY-----",self.content))),"pypi_api":list(dict.fromkeys(re.findall(r"pypi-[a-zA-Z0-9-_]{85,}",self.content))),"rsa_private_key":list(dict.fromkeys(re.findall(r"-----BEGIN RSA PRIVATE KEY-----[\s\S]+-----END RSA PRIVATE KEY-----",self.content))),"tailscale_api":list(dict.fromkeys(re.findall(r"tskey-api-[a-zA-Z0-9]+|tskey-auth-[a-zA-Z0-9]+|tskey-client-[a-zA-Z0-9]+|tskey-scim-[a-zA-Z0-9]+|tskey-webhook-[a-zA-Z0-9]+",self.content)))}.items() if value)
+    def classified(self):
+        return True if re.search("not for public release",self.content.lower()) else False
+    def email(self):
+        return [i.rstrip(".") for i in list(dict.fromkeys(re.findall(r"[a-z0-9\.]+@[a-z][a-z0-9]+\.[a-z0-9]+[a-z0-9\.]|[a-z0-9\.]+[\(\{\[\<]at[\)\}\]|>][a-z][a-z0-9]+\.[a-z0-9]+[a-z0-9\.]",self.content)))]
+    def ipaddress(self):
+        return list(dict.fromkeys(re.findall(r"\b(10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3})\b",self.content)))
+    def ipcamera(self):
+        return True if re.search(r"camera live image|webcamxp \d",self.content.lower()) else False
+    def links(self):
+        return [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"<.+href=[\"\'](\S+?)(?=[\"\'\\])",self.content)))] + [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"<.+src=[\"\'](\S+?)(?=[\"\'\\])",self.content)))]
+    def phone(self):
+        return list(dict.fromkeys(re.findall(r"tel:\+?\d{10,11}|\(\d{3}\)-\d{3}-\d{4}|\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4}",self.content)))
+    def ssn(self):
+        return list(dict.fromkeys(re.findall(r"(?!000|666)[0-8]\d{2}-(?!00)\d{2}-(?!0000)\d{4}",self.content)))
+    def subnet(self):
+        return list(dict.fromkeys(re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}",self.content)))
