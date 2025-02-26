@@ -8,7 +8,7 @@ class TheSilent:
     def classified(self):
         return True if re.search("not for public release",self.content.lower()) else False
     def email(self):
-        return [i.rstrip(".") for i in list(dict.fromkeys(re.findall(r"[a-z0-9\.]+@[a-z][a-z0-9]+\.[a-z0-9]+[a-z0-9\.]|[a-z0-9\.]+[\(\{\[\<]at[\)\}\]|>][a-z][a-z0-9]+\.[a-z0-9]+[a-z0-9\.]",self.content)))]
+        return [i.rstrip(".") for i in list(dict.fromkeys(re.findall(r"[a-z0-9\.]+@[a-z][a-z0-9]+\.[a-z0-9]+[a-z0-9\.]+|[a-z0-9\.]+[\(\{\[\<]at[\)\}\]|>][a-z][a-z0-9]+\.[a-z0-9]+[a-z0-9\.]+",self.content)))]
     def ipaddress(self):
         return list(dict.fromkeys(re.findall(r"\b(10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3})\b",self.content)))
     def ipcamera(self):
