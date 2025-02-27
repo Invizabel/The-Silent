@@ -14,10 +14,12 @@ class TheSilent:
     def ipcamera(self):
         return True if re.search(r"camera live image|webcamxp \d",self.content.lower()) else False
     def links(self):
-        return [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"<.+href=[\"\'](\S+?)(?=[\"\'\\])",self.content)))] + [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"<.+src=[\"\'](\S+?)(?=[\"\'\\])",self.content)))]
+        return [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"<.+href\s*=\s*[\"\'](\S+?)(?=[\"\'\\])",self.content)))] + [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"<.+src\s*=\s*[\"\'](\S+?)(?=[\"\'\\])",self.content)))]
     def phone(self):
         return list(dict.fromkeys(re.findall(r"tel:\+?\d{10,11}|\(\d{3}\)-\d{3}-\d{4}|\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4}",self.content)))
     def ssn(self):
         return list(dict.fromkeys(re.findall(r"(?!000|666)[0-8]\d{2}-(?!00)\d{2}-(?!0000)\d{4}",self.content)))
     def subnet(self):
         return list(dict.fromkeys(re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}",self.content)))
+    def webforms(self):
+        return [{f"METHOD":re.findall(r"method\s*=\s*[\"\'](\S+?)(?=[\"\'\\])",value)[0].upper(),f"ACTION": re.findall(r"action\s*=\s*[\"\'](\S+?)(?=[\"\'\\])", value)[0],f"INPUT": [re.findall(r"\b(?:type|name|value)\s*=\s*[\"\']([^\"\']+)[\"\']", field) for field in re.findall(r"<input[^>]+>", value)]}for key,value in enumerate(list(dict.fromkeys(re.findall(r"<form[\S\s\n]+?(?=form>)", self.content))))]
