@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "TheSilent"
-version = "0.1.5"
+version = "0.1.7"
 authors = [
   { name="Invizabel"},
 ]
-description = "TheSilent is an sensitive info/pii parser!"
+description = "TheSilent is an string parser!"
 readme = "README.md"
 license = { file="LICENSE.txt" }
 requires-python = ">=3.8"

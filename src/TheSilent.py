@@ -1,8 +1,11 @@
 import re
+import string
 
 class TheSilent:
     def __init__(self,content):
         self.content = content
+    def all_text(self):
+        return [i.encode("ascii",errors="ignore").decode().strip() for i in list(dict.fromkeys(re.findall(r">(?!<)(.+?)(?=<)",self.content)))]
     def api(self):
         return dict((key,value) for key,value in {"dsa_private_key":list(dict.fromkeys(re.findall(r"-----BEGIN DSA PRIVATE KEY-----[\s\S]+-----END DSA PRIVATE KEY-----",self.content))),"ec_private_key":list(dict.fromkeys(re.findall(r"-----BEGIN EC PRIVATE KEY-----[\s\S]+-----END EC PRIVATE KEY-----",self.content))),"pgp_private_key":list(dict.fromkeys(re.findall(r"-----BEGIN PGP PRIVATE KEY BLOCK-----[\s\S]+-----END PGP PRIVATE KEY-----",self.content))),"pypi_api":list(dict.fromkeys(re.findall(r"pypi-[a-zA-Z0-9-_]{85,}",self.content))),"rsa_private_key":list(dict.fromkeys(re.findall(r"-----BEGIN RSA PRIVATE KEY-----[\s\S]+-----END RSA PRIVATE KEY-----",self.content))),"tailscale_api":list(dict.fromkeys(re.findall(r"tskey-api-[a-zA-Z0-9]+|tskey-auth-[a-zA-Z0-9]+|tskey-client-[a-zA-Z0-9]+|tskey-scim-[a-zA-Z0-9]+|tskey-webhook-[a-zA-Z0-9]+",self.content)))}.items() if value)
     def classified(self):

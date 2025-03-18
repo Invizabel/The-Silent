@@ -1,8 +1,9 @@
-﻿# TheSilent is a string parser
+﻿# TheSilent is a string parser!
 #
 # Documentation:
 # import TheSilent
 # ts = TheSilent.TheSilent("some text")
+# print(ts.all_text())
 # print(ts.api())
 # print(ts.classified())
 # print(ts.email())
