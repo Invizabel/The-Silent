@@ -17,7 +17,7 @@ class TheSilent:
     def ipcamera(self):
         return True if re.search(r"camera live image|webcamxp \d",self.content.lower()) else False
     def links(self):
-        return [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"href\s*=\s*[\"\'](\S+?)(?=[\"\'\\])",self.content)))] + [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"src\s*=\s*[\"\'](\S+?)(?=[\"\'\\])",self.content)))]
+        return [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"(?:href|src|action|data|cite|poster|content|background|profile|manifest|srcset|ping)\s*=\s*[\"'](\S+?)(?=[\"'\\])",self.content)))] + [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"src\s*=\s*[\"\'](\S+?)(?=[\"\'\\])",self.content)))]
     def phone(self):
         return list(dict.fromkeys(re.findall(r"tel:\+?\d{10,11}|\(\d{3}\)-\d{3}-\d{4}|\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4}",self.content)))
     def ssn(self):
