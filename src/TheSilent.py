@@ -1,28 +1,105 @@
+import argparse
+import asyncio
+import http.cookiejar
 import re
-import string
+import urllib.parse
+import urllib.request
+from clear import clear
 
-class TheSilent:
-    def __init__(self,content):
-        self.content = content
-    def all_text(self):
-        return [i.encode("ascii",errors="ignore").decode().strip() for i in list(dict.fromkeys(re.findall(r">(?!<)(.+?)(?=<)",self.content)))]
-    def api(self):
-        return dict((key,value) for key,value in {"dsa_private_key":list(dict.fromkeys(re.findall(r"-----BEGIN DSA PRIVATE KEY-----[\s\S]+-----END DSA PRIVATE KEY-----",self.content))),"ec_private_key":list(dict.fromkeys(re.findall(r"-----BEGIN EC PRIVATE KEY-----[\s\S]+-----END EC PRIVATE KEY-----",self.content))),"pgp_private_key":list(dict.fromkeys(re.findall(r"-----BEGIN PGP PRIVATE KEY BLOCK-----[\s\S]+-----END PGP PRIVATE KEY-----",self.content))),"pypi_api":list(dict.fromkeys(re.findall(r"pypi-[a-zA-Z0-9-_]{85,}",self.content))),"rsa_private_key":list(dict.fromkeys(re.findall(r"-----BEGIN RSA PRIVATE KEY-----[\s\S]+-----END RSA PRIVATE KEY-----",self.content))),"tailscale_api":list(dict.fromkeys(re.findall(r"tskey-api-[a-zA-Z0-9]+|tskey-auth-[a-zA-Z0-9]+|tskey-client-[a-zA-Z0-9]+|tskey-scim-[a-zA-Z0-9]+|tskey-webhook-[a-zA-Z0-9]+",self.content)))}.items() if value)
-    def classified(self):
-        return True if re.search("not for public release",self.content.lower()) else False
-    def email(self):
-        return [i.rstrip(".") for i in list(dict.fromkeys(re.findall(r"[a-z0-9][a-z0-9\.]+@[a-z][a-z0-9]+\.[a-z0-9]+[a-z0-9\.]+|[a-z0-9][a-z0-9\.]+[\(\{\[\<]at[\)\}\]|>][a-z][a-z0-9]+\.[a-z0-9]+[a-z0-9\.]+",self.content.lower())))]
-    def ipaddress(self):
-        return list(dict.fromkeys(re.findall(r"\b(10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3})\b",self.content)))
-    def ipcamera(self):
-        return True if re.search(r"camera live image|webcamxp \d",self.content.lower()) else False
-    def links(self):
-        return [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"(?:href|src|action|data|cite|poster|content|background|profile|manifest|srcset|ping)\s*=\s*[\"'](\S+?)(?=[\"'\\])",self.content)))] + [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"src\s*=\s*[\"\'](\S+?)(?=[\"\'\\])",self.content)))]
-    def phone(self):
-        return list(dict.fromkeys(re.findall(r"tel:\+?\d{10,11}|\(\d{3}\)-\d{3}-\d{4}|\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4}",self.content)))
-    def ssn(self):
-        return list(dict.fromkeys(re.findall(r"(?!000|666)[0-8]\d{2}-(?!00)\d{2}-(?!0000)\d{4}",self.content)))
-    def subnet(self):
-        return list(dict.fromkeys(re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}",self.content)))
-    def webforms(self):
-        return [{f"METHOD":re.findall(r"method\s*=\s*[\"\'](\S+?)(?=[\"\'\\])",value)[0].upper(),f"ACTION": re.findall(r"action\s*=\s*[\"\'](\S+?)(?=[\"\'\\])", value)[0],f"INPUT": [re.findall(r"\b(?:type|name|value)\s*=\s*[\"\']([^\"\']+)[\"\']", field) for field in re.findall(r"<input[^>]+>", value)]}for key,value in enumerate(list(dict.fromkeys(re.findall(r"<form[\S\s\n]+?(?=form>)", self.content))))]
+async def fetch(host):
+    def fetch_html():
+        try:
+            fake_headers = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8","Accept-Encoding":"deflate","Accept-Language":"en-US,en;q=0.5","User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36","UPGRADE-INSECURE-REQUESTS":"1"}
+            cookie_jar = http.cookiejar.CookieJar()
+            opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cookie_jar))
+            urllib.request.install_opener(opener)
+            request = urllib.request.Request(url=host,headers=fake_headers,method="GET")
+            response = urllib.request.urlopen(request,timeout=10)
+            return response
+        except:
+            return None
+    return await asyncio.to_thread(fetch_html)
+
+async def TheSilent(host):
+    hits = {}
+    web_host = f"http://{host}"
+    visits = [web_host]
+    links = [web_host]
+    count = 0
+
+    while True:
+        try:
+            count += 1
+            print(f"CRAWLING WITH DEPTH OF: {count}")
+            tasks = [fetch(link) for link in links]
+            responses = await asyncio.gather(*tasks)
+            skip = False
+            old_visit_count = len(visits)
+            for response in responses:
+                if response:
+                    content = response.read().decode(errors="ignore")
+                   
+                    if len(content) <= 25000000:
+                        links = [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"(?:href|src|action|data|cite|poster|content|background|profile|manifest|srcset|ping)\s*=\s*[\"'](\S+?)(?=[\"'\\])",content)))] + [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"src\s*=\s*[\"\'](\S+?)(?=[\"\'\\])",content)))]
+                        for link in links:
+                            link = link.encode("ascii",errors="ignore").decode()
+                            if link.startswith("http://") or link.startswith("https://"):
+                                if urllib.parse.urlparse(web_host).netloc in urllib.parse.urlparse(link).netloc:
+                                    new_link = link
+
+                                else:
+                                    continue
+
+                            elif link.startswith("//"):
+                                if urllib.parse.urlparse(web_host).netloc in urllib.parse.urlparse(urllib.parse.urlparse(response.url).scheme + ":" + link).netloc:
+                                    new_link = urllib.parse.urlparse(response.url).scheme + ":" + link
+
+                                else:
+                                    continue
+
+                            elif link.startswith("/") and not link.startswith("//"):
+                                if urllib.parse.urlparse(web_host).netloc in urllib.parse.urlparse(f"{response.url.rstrip('/')}{link}").netloc:
+                                    new_link = f"{response.url.rstrip('/')}{link}"
+
+                                else:
+                                    continue
+                                
+                            else:
+                                if urllib.parse.urlparse(web_host).netloc in urllib.parse.urlparse(f"{response.url.rstrip('/')}/{link}").netloc:
+                                    new_link = f"{response.url.rstrip('/')}/{link}"
+
+                                else:
+                                    continue
+
+                            if not skip:
+                                new_link = new_link.rstrip("/")
+                                visits.append(new_link)
+                                visits = list(dict.fromkeys(visits[:]))
+                                links.append(new_link)
+                                links = list(dict.fromkeys(links[:]))
+
+            if old_visit_count == len(visits):
+                break
+
+        except:
+            pass
+
+    hits = []
+    for visit in visits:
+        hits.append(urllib.parse.urlparse(visit).netloc)
+
+    hits = list(dict.fromkeys(hits[:]))
+    hits.sort()
+    return hits
+
+if __name__ == "__main__":
+    clear()
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-host",required=True)
+    args = parser.parse_args()
+
+    hits = asyncio.run(TheSilent(args.host))
+    clear()
+    for hit in hits:
+        print(hit)
