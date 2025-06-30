@@ -1,105 +1,107 @@
 import argparse
-import asyncio
-import http.cookiejar
-import re
-import urllib.parse
-import urllib.request
+import json
+import ssl
+import socket
 from clear import clear
 
-async def fetch(host):
-    def fetch_html():
-        try:
-            fake_headers = {"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8","Accept-Encoding":"deflate","Accept-Language":"en-US,en;q=0.5","User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36","UPGRADE-INSECURE-REQUESTS":"1"}
-            cookie_jar = http.cookiejar.CookieJar()
-            opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cookie_jar))
-            urllib.request.install_opener(opener)
-            request = urllib.request.Request(url=host,headers=fake_headers,method="GET")
-            response = urllib.request.urlopen(request,timeout=10)
-            return response
-        except:
-            return None
-    return await asyncio.to_thread(fetch_html)
+CYAN = "\033[1;36m"
+GREEN = "\033[0;32m"
+RED = "\033[1;31m"
 
-async def TheSilent(host):
+def TheSilent():
+    clear()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-host", required = True, type = str, help = "host to scan | string")
+    parser.add_argument("-filename", required = False, type = str, help = "file to output | string")
+    args = parser.parse_args()
+
+    context = ssl.create_default_context()
+    count = -1
     hits = {}
-    web_host = f"http://{host}"
-    visits = [web_host]
-    links = [web_host]
-    count = 0
-
+    hosts = [args.host]
+    
     while True:
+        count += 1
         try:
-            count += 1
-            print(f"CRAWLING WITH DEPTH OF: {count}")
-            tasks = [fetch(link) for link in links]
-            responses = await asyncio.gather(*tasks)
-            skip = False
-            old_visit_count = len(visits)
-            for response in responses:
-                if response:
-                    content = response.read().decode(errors="ignore")
-                   
-                    if len(content) <= 25000000:
-                        links = [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"(?:href|src|action|data|cite|poster|content|background|profile|manifest|srcset|ping)\s*=\s*[\"'](\S+?)(?=[\"'\\])",content)))] + [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"src\s*=\s*[\"\'](\S+?)(?=[\"\'\\])",content)))]
-                        for link in links:
-                            link = link.encode("ascii",errors="ignore").decode()
-                            if link.startswith("http://") or link.startswith("https://"):
-                                if urllib.parse.urlparse(web_host).netloc in urllib.parse.urlparse(link).netloc:
-                                    new_link = link
+            json_data = []
+            hosts = list(dict.fromkeys(hosts[:]))
+            print(f"{CYAN}checking: {GREEN}{hosts[count]}")
 
-                                else:
-                                    continue
+            # dns
+            dns = socket.gethostbyname_ex(hosts[count])
+            json_data.append(dns[0])
+            for i in dns[1]:
+                json_data.append(i)
+            for i in dns[2]:
+                json_data.append(i)
 
-                            elif link.startswith("//"):
-                                if urllib.parse.urlparse(web_host).netloc in urllib.parse.urlparse(urllib.parse.urlparse(response.url).scheme + ":" + link).netloc:
-                                    new_link = urllib.parse.urlparse(response.url).scheme + ":" + link
+            # reverse dns
+            reverse_dns = socket.gethostbyaddr(hosts[count])
+            json_data.append(reverse_dns[0])
+            for i in reverse_dns[1]:
+                json_data.append(i)
+            for i in reverse_dns[2]:
+                json_data.append(i)
 
-                                else:
-                                    continue
-
-                            elif link.startswith("/") and not link.startswith("//"):
-                                if urllib.parse.urlparse(web_host).netloc in urllib.parse.urlparse(f"{response.url.rstrip('/')}{link}").netloc:
-                                    new_link = f"{response.url.rstrip('/')}{link}"
-
-                                else:
-                                    continue
-                                
-                            else:
-                                if urllib.parse.urlparse(web_host).netloc in urllib.parse.urlparse(f"{response.url.rstrip('/')}/{link}").netloc:
-                                    new_link = f"{response.url.rstrip('/')}/{link}"
-
-                                else:
-                                    continue
-
-                            if not skip:
-                                new_link = new_link.rstrip("/")
-                                visits.append(new_link)
-                                visits = list(dict.fromkeys(visits[:]))
-                                links.append(new_link)
-                                links = list(dict.fromkeys(links[:]))
-
-            if old_visit_count == len(visits):
-                break
+        except IndexError:
+            break
 
         except:
             pass
 
-    hits = []
-    for visit in visits:
-        hits.append(urllib.parse.urlparse(visit).netloc)
+        try:
+            # ssl cert dns
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(10)
+            tcp_socket.connect((hosts[count], 443))
+            ssl_socket = context.wrap_socket(tcp_socket, server_hostname = hosts[count])
+            cert = ssl_socket.getpeercert()
+            tcp_socket.close()
+            for dns_cert in cert["subject"]:
+                if "commonName" in dns_cert[0]:
+                    json_data.append(dns_cert[1].replace("*.", ""))
 
-    hits = list(dict.fromkeys(hits[:]))
-    hits.sort()
-    return hits
+        except:
+            pass
+
+        try:
+            # ssl cert dns
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.settimeout(10)
+            tcp_socket.connect((hosts[count], 443))
+            ssl_socket = context.wrap_socket(tcp_socket, server_hostname = hosts[count])
+            cert = ssl_socket.getpeercert()
+            tcp_socket.close()    
+            for dns_cert in cert["subjectAltName"]:
+                if "DNS" in dns_cert[0]:
+                    json_data.append(dns_cert[1].replace("*.", ""))
+
+        except:
+            pass
+        
+        json_data = list(dict.fromkeys(json_data[:]))
+        json_data.sort()
+        for i in json_data:
+            hosts.append(i)
+
+        results = {}
+        results.update({"RELATIONSHIPS": json_data})
+        hits.update({hosts[count]: results})
+        
+        
+    clear()
+
+    hits = json.dumps(hits, indent = 4, sort_keys = True)
+
+    if args.filename:
+        with open(f"{args.filename}.json", "w") as json_file:
+            json_file.write(hits)
+
+        with open(f"{args.filename}.txt", "w") as text_file:
+            for line in json.loads(hits).keys():
+                text_file.write(f"{line}\n")
+
+    print(f"{RED}{hits}")
 
 if __name__ == "__main__":
-    clear()
-    
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-host",required=True)
-    args = parser.parse_args()
-
-    hits = asyncio.run(TheSilent(args.host))
-    clear()
-    for hit in hits:
-        print(hit)
+    TheSilent()
