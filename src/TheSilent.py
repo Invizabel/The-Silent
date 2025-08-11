@@ -7,7 +7,7 @@ import urllib.parse
 import urllib.request
 from os import name
 
-def TheSilent(host,dns_only):
+def TheSilent(host,osint):
     if name == "nt":
         os.system("cls")
     
@@ -88,33 +88,33 @@ def TheSilent(host,dns_only):
         except:
             pass
 
-        if not dns_only:
-            try:
-                response = urllib.request.urlopen(f"http://{hits[count]}/robots.txt",timeout=10)
-                robots = response.read().decode("ascii",errors="ignore").lower()
-                sitemaps = re.findall(r"sitemap\:\s*(.+)", robots)
-                for sitemap in sitemaps:
-                    response = urllib.request.urlopen(sitemap,timeout=10)
-                    data = response.read().decode("ascii",errors="ignore").lower()
-                    hosts = re.findall(r"<.+loc>(\S+)(?=<)",data)
-                    for host in host:    
-                        if re.search(r"\S+\.\S+",host):
-                            hits.append(urllib.parse.urlparse(host).netloc.split(":")[0])
-
-            except:
-                pass
-
-            try:
-                response = urllib.request.urlopen(f"http://{hits[count]}/sitemap.xml",timeout=10)
+        try:
+            response = urllib.request.urlopen(f"http://{hits[count]}/robots.txt",timeout=10)
+            robots = response.read().decode("ascii",errors="ignore").lower()
+            sitemaps = re.findall(r"sitemap\:\s*(.+)", robots)
+            for sitemap in sitemaps:
+                response = urllib.request.urlopen(sitemap,timeout=10)
                 data = response.read().decode("ascii",errors="ignore").lower()
                 hosts = re.findall(r"<.+loc>(\S+)(?=<)",data)
                 for host in host:    
                     if re.search(r"\S+\.\S+",host):
                         hits.append(urllib.parse.urlparse(host).netloc.split(":")[0])
 
-            except:
-                pass
+        except:
+            pass
 
+        try:
+            response = urllib.request.urlopen(f"http://{hits[count]}/sitemap.xml",timeout=10)
+            data = response.read().decode("ascii",errors="ignore").lower()
+            hosts = re.findall(r"<.+loc>(\S+)(?=<)",data)
+            for host in host:    
+                if re.search(r"\S+\.\S+",host):
+                    hits.append(urllib.parse.urlparse(host).netloc.split(":")[0])
+
+        except:
+            pass
+
+        if osint:
             try:
                 response = urllib.request.urlopen(f"http://web.archive.org/cdx/search/cdx?url=*.{args.host}/*&output=text&fl=original&collapse=urlkey")
                 waybacks = response.read().decode("ascii",errors="ignore").lower().split("\n")
@@ -135,9 +135,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", required = True, help = "hostname to check")
     parser.add_argument("--filename", required = False, help = "name of file")
-    parser.add_argument("--dns-only", required = False, action = "store_true", help = "use dns and ssl certificates only (fast but not full)")
+    parser.add_argument("--osint", required = False, action = "store_true", help = "use osint (slow)")
     args = parser.parse_args()
-    hits = TheSilent(args.host, args.dns_only)
+    hits = TheSilent(args.host, args.osint)
     if args.filename:
         for hit in hits:
             with open(args.filename, "a") as file:
