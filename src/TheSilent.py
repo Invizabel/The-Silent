@@ -135,7 +135,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", required = True, help = "hostname to check")
     parser.add_argument("--filename", required = False, help = "name of file")
-    parser.add_argument("--dns-only", required = False, action = "store_false", help = "use dns and ssl certificates only (fast but not full)")
+    parser.add_argument("--dns-only", required = False, action = "store_true", help = "use dns and ssl certificates only (fast but not full)")
     args = parser.parse_args()
     hits = TheSilent(args.host, args.dns_only)
     if args.filename:
