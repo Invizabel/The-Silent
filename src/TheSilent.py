@@ -1,47 +1,56 @@
 import argparse
-import json
-import ssl
+import os
+import re
 import socket
-from clear import clear
+import ssl
+import urllib.parse
+import urllib.request
+from os import name
 
-CYAN = "\033[1;36m"
-GREEN = "\033[0;32m"
-RED = "\033[1;31m"
-
-def TheSilent():
-    clear()
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-host", required = True, type = str, help = "host to scan | string")
-    parser.add_argument("-filename", required = False, type = str, help = "file to output | string")
-    args = parser.parse_args()
-
-    context = ssl.create_default_context()
-    count = -1
-    hits = {}
-    hosts = [args.host]
+def TheSilent(host):
+    if name == "nt":
+        os.system("cls")
     
-    while True:
-        count += 1
-        try:
-            json_data = []
-            hosts = list(dict.fromkeys(hosts[:]))
-            print(f"{CYAN}checking: {GREEN}{hosts[count]}")
+    else:
+        os.system("clear")
 
+    count = -1
+    hits = [host]
+    context = ssl.create_default_context()
+
+    while True:
+        try:
+            count += 1
+            print(hits[count])
+            
             # dns
-            dns = socket.gethostbyname_ex(hosts[count])
-            json_data.append(dns[0])
+            dns = socket.gethostbyname_ex(hits[count])
+            hits.append(dns[0])
+            
             for i in dns[1]:
-                json_data.append(i)
+                hits.append(i)
+            
             for i in dns[2]:
-                json_data.append(i)
+                hits.append(i)
+                try:
+               
+                    hits.append(socket.getnameinfo((i,0),0)[0])
+                
+                except:
+                    pass
 
             # reverse dns
-            reverse_dns = socket.gethostbyaddr(hosts[count])
-            json_data.append(reverse_dns[0])
+            reverse_dns = socket.gethostbyaddr(hits[count])
+            hits.append(reverse_dns[0])
             for i in reverse_dns[1]:
-                json_data.append(i)
+                hits.append(i)
             for i in reverse_dns[2]:
-                json_data.append(i)
+                hits.append(i)
+                try:
+                    hits.append(socket.getnameinfo((i,0),0)[0])
+                except:
+                    pass
+
 
         except IndexError:
             break
@@ -53,13 +62,13 @@ def TheSilent():
             # ssl cert dns
             tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             tcp_socket.settimeout(10)
-            tcp_socket.connect((hosts[count], 443))
-            ssl_socket = context.wrap_socket(tcp_socket, server_hostname = hosts[count])
+            tcp_socket.connect((hits[count], 443))
+            ssl_socket = context.wrap_socket(tcp_socket, server_hostname = hits[count])
             cert = ssl_socket.getpeercert()
             tcp_socket.close()
             for dns_cert in cert["subject"]:
                 if "commonName" in dns_cert[0]:
-                    json_data.append(dns_cert[1].replace("*.", ""))
+                    hits.append(dns_cert[1].replace("*.", ""))
 
         except:
             pass
@@ -68,40 +77,50 @@ def TheSilent():
             # ssl cert dns
             tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             tcp_socket.settimeout(10)
-            tcp_socket.connect((hosts[count], 443))
-            ssl_socket = context.wrap_socket(tcp_socket, server_hostname = hosts[count])
+            tcp_socket.connect((hits[count], 443))
+            ssl_socket = context.wrap_socket(tcp_socket, server_hostname = hits[count])
             cert = ssl_socket.getpeercert()
             tcp_socket.close()    
             for dns_cert in cert["subjectAltName"]:
                 if "DNS" in dns_cert[0]:
-                    json_data.append(dns_cert[1].replace("*.", ""))
+                    hits.append(dns_cert[1].replace("*.", ""))
 
         except:
             pass
+
+        try:
+            response = urllib.request.urlopen(f"http://{args.host}/robots.txt",timeout=10)
+            robots = response.read().decode("ascii",errors="ignore").lower()
+            sitemaps = re.findall(r"sitemap\:\s*(.+)", robots)
+            for sitemap in sitemaps:
+                response = urllib.request.urlopen(sitemap,timeout=10)
+                data = response.read().decode("ascii",errors="ignore").lower()
+                hosts = re.findall(r"<.+loc>(\S+)(?=<)",data)
+                for host in host:    
+                    if re.search(r"\S+\.\S+",host):
+                        hits.append(urllib.parse.urlparse(host).netloc.split(":")[0])
+
+        except:
+            pass
+
+        try:
+            response = urllib.request.urlopen(f"http://web.archive.org/cdx/search/cdx?url=*.{args.host}/*&output=text&fl=original&collapse=urlkey")
+            waybacks = response.read().decode("ascii",errors="ignore").lower().split("\n")
+            for wayback in waybacks:
+                if re.search(r"\S+\.\S+",wayback):
+                    hits.append(urllib.parse.urlparse(wayback).netloc)
         
-        json_data = list(dict.fromkeys(json_data[:]))
-        json_data.sort()
-        for i in json_data:
-            hosts.append(i)
+        except:
+            pass
 
-        results = {}
-        results.update({"RELATIONSHIPS": json_data})
-        hits.update({hosts[count]: results})
-        
-        
-    clear()
+        hits = list(dict.fromkeys(hits[:]))
 
-    hits = json.dumps(hits, indent = 4, sort_keys = True)
-
-    if args.filename:
-        with open(f"{args.filename}.json", "w") as json_file:
-            json_file.write(hits)
-
-        with open(f"{args.filename}.txt", "w") as text_file:
-            for line in json.loads(hits).keys():
-                text_file.write(f"{line}\n")
-
-    print(f"{RED}{hits}")
+    hits = list(dict.fromkeys(hits[:]))
+    hits.sort()
+    return hits
 
 if __name__ == "__main__":
-    TheSilent()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-host", required = True)
+    args = parser.parse_args()
+    TheSilent(args.host)
