@@ -1,6 +1,6 @@
-﻿# ninjalib is a data science library
+﻿# TheSilent is a data science library
 # 
-# import ninjalib
+# import TheSilent
 
 # chain TheSilent.TheSilent(data).chain()
 # flatten = TheSilent.TheSilent(data,nth=0,verbose=False).flatten()

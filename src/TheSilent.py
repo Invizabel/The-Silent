@@ -2,8 +2,6 @@ class TheSilent:
     def __init__(self,data,a=-1,verbose=False):
         self.data = data
         self.a = a
-        self.b = b
-        self.c = c
         self.verbose = verbose
 
     def chain(self):
