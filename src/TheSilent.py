@@ -15,28 +15,25 @@ class TheSilent:
         new_data = self.data
         if self.a == -1:
             while True:
+                if self.verbose:
+                    print(f"{new_data}\n")
+
                 if isinstance(new_data, dict):
                     new_data = list(new_data.items())
-                    if self.verbose:
-                        print(new_data)
-
+                    
                 if isinstance(new_data[0], list) or isinstance(new_data[0], tuple):
                     new_data = list(TheSilent(new_data).chain())
-                    if self.verbose:
-                        print(new_data)
 
                 if any([True if isinstance(i,dict) else False for i in new_data]):
                     add = []
                     for i in new_data:
                         if isinstance(i,dict):
-                            add = list(zip(add,list(i.items())))
+                            add += list(i.items())
 
                         else:
                             add.append(i)
 
                     new_data = list(add[:])
-                    if self.verbose:
-                        print(new_data)
 
                 if any([True if isinstance(i,list) or isinstance(i,tuple) else False for i in new_data]):
                     add = []
@@ -48,34 +45,29 @@ class TheSilent:
                             add.append(i)
 
                     new_data = list(add[:])
-                    if self.verbose:
-                        print(new_data)
 
                 else:
                     break
         else:
             for i in range(self.a):
+                if self.verbose:
+                    print(f"{new_data}\n")
+                    
                 if isinstance(new_data, dict):
                     new_data = list(new_data.items())
-                    if self.verbose:
-                        print(new_data)
 
                 if isinstance(new_data[0], list) or isinstance(new_data[0], tuple):
                     new_data = list(TheSilent(new_data).chain())
-                    if self.verbose:
-                        print(new_data)
 
                 if any([True if isinstance(i,dict) else False for i in new_data]):
                     add = []
                     for i in new_data:
                         if isinstance(i,dict):
-                            add = list(zip(add,list(i.items())))
+                            add += list(i.items())
 
                         else:
                             add.append(i)
                     new_data = list(add[:])
-                    if self.verbose:
-                        print(new_data)
 
                 if any([True if isinstance(i,list) or isinstance(i,tuple) else False for i in new_data]):
                     add = []
@@ -87,8 +79,6 @@ class TheSilent:
                             add.append(i)
 
                     new_data = list(add[:])
-                    if self.verbose:
-                        print(new_data)
 
         return new_data
 
