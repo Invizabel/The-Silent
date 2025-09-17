@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "TheSilent"
-version = "0.1.22"
+version = "0.1.24"
 authors = [
   { name="Invizabel"},
 ]
-description = "TheSilent is a data science library"
+description = "TheSilent is a subdomain enumeration tool!"
 readme = "README.md"
 license = { file="LICENSE.txt" }
 requires-python = ">=3.8"

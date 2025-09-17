@@ -1,7 +1,3 @@
-﻿# TheSilent is a data science library
+﻿# TheSilent is a subdomain enumeration tool!
 # 
-# import TheSilent
-
-# chain TheSilent.TheSilent(data).chain()
-# flatten = TheSilent.TheSilent(data,nth=0,verbose=False).flatten()
-# mean = TheSilent.TheSilent(data).mean()
+# python3 -m TheSilent --host example.com --filename my_file --osint (optional)
