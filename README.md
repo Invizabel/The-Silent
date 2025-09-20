@@ -1,3 +1,3 @@
-﻿# TheSilent is a subdomain enumeration tool!
+﻿# TheSilent allows you to hide CLI history!
 # 
-# python3 -m TheSilent --host example.com --filename my_file --osint (optional)
+# python3 -m TheSilent
