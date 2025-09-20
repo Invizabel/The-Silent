@@ -1,3 +1,0 @@
-Wireshark regex for packet fox hex dump
-
-^(?<data>[0-9a-f]+)$
