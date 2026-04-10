@@ -10,7 +10,7 @@ class Tools:
     def __init__(self,host):
         self.host = host
     def nmap(self):
-        out = subprocess.run(["nmap", "-v", "-Pn", "-p-", "--script=vuln", self.host], capture_output = True, text = True).stdout
+        out = subprocess.run(["nmap", "-Pn", "-p-", self.host], capture_output = True, text = True).stdout
         print(out)
     def sqlmap(self):
         out = subprocess.run(["sqlmap", f"--url=http://{self.host}", "--random-agent", "--level=5", "--risk=3", "--fingerprint", "--all", "--common-tables", " --common-columns", "--common-files", "--crawl=7", "--batch"], capture_output = True, text = True).stdout
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     for i in pips:
         if not importlib.util.find_spec(i):
             print(f"Skipping: {i}")
-            apps.remove(i)
+            pips.remove(i)
         else:
             print(f"Found: {i}")
 
