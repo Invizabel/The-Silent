@@ -1,13 +1,27 @@
 import argparse
 import http.cookiejar
 import json
+import importlib.util
 import socket
 import random
 import re
+import subprocess
 import time
 import urllib.parse
 import urllib.request
 
+apps = ["nmap"]
+pips = ["sqlmap"]
+class Tools:
+    def __init__(self,host):
+        self.host = host
+    def nmap(self):
+        out = subprocess.run(["nmap", "-Pn", "-p-", self.host], capture_output = True, text = True).stdout
+        print(out)
+    def sqlmap(self):
+        out = subprocess.run(["sqlmap", f"--url=http://{self.host}", "--random-agent", "--level=5", "--risk=3", "--fingerprint", "--current-user", "--common-tables", " --common-columns", "--common-files", "--crawl=8", "--batch"], capture_output = True, text = True).stdout
+        print(out)
+        
 class Parser:
     def __init__(self,data):
         self.data = data
@@ -19,7 +33,6 @@ class TheSilent:
         self.host = host
         self.hits = []
         self.ports = [80, 443]
-        self.wafs = ["akamai", "aws", "cloudflare"]
     def TCP(self):
         for i in self.ports:
             try:
@@ -57,16 +70,13 @@ class TheSilent:
         except:
             return None
     def CRAWL(self):
-        is_waf = False
         self.hits.append(f"http://{self.host}/")
         dead = []
         count = -1
         while True:
             count += 1
             self.hits = list(dict.fromkeys(self.hits[:]))
-            if is_waf:
-                time.sleep(random.uniform(1,2**5))
-            time.sleep(random.uniform(1,3))
+            time.sleep(random.uniform(1,8))
             try:
                 fake_headers = {"Accept":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36","Accept-Encoding":"deflate","Accept-Language":"en-US,en;q=0.5","User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36","UPGRADE-INSECURE-REQUESTS":"1"}
                 cookie_jar = http.cookiejar.CookieJar()
@@ -74,10 +84,6 @@ class TheSilent:
                 urllib.request.install_opener(opener)
                 request = urllib.request.Request(url = self.hits[count], headers = fake_headers, method = "GET")
                 response = urllib.request.urlopen(request, timeout = 10)
-                for waf in self.wafs:
-                    if waf in response.headers["server"]:
-                        print(f"Detected waf: {response.headers['server']}")
-                        is_waf = True
                 if response.status == 200:
                     print(f"Found: {self.hits[count]}")
                     links = Parser(response.read().decode()).Links()
@@ -106,6 +112,20 @@ if __name__ == "__main__":
     parser.add_argument("-host", required = True)
     parser.add_argument("-filename", required = False)
     args = parser.parse_args()
+    for i in pips:
+        if not importlib.util.find_spec(i):
+            print(f"Skipping: {i}")
+            pips.remove(i)
+        else:
+            print(f"Found: {i}")
+
+    for i in apps:
+        try:
+            subprocess.run(["which", i], capture_output=True, text=True, check=True)
+            print(f"Found: {i}")
+        except subprocess.CalledProcessError:
+            print(f"Skipping: {i}")
+            apps.remove(i)
     hosts = [args.host]
     count = -1
     while True:
@@ -131,6 +151,14 @@ if __name__ == "__main__":
                     hosts.append(urllib.parse.urlparse(i).netloc)
         except IndexError:
             break
+
+    for key in hits.keys():
+        if "nmap" in apps:
+            print(f"Running nmap against: {key}")
+            tool = Tools(key).nmap()
+        if "sqlmap" in pips:
+            print(f"Running sqlmap against: {key}")
+            tool = Tools(key).sqlmap()
     hits = json.dumps(hits, indent = 4)
     if args.filename:
         with open(args.filename, "w") as file:
