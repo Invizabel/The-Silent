@@ -1,3 +1,3 @@
-﻿# TheSilent allows you to hide CLI history!
+﻿# TheSilent is to Ethical Hacking as OpenClaw is to A.I.!
 # 
-# python3 -m TheSilent
+# python3 -m TheSilent -host demo.arpa
