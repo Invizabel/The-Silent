@@ -1,26 +1,25 @@
 import argparse
+import http.cookiejar
 import json
-import importlib.util
 import socket
-import subprocess
+import random
+import re
+import time
+import urllib.parse
+import urllib.request
 
-apps = ["nmap"]
-pips = ["sqlmap"]
-class Tools:
-    def __init__(self,host):
-        self.host = host
-    def nmap(self):
-        out = subprocess.run(["nmap", "-Pn", "-p-", self.host], capture_output = True, text = True).stdout
-        print(out)
-    def sqlmap(self):
-        out = subprocess.run(["sqlmap", f"--url=http://{self.host}", "--random-agent", "--level=5", "--risk=3", "--fingerprint", "--all", "--common-tables", " --common-columns", "--common-files", "--crawl=7", "--batch"], capture_output = True, text = True).stdout
-        print(out)
-        
+class Parser:
+    def __init__(self,data):
+        self.data = data
+    def Links(self):
+        return [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"(?:href|src|action|data|cite|poster|content|background|profile|manifest|srcset|ping)\s*=\s*[\"'](\S+?)(?=[\"'\\])",self.data)))] + [i.rstrip("/") for i in list(dict.fromkeys(re.findall(r"src\s*=\s*[\"\'](\S+?)(?=[\"\'\\])", self.data)))]
+
 class TheSilent:
     def __init__(self,host):
         self.host = host
-        self.ports = [80, 443]
         self.hits = []
+        self.ports = [80, 443]
+        self.wafs = ["akamai", "aws", "cloudflare"]
     def TCP(self):
         for i in self.ports:
             try:
@@ -57,35 +56,62 @@ class TheSilent:
                 return self.hits
         except:
             return None
+    def CRAWL(self):
+        is_waf = False
+        self.hits.append(f"http://{self.host}/")
+        dead = []
+        count = -1
+        while True:
+            count += 1
+            self.hits = list(dict.fromkeys(self.hits[:]))
+            if is_waf:
+                time.sleep(random.uniform(1,2**5))
+            time.sleep(random.uniform(1,3))
+            try:
+                fake_headers = {"Accept":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36","Accept-Encoding":"deflate","Accept-Language":"en-US,en;q=0.5","User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36","UPGRADE-INSECURE-REQUESTS":"1"}
+                cookie_jar = http.cookiejar.CookieJar()
+                opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cookie_jar))
+                urllib.request.install_opener(opener)
+                request = urllib.request.Request(url = self.hits[count], headers = fake_headers, method = "GET")
+                response = urllib.request.urlopen(request, timeout = 10)
+                for waf in self.wafs:
+                    if waf in response.headers["server"]:
+                        print(f"Detected waf: {response.headers['server']}")
+                        is_waf = True
+                if response.status == 200:
+                    print(f"Found: {self.hits[count]}")
+                    links = Parser(response.read().decode()).Links()
+                    for i in links:
+                        temp = i.rstrip("/")
+                        if i.startswith("https://") or i.startswith("http://"):
+                            if self.host in urllib.parse.urlparse(i).netloc:
+                                if temp + "/" not in dead:
+                                    self.hits.append(temp + "/")
+                        elif i.startswith("/"):
+                            if self.host in "http://" + urllib.parse.urlparse(response.url).netloc.rstrip("/") + temp + "/" and "http://" + urllib.parse.urlparse(response.url).netloc.rstrip("/") + temp + "/" not in dead:
+                                self.hits.append("http://" + urllib.parse.urlparse(response.url).netloc.rstrip("/") + temp + "/")
+                        elif not i.startswith("https://") and not i.startswith("http://"):
+                            if self.host in "http://" + urllib.parse.urlparse(response.url).netloc.rstrip("/") + "/" + temp + "/" and "http://" + urllib.parse.urlparse(response.url).netloc.rstrip("/") + "/" + temp + "/" not in dead:
+                                self.hits.append("http://" + urllib.parse.urlparse(response.url).netloc.rstrip("/") + "/" + temp + "/")
+            except IndexError:
+                break
+            except:
+                dead.append(self.hits[count])
+                self.hits.remove(self.hits[count])
+        return self.hits
 
 if __name__ == "__main__":
     hits = {}
     parser = argparse.ArgumentParser()
     parser.add_argument("-host", required = True)
-    parser.add_argument("-mode", choices = ["discover", "attack"], default = "discover", required = False)
+    parser.add_argument("-filename", required = False)
     args = parser.parse_args()
-    
-    for i in pips:
-        if not importlib.util.find_spec(i):
-            print(f"Skipping: {i}")
-            pips.remove(i)
-        else:
-            print(f"Found: {i}")
-
-    for i in apps:
-        try:
-            subprocess.run(["which", i], capture_output=True, text=True, check=True)
-            print(f"Found: {i}")
-        except subprocess.CalledProcessError:
-            print(f"Skipping: {i}")
-            apps.remove(i)
-
     hosts = [args.host]
     count = -1
-    print("")
     while True:
         count += 1
         try:
+            hosts = list(dict.fromkeys(hosts[:]))
             print(f"Discoving: {hosts[count]}")
             print(f"Checking: TCP")
             tcp = TheSilent(hosts[count]).TCP()
@@ -93,41 +119,20 @@ if __name__ == "__main__":
             udp = TheSilent(hosts[count]).UDP()
             print(f"Checking: DNS")
             dns = TheSilent(hosts[count]).DNS()
-            hits.update({hosts[count]: {"TCP": tcp, "UDP": udp, "DNS": dns}})
+            print(f"Crawling: {hosts[count]}")
+            crawl = TheSilent(hosts[count]).CRAWL()
+            hits.update({hosts[count]: {"TCP": tcp, "UDP": udp, "DNS": dns, "CRAWL": crawl}})
             if dns:
                 for i in dns:
                     if i.endswith(args.host):
                         hosts.append(i)
-                        hosts = list(dict.fromkeys(hosts[:]))
+            if crawl:
+                for i in crawl:
+                    hosts.append(urllib.parse.urlparse(i).netloc)
         except IndexError:
             break
-    
     hits = json.dumps(hits, indent = 4)
+    if args.filename:
+        with open(args.filename, "w") as file:
+            file.write(hits)
     print(hits)
-    if args.mode == "attack":
-        alive = False
-        hits = json.loads(hits)
-        if hits[args.host]["TCP"] or hits[args.host]["UDP"] or hits[args.host]["DNS"]:
-            alive = True
-        if not alive:
-            is_alive = input("Host seems to be down, are you sure you want to test? y/N ")
-        if alive or is_alive.lower() == "y":
-            choice = input("Test all targets? y/N ")
-            if choice.lower() == "y":
-                if "nmap" in apps:
-                    for i in hosts:
-                        print(f"Running nmap against: {i}")
-                        tool = Tools(i).nmap()
-                if "sqlmap" in pips:
-                    for i in hosts:
-                        print(f"Running sqlmap against: {i}")
-                        tool = Tools(i).sqlmap()
-            else:
-                if "nmap" in apps:
-                    print(f"Running nmap against: {args.host}")
-                    tool = Tools(args.host).nmap()
-                if "sqlmap" in pips:
-                    print(f"Running sqlmap against: {args.host}")
-                    tool = Tools(args.host).sqlmap()
-        else:
-            print("Aborted by user!")
