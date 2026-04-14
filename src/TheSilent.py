@@ -1,13 +1,12 @@
 import json
 import socket
 
-class Noise:
+class Classic:
     def __init__(self,index,x,y,t):
         self.index = index
         self.x = x
         self.y = y
         self.t = t
-        
     def algo(self):
         a = 11
         b = 17
@@ -15,7 +14,7 @@ class Noise:
         return out
 
     def smooth(self):
-        out = (Noise(0, self.x, self.y, self.t).algo() + Noise(0, self.x + 1, self.y, self.t).algo() + Noise(0, self.x - 1, self.y, self.t).algo() + Noise(0, self.x, self.y + 1, self.t).algo() + Noise(0, self.x, self.y - 1, self.t).algo()) // self.t
+        out = (Classic(0, self.x, self.y, self.t).algo() + Classic(0, self.x + 1, self.y, self.t).algo() + Classic(0, self.x - 1, self.y, self.t).algo() + Classic(0, self.x, self.y + 1, self.t).algo() + Classic(0, self.x, self.y - 1, self.t).algo()) // self.t
         return out + self.t
 
     def gen_terrain(self):
@@ -25,8 +24,35 @@ class Noise:
         for x in range(self.index*c,self.index*c+c):
             temp = []
             for y in range(self.index*c,self.index*c+c):
-                temp.append(Noise(0,x,y,t).smooth())
+                temp.append(Classic(0,x,y,t).smooth())
             out.append(temp)
+        return out
+
+class Minecraft4K:
+    def __init__(self,index,x,y,z):
+        self.index = index
+        self.x = x
+        self.y = y
+        self.z = z
+    def algo(self):
+        a = 11
+        b = 17
+        c = 23
+        out = ((self.x ^ a) + (self.y ^ b) + (self.z ^ c) + (self.x * self.y * self.z)) % 8
+        return out
+
+    def gen_terrain(self):
+        out = []
+        c = 16
+        for x in range(self.index*c,self.index*c+c):
+            temp1 = []
+            for y in range(self.index*64,self.index*64+c):
+                temp2 = []
+                for z in range(self.index*c,self.index*c+c):
+                    temp2.append(Minecraft4K(0,x,y,z).algo())
+
+                temp1.append(temp2)
+            out.append(temp1)
         return out
     
 class TheSilent:
@@ -36,7 +62,8 @@ class TheSilent:
         self.version = version
         self.SEGMENT_BITS = 0x7F
         self.CONTINUE_BIT = 0x80
-        
+        self.idx = 0
+
     def readVarInt(self):
         value = 0
         position = 0
@@ -75,7 +102,15 @@ class TheSilent:
         s.bind(("", 25565))
         s.listen(5)
 
-        spawn_chunk = Noise(0, 0, 0, 0).gen_terrain()
+        if self.data == 1:
+            spawn_chunk = Minecraft4K(self.idx, 0, 0, 0).gen_terrain()
+
+        if self.data == 2:
+            spawn_chunk = Classic(self.idx, 0, 0, 0).gen_terrain()
+
+        else:
+            # No valid server selected
+            return None
        
         while True:
             c, addr = s.accept()
@@ -99,5 +134,8 @@ class TheSilent:
             # handshake end
 
 if __name__ == "__main__":
-    TheSilent(None).Run()
+    # make sure to uncomment the map type you want
+    map_type = 1 # Minecraft 4K
+    #map_type = 2 # Classic
+    TheSilent(map_type).Run()
     
