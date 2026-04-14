@@ -1,5 +1,3 @@
-﻿# TheSilent is a cybersecurity aggregator tool!
-# 
-# python3 -m TheSilent -host example.com
+﻿# TheSilent is a WIP Minecraft Server written in Python!
 
 # work in progress, will update pypi package when done :)
