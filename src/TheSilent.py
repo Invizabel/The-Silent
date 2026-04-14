@@ -1,6 +1,34 @@
 import json
 import socket
 
+class Noise:
+    def __init__(self,index,x,y,t):
+        self.index = index
+        self.x = x
+        self.y = y
+        self.t = t
+        
+    def algo(self):
+        a = 11
+        b = 17
+        out = ((self.x ^ a) + (self.y ^ b) + (self.x * self.y)) % self.t
+        return out
+
+    def smooth(self):
+        out = (Noise(0, self.x, self.y, self.t).algo() + Noise(0, self.x + 1, self.y, self.t).algo() + Noise(0, self.x - 1, self.y, self.t).algo() + Noise(0, self.x, self.y + 1, self.t).algo() + Noise(0, self.x, self.y - 1, self.t).algo()) // self.t
+        return out + self.t
+
+    def gen_terrain(self):
+        out = []
+        t = 64
+        c = 16
+        for x in range(self.index*c,self.index*c+c):
+            temp = []
+            for y in range(self.index*c,self.index*c+c):
+                temp.append(Noise(0,x,y,t).smooth())
+            out.append(temp)
+        return out
+    
 class TheSilent:
     def __init__(self,data,version="26.1.2",protocol=775):
         self.data = data
@@ -8,7 +36,7 @@ class TheSilent:
         self.version = version
         self.SEGMENT_BITS = 0x7F
         self.CONTINUE_BIT = 0x80
-
+        
     def readVarInt(self):
         value = 0
         position = 0
@@ -40,17 +68,20 @@ class TheSilent:
             out = bytes([(value & self.SEGMENT_BITS) | self.CONTINUE_BIT])
             value >>= 7
 
-    def handshake(self):
+    def Run(self):
         status_response = json.dumps({"version": {"name": "26.1.2", "protocol": 775}, "description": {"text": "your mom"}}).encode("utf8")
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind(("", 25565))
         s.listen(5)
+
+        spawn_chunk = Noise(0, 0, 0, 0).gen_terrain()
        
         while True:
             c, addr = s.accept()
             print(f"Got connection from {addr}")
-            
+
+            # handshake start
             init = c.recv(1)
             length_of_packet = TheSilent(init).readVarInt()
             packet = c.recv(length_of_packet)
@@ -65,6 +96,8 @@ class TheSilent:
             c.sendall(packet)
             temp = c.recv(4096)
             print(temp)
+            # handshake end
 
 if __name__ == "__main__":
-    TheSilent(None).handshake()
+    TheSilent(None).Run()
+    
