@@ -2,34 +2,7 @@ import json
 import socket
 import uuid
 
-class Classic:
-    def __init__(self,index,x,y,t):
-        self.index = index
-        self.x = x
-        self.y = y
-        self.t = t
-    def algo(self):
-        a = 11
-        b = 17
-        out = ((self.x ^ a) + (self.y ^ b) + (self.x * self.y)) % self.t
-        return out
-
-    def smooth(self):
-        out = (Classic(0, self.x, self.y, self.t).algo() + Classic(0, self.x + 1, self.y, self.t).algo() + Classic(0, self.x - 1, self.y, self.t).algo() + Classic(0, self.x, self.y + 1, self.t).algo() + Classic(0, self.x, self.y - 1, self.t).algo()) // self.t
-        return out + self.t
-
-    def gen_terrain(self):
-        out = []
-        t = 64
-        c = 16
-        for x in range(self.index*c,self.index*c+c):
-            temp = []
-            for y in range(self.index*c,self.index*c+c):
-                temp.append(Classic(0,x,y,t).smooth())
-            out.append(temp)
-        return out
-
-class Minecraft4K:
+class World:
     def __init__(self,index,x,y,z):
         self.index = index
         self.x = x
@@ -50,7 +23,7 @@ class Minecraft4K:
             for y in range(self.index*64,self.index*64+c):
                 temp2 = []
                 for z in range(self.index*c,self.index*c+c):
-                    temp2.append(Minecraft4K(0,x,y,z).algo())
+                    temp2.append(World(0,x,y,z).algo())
 
                 temp1.append(temp2)
             out.append(temp1)
@@ -98,20 +71,14 @@ class TheSilent:
 
     def RunServer(self):
         status_response = json.dumps({"version": {"name": "26.1.2", "protocol": 775}, "description": {"text": "A Minecraft Server"}}).encode("utf8")
+        disconnect_response = json.dumps({"text": "You were kicked for trying to swim in void!"}).encode("utf8")
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind(("", 25565))
         s.listen(5)
 
-        if self.data == 1:
-            spawn_chunk = Minecraft4K(self.idx, 0, 0, 0).gen_terrain()
-
-        elif self.data == 2:
-            spawn_chunk = Classic(self.idx, 0, 0, 0).gen_terrain()
-
-        else:
-            # No valid world type selected
-            return None
+        world = World(self.idx, 0, 0, 0).gen_terrain()
+    
        
         while True:
             c, addr = s.accept()
@@ -156,21 +123,11 @@ class TheSilent:
                 
 
                 if state == 3:
-                    # join server
+                    # start joining
                     print(f"{addr[0]} is joining server")
-                    # todo: https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login_(play)
-
-                else:
-                    c.close()
-
-            else:
-                c.close()
 
             # handshake end
 
 if __name__ == "__main__":
-    # make sure to uncomment the map type you want
-    map_type = 1 # Minecraft 4K
-    #map_type = 2 # Classic
-    TheSilent(map_type).RunServer()
+    TheSilent(None).RunServer()
     
