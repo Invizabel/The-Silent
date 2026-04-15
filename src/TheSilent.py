@@ -1,5 +1,5 @@
-import json
 import socket
+import struct
 import uuid
 
 class World:
@@ -12,7 +12,7 @@ class World:
         a = 11
         b = 17
         c = 23
-        out = ((self.x ^ a) + (self.y ^ b) + (self.z ^ c) + (self.x * self.y * self.z)) % 8
+        out = ((self.x ^ a) + (self.y ^ b) + (self.z ^ c) + (self.x + self.y + self.z)) % 8
         return out
 
     def gen_terrain(self):
@@ -30,7 +30,7 @@ class World:
         return out
     
 class TheSilent:
-    def __init__(self,data,version="26.1.2",protocol=775):
+    def __init__(self,data,version="1.8.9",protocol=47):
         self.data = data
         self.protocol = protocol
         self.version = version
@@ -59,72 +59,92 @@ class TheSilent:
         return value
     
     def writeVarInt(self):
-        out = b""
+        out = b''
         value = self.data
         while True:
             if (value & ~self.SEGMENT_BITS) == 0:
-                out = bytes([value])
+                out += bytes([value])
                 return out
 
-            out = bytes([(value & self.SEGMENT_BITS) | self.CONTINUE_BIT])
+            out += bytes([(value & self.SEGMENT_BITS) | self.CONTINUE_BIT])
             value >>= 7
 
-    def RunServer(self):
-        status_response = json.dumps({"version": {"name": "26.1.2", "protocol": 775}, "description": {"text": "A Minecraft Server"}}).encode("utf8")
-        disconnect_response = json.dumps({"text": "You were kicked for trying to swim in void!"}).encode("utf8")
+    def recvall(self):
+        content = b''
+        length = TheSilent(self.data.recv(1)).readVarInt()
+        while len(content) < length:
+            request = self.data.recv(1)
+            if not request:
+                break
+            content += request
 
+        return content
+
+    def RunServer(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind(("", 25565))
         s.listen(5)
 
         world = World(self.idx, 0, 0, 0).gen_terrain()
-    
-       
+
         while True:
             c, addr = s.accept()
-            print(f"Got connection from {addr[0]}")
 
-            init = c.recv(1)
-            length_of_packet = TheSilent(init).readVarInt()
-            packet = c.recv(length_of_packet)
-            version = TheSilent(packet[1:]).readVarInt()
-            state = TheSilent(bytes([packet[-1]])).readVarInt()
-            
-            if length_of_packet == -2 or version == -2:
-                print(f"VarInt is too big")
-                c.close()
+            packet = TheSilent(c).recvall()
+            print(packet)
+            state = -1
 
-            if state == 1:
-                # get status
-                print(f"{addr[0]} is requesting status")
-                packet_data = TheSilent(0).writeVarInt() + TheSilent(len(status_response)).writeVarInt() + status_response
-                packet = TheSilent(len(packet_data)).writeVarInt() + packet_data
-                c.send(packet)
-                c.close()
+            if b'\xdd\x02' in packet:
+                state = 2
+
+            if b'\xdd\x03' in packet:
+                state = 2
             
             if state == 2:
                 # begin login
+                packet = TheSilent(c).recvall()
                 print(f"{addr[0]} is requesting to login")
-                init = c.recv(1)
-                length = TheSilent(init).readVarInt()
-                packet = c.recv(length)
-                username_length = TheSilent(packet[1:]).readVarInt()
+                username_length = TheSilent(bytes([packet[2]])).readVarInt()
                 username = packet[2:username_length+2].decode("utf8")
-                uid = uuid.UUID(bytes=packet[username_length+2:username_length+2+16])
+                uid = str(uuid.uuid4())
                 print(f"{addr[0]} is {username}")
-                packet = TheSilent(2).writeVarInt() + uid.bytes + TheSilent(len(username.encode("utf8"))).writeVarInt() + username.encode("utf8") + TheSilent(0).writeVarInt()
+                packet = TheSilent(2).writeVarInt() + TheSilent(len(uid)).writeVarInt() + uid.encode("utf8") + TheSilent(len(username.encode("utf8"))).writeVarInt() + username.encode("utf8")
+                response = TheSilent(len(packet)).writeVarInt() + packet
+                c.send(response)
+            
+                # start joining
+                print(f"{addr[0]} is entering world")
+
+                packet_id = TheSilent(0x01).writeVarInt()
+                entity_id = struct.pack(">i", 1)
+                gamemode = struct.pack(">B", 1)
+                dimension = struct.pack(">b", 0)
+                difficulty = struct.pack(">B", 0)         # unsigned byte
+                max_players = struct.pack(">B", 20)       # unsigned byte
+                level_type = "default".encode("utf8")
+                level_type = TheSilent(len(level_type)).writeVarInt() + level_type
+                reduced_debug = struct.pack(">?", False)
+                
+                packet = packet_id + entity_id + gamemode + dimension + difficulty + max_players + level_type + reduced_debug
                 response = TheSilent(len(packet)).writeVarInt() + packet
                 c.send(response)
 
-                packet = c.recv(1)
-                length = TheSilent(packet).readVarInt()
-                packet = c.recv(length)
-                state = TheSilent(packet).readVarInt()
-                
+                # send player position (1.8.9 correct packet id = 0x08)
+                '''print(f"{addr[0]} is spawning")
+                packet_id = TheSilent(0x08).writeVarInt()
 
-                if state == 3:
-                    # start joining
-                    print(f"{addr[0]} is joining server")
+                x = 0
+                y = 64
+                z = 0
+                yaw = 0
+                pitch = 0
+
+                flags = bytes([0])
+
+                packet = packet_id + struct.pack(">ddd", x, y, z) + struct.pack(">ff", yaw, pitch) + flags
+                response = TheSilent(len(packet)).writeVarInt() + packet
+
+                c.send(response)'''
 
             # handshake end
 
