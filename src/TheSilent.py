@@ -1,5 +1,6 @@
 import json
 import socket
+import uuid
 
 class Classic:
     def __init__(self,index,x,y,t):
@@ -95,8 +96,8 @@ class TheSilent:
             out = bytes([(value & self.SEGMENT_BITS) | self.CONTINUE_BIT])
             value >>= 7
 
-    def Run(self):
-        status_response = json.dumps({"version": {"name": "26.1.2", "protocol": 775}, "description": {"text": "your mom"}}).encode("utf8")
+    def RunServer(self):
+        status_response = json.dumps({"version": {"name": "26.1.2", "protocol": 775}, "description": {"text": "A Minecraft Server"}}).encode("utf8")
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind(("", 25565))
@@ -105,37 +106,71 @@ class TheSilent:
         if self.data == 1:
             spawn_chunk = Minecraft4K(self.idx, 0, 0, 0).gen_terrain()
 
-        if self.data == 2:
+        elif self.data == 2:
             spawn_chunk = Classic(self.idx, 0, 0, 0).gen_terrain()
 
         else:
-            # No valid server selected
+            # No valid world type selected
             return None
        
         while True:
             c, addr = s.accept()
-            print(f"Got connection from {addr}")
+            print(f"Got connection from {addr[0]}")
 
-            # handshake start
             init = c.recv(1)
             length_of_packet = TheSilent(init).readVarInt()
             packet = c.recv(length_of_packet)
             version = TheSilent(packet[1:]).readVarInt()
+            state = TheSilent(bytes([packet[-1]])).readVarInt()
             
             if length_of_packet == -2 or version == -2:
                 print(f"VarInt is too big")
                 c.close()
 
-            packet_data = TheSilent(0).writeVarInt() + TheSilent(len(status_response)).writeVarInt() + status_response
-            packet = TheSilent(len(packet_data)).writeVarInt() + packet_data
-            c.sendall(packet)
-            temp = c.recv(4096)
-            print(temp)
+            if state == 1:
+                # get status
+                print(f"{addr[0]} is requesting status")
+                packet_data = TheSilent(0).writeVarInt() + TheSilent(len(status_response)).writeVarInt() + status_response
+                packet = TheSilent(len(packet_data)).writeVarInt() + packet_data
+                c.send(packet)
+                c.close()
+            
+            if state == 2:
+                # begin login
+                print(f"{addr[0]} is requesting to login")
+                init = c.recv(1)
+                length = TheSilent(init).readVarInt()
+                packet = c.recv(length)
+                username_length = TheSilent(packet[1:]).readVarInt()
+                username = packet[2:username_length+2].decode("utf8")
+                uid = uuid.UUID(bytes=packet[username_length+2:username_length+2+16])
+                print(f"{addr[0]} is {username}")
+                packet = TheSilent(2).writeVarInt() + uid.bytes + TheSilent(len(username.encode("utf8"))).writeVarInt() + username.encode("utf8") + TheSilent(0).writeVarInt()
+                response = TheSilent(len(packet)).writeVarInt() + packet
+                c.send(response)
+
+                packet = c.recv(1)
+                length = TheSilent(packet).readVarInt()
+                packet = c.recv(length)
+                state = TheSilent(packet).readVarInt()
+                
+
+                if state == 3:
+                    # join server
+                    print(f"{addr[0]} is joining server")
+                    # todo: https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login_(play)
+
+                else:
+                    c.close()
+
+            else:
+                c.close()
+
             # handshake end
 
 if __name__ == "__main__":
     # make sure to uncomment the map type you want
     map_type = 1 # Minecraft 4K
     #map_type = 2 # Classic
-    TheSilent(map_type).Run()
+    TheSilent(map_type).RunServer()
     
