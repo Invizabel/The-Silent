@@ -91,7 +91,6 @@ class TheSilent:
             c, addr = s.accept()
 
             packet = TheSilent(c).recvall()
-            print(packet)
             state = -1
 
             if b'\xdd\x02' in packet:
@@ -130,7 +129,7 @@ class TheSilent:
                 c.send(response)
 
                 # send player position (1.8.9 correct packet id = 0x08)
-                '''print(f"{addr[0]} is spawning")
+                print(f"{addr[0]} is spawning")
                 packet_id = TheSilent(0x08).writeVarInt()
 
                 x = 0
@@ -144,7 +143,7 @@ class TheSilent:
                 packet = packet_id + struct.pack(">ddd", x, y, z) + struct.pack(">ff", yaw, pitch) + flags
                 response = TheSilent(len(packet)).writeVarInt() + packet
 
-                c.send(response)'''
+                c.send(response)
 
             # handshake end
 
