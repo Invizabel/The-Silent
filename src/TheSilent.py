@@ -1,32 +1,36 @@
+import random
 import socket
 import struct
+import threading
+import time
 import uuid
 
 class World:
-    def __init__(self,index,x,y,z):
+    def __init__(self,index,x=0,y=0,t=0):
         self.index = index
         self.x = x
         self.y = y
-        self.z = z
+        self.t = t
+        
     def algo(self):
         a = 11
         b = 17
-        c = 23
-        out = ((self.x ^ a) + (self.y ^ b) + (self.z ^ c) + (self.x + self.y + self.z)) % 8
+        out = ((self.x ^ a) + (self.y ^ b) + (self.x * self.y)) % self.t
         return out
+
+    def smooth(self):
+        out = (World(0, self.x, self.y, self.t).algo() + World(0, self.x + 1, self.y, self.t).algo() + World(0, self.x - 1, self.y, self.t).algo() + World(0, self.x, self.y + 1, self.t).algo() + World(0, self.x, self.y - 1, self.t).algo()) // 12
+        return out + self.t
 
     def gen_terrain(self):
         out = []
+        t = 64
         c = 16
         for x in range(self.index*c,self.index*c+c):
-            temp1 = []
-            for y in range(self.index*64,self.index*64+c):
-                temp2 = []
-                for z in range(self.index*c,self.index*c+c):
-                    temp2.append(World(0,x,y,z).algo())
-
-                temp1.append(temp2)
-            out.append(temp1)
+            temp = []
+            for y in range(self.index*c,self.index*c+c):
+                temp.append(World(0,x,y,t).smooth())
+            out.append(temp)
         return out
     
 class TheSilent:
@@ -37,6 +41,8 @@ class TheSilent:
         self.SEGMENT_BITS = 0x7F
         self.CONTINUE_BIT = 0x80
         self.idx = 0
+        self.players = {}
+        self.alive = []
 
     def readVarInt(self):
         value = 0
@@ -79,74 +85,101 @@ class TheSilent:
             content += request
 
         return content
+    
+    def KeepAlive(self):
+        # keep alive sequence
+        start = time.time()
+
+        while True:
+                end = time.time()
+                if len(self.alive) > 0 and (end - start) % 15 == 0:
+                    keepalive_id = random.randint(1, 2**31-1)
+
+                    packet_id = TheSilent(0x00).writeVarInt()
+                    payload = TheSilent(keepalive_id).writeVarInt()
+
+                    packet = packet_id + payload
+                    response = TheSilent(len(packet)).writeVarInt() + packet
+                    for addr,c in self.players.items():
+                        try:
+                            c.send(response)
+
+                        except BrokenPipeError:
+                            print(f"{addr} has disconnected")
+                            self.alive.remove(addr)
+                            c.close()
 
     def RunServer(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind(("", 25565))
         s.listen(5)
 
-        world = World(self.idx, 0, 0, 0).gen_terrain()
+        #world_spawn = World(self.idx).gen_terrain()
+        keep_alive_thread = threading.Thread(target=self.KeepAlive)
+        keep_alive_thread.start()
 
         while True:
-            c, addr = s.accept()
+            try:
+                connection, address = s.accept()
+                self.players.update({address[0]: connection})
+                if self.players:
+                    for addr, c in self.players.items():
+                        packet = TheSilent(c).recvall()
+                        state = -1
 
-            packet = TheSilent(c).recvall()
-            state = -1
+                        if b'\xdd\x02' in packet:
+                            state = 2
 
-            if b'\xdd\x02' in packet:
-                state = 2
+                        if state == 2 and addr[0] not in self.alive:
+                            # begin login
+                            packet = TheSilent(c).recvall()
+                            print(f"{addr} is requesting to login")
+                            username_length = TheSilent(bytes([packet[2]])).readVarInt()
+                            username = packet[2:username_length+2].decode("utf8")
+                            uid = str(uuid.uuid4())
+                            print(f"{addr} is {username}")
+                            packet = TheSilent(2).writeVarInt() + TheSilent(len(uid)).writeVarInt() + uid.encode("utf8") + TheSilent(len(username.encode("utf8"))).writeVarInt() + username.encode("utf8")
+                            response = TheSilent(len(packet)).writeVarInt() + packet
+                            c.send(response)
+                        
+                            # start joining
+                            print(f"{addr} is entering world")
 
-            if b'\xdd\x03' in packet:
-                state = 2
+                            packet_id = TheSilent(0x01).writeVarInt()
+                            entity_id = struct.pack(">i", 1)
+                            gamemode = struct.pack(">B", 1)
+                            dimension = struct.pack(">b", 0)
+                            difficulty = struct.pack(">B", 0)         # unsigned byte
+                            max_players = struct.pack(">B", 20)       # unsigned byte
+                            level_type = "default".encode("utf8")
+                            level_type = TheSilent(len(level_type)).writeVarInt() + level_type
+                            reduced_debug = struct.pack(">?", False)
+                            
+                            packet = packet_id + entity_id + gamemode + dimension + difficulty + max_players + level_type + reduced_debug
+                            response = TheSilent(len(packet)).writeVarInt() + packet
+                            c.send(response)
+
+                            # send player position (1.8.9 correct packet id = 0x08)
+                            print(f"{addr} is spawning")
+                            packet_id = TheSilent(0x08).writeVarInt()
+
+                            x = 0
+                            y = 64
+                            z = 0
+                            yaw = 0
+                            pitch = 0
+
+                            flags = bytes([0])
+
+                            packet = packet_id + struct.pack(">ddd", x, y, z) + struct.pack(">ff", yaw, pitch) + flags
+                            response = TheSilent(len(packet)).writeVarInt() + packet
+
+                            c.send(response)
+                            self.alive.append(addr)
+
+            except:
+                pass
             
-            if state == 2:
-                # begin login
-                packet = TheSilent(c).recvall()
-                print(f"{addr[0]} is requesting to login")
-                username_length = TheSilent(bytes([packet[2]])).readVarInt()
-                username = packet[2:username_length+2].decode("utf8")
-                uid = str(uuid.uuid4())
-                print(f"{addr[0]} is {username}")
-                packet = TheSilent(2).writeVarInt() + TheSilent(len(uid)).writeVarInt() + uid.encode("utf8") + TheSilent(len(username.encode("utf8"))).writeVarInt() + username.encode("utf8")
-                response = TheSilent(len(packet)).writeVarInt() + packet
-                c.send(response)
-            
-                # start joining
-                print(f"{addr[0]} is entering world")
-
-                packet_id = TheSilent(0x01).writeVarInt()
-                entity_id = struct.pack(">i", 1)
-                gamemode = struct.pack(">B", 1)
-                dimension = struct.pack(">b", 0)
-                difficulty = struct.pack(">B", 0)         # unsigned byte
-                max_players = struct.pack(">B", 20)       # unsigned byte
-                level_type = "default".encode("utf8")
-                level_type = TheSilent(len(level_type)).writeVarInt() + level_type
-                reduced_debug = struct.pack(">?", False)
-                
-                packet = packet_id + entity_id + gamemode + dimension + difficulty + max_players + level_type + reduced_debug
-                response = TheSilent(len(packet)).writeVarInt() + packet
-                c.send(response)
-
-                # send player position (1.8.9 correct packet id = 0x08)
-                print(f"{addr[0]} is spawning")
-                packet_id = TheSilent(0x08).writeVarInt()
-
-                x = 0
-                y = 64
-                z = 0
-                yaw = 0
-                pitch = 0
-
-                flags = bytes([0])
-
-                packet = packet_id + struct.pack(">ddd", x, y, z) + struct.pack(">ff", yaw, pitch) + flags
-                response = TheSilent(len(packet)).writeVarInt() + packet
-
-                c.send(response)
-
-            # handshake end
-
 if __name__ == "__main__":
     TheSilent(None).RunServer()
     
