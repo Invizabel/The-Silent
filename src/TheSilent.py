@@ -104,7 +104,7 @@ class TheSilent:
                         try:
                             c.send(response)
 
-                        except BrokenPipeError:
+                        except:
                             print(f"{addr} has disconnected")
                             self.alive.remove(addr)
                             c.close()
@@ -147,7 +147,7 @@ class TheSilent:
 
                             packet_id = TheSilent(0x01).writeVarInt()
                             entity_id = struct.pack(">i", 1)
-                            gamemode = struct.pack(">B", 1)
+                            gamemode = struct.pack(">B", 0)
                             dimension = struct.pack(">b", 0)
                             difficulty = struct.pack(">B", 0)         # unsigned byte
                             max_players = struct.pack(">B", 20)       # unsigned byte
@@ -163,9 +163,9 @@ class TheSilent:
                             print(f"{addr} is spawning")
                             packet_id = TheSilent(0x08).writeVarInt()
 
-                            x = 0
-                            y = 64
-                            z = 0
+                            x = 32
+                            y = 66
+                            z = 32
                             yaw = 0
                             pitch = 0
 
@@ -176,6 +176,27 @@ class TheSilent:
 
                             c.send(response)
                             self.alive.append(addr)
+
+                            # send terrain data
+                            GRASS = 2
+                            num_sections = 4
+
+                            blocks = b''
+                            for _ in range(4096 * num_sections):
+                                blocks += struct.pack("<H", (GRASS << 4) | 0)
+
+                            block_light = bytes([0xFF] * (2048 * num_sections))
+                            sky_light = bytes([0xFF] * (2048 * num_sections))
+                            biomes = bytes([1] * 256)
+
+                            section_data = blocks + block_light + sky_light + biomes
+                            primary_bitmap = (1 << num_sections) - 1
+                            data_length = TheSilent(len(section_data)).writeVarInt()
+
+                            for cx in range(4):
+                                for cz in range(4):
+                                    packet = TheSilent(0x21).writeVarInt() + struct.pack(">i", cx) + struct.pack(">i", cz) + struct.pack(">?", True) + struct.pack(">H", primary_bitmap) + data_length + section_data
+                                    c.send(TheSilent(len(packet)).writeVarInt() + packet)
 
             except:
                 pass
