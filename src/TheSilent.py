@@ -5,7 +5,7 @@ import threading
 import time
 import uuid
 
-class World:
+class Classic:
     def __init__(self,index,x=0,y=0,t=0):
         self.index = index
         self.x = x
@@ -19,7 +19,7 @@ class World:
         return out
 
     def smooth(self):
-        out = (World(0, self.x, self.y, self.t).algo() + World(0, self.x + 1, self.y, self.t).algo() + World(0, self.x - 1, self.y, self.t).algo() + World(0, self.x, self.y + 1, self.t).algo() + World(0, self.x, self.y - 1, self.t).algo()) // 12
+        out = (Classic(0, self.x, self.y, self.t).algo() + Classic(0, self.x + 1, self.y, self.t).algo() + Classic(0, self.x - 1, self.y, self.t).algo() + Classic(0, self.x, self.y + 1, self.t).algo() + Classic(0, self.x, self.y - 1, self.t).algo()) // 12
         return out + self.t
 
     def gen_terrain(self):
@@ -29,8 +29,58 @@ class World:
         for x in range(self.index*c,self.index*c+c):
             temp = []
             for y in range(self.index*c,self.index*c+c):
-                temp.append(World(0,x,y,t).smooth())
+                temp.append(Classic(0,x,y,t).smooth())
             out.append(temp)
+        return out
+    
+class Minecraft4K:
+    def __init__(self,x=0,y=0,z=0,t=6):
+        self.index = 0
+        self.x = x
+        self.y = y
+        self.z = z
+        self.t = t
+        
+    def algo(self):
+        a = 11
+        b = 17
+        c = 23
+        out = ((self.x ^ a) + (self.y ^ b) + (self.z ^ c) + (self.x * self.y * self.z)) % self.t
+        return out
+
+    def gen_terrain(self):
+        out = []
+        t = 7
+        c = 64
+        AIR = 0
+        STONE = 1
+        GRASS = 2
+        DIRT = 45
+        OAK_LOGS = 17
+        OAK_BRANCHES = 18
+        BRICK = 45
+        for x in range(self.index*c,self.index*c+c):
+            temp1 = []
+            for y in range(self.index*c,self.index*c+c):
+                temp2 = []
+                for z in range(self.index*c,self.index*c+c):
+                    block_choice = Minecraft4K(x,y,z,t).algo()
+                    if block_choice == 0:
+                        temp2.append(AIR)
+                    if block_choice == 1:
+                        temp2.append(STONE)
+                    if block_choice == 2:
+                        temp2.append(GRASS)
+                    if block_choice == 3:
+                        temp2.append(DIRT)
+                    if block_choice == 4:
+                        temp2.append(OAK_LOGS)
+                    if block_choice == 5:
+                        temp2.append(OAK_BRANCHES)
+                    if block_choice == 6:
+                        temp2.append(BRICK)
+                temp1.append(temp2)
+            out.append(temp1)
         return out
     
 class TheSilent:
@@ -114,7 +164,7 @@ class TheSilent:
         s.bind(("", 25565))
         s.listen(5)
 
-        #world_spawn = World(self.idx).gen_terrain()
+        world = Minecraft4K().gen_terrain()
         keep_alive_thread = threading.Thread(target=self.KeepAlive)
         keep_alive_thread.start()
 
@@ -143,7 +193,7 @@ class TheSilent:
                             c.send(response)
                         
                             # start joining
-                            print(f"{addr} is entering world")
+                            print(f"{addr} is entering Classic")
 
                             packet_id = TheSilent(0x01).writeVarInt()
                             entity_id = struct.pack(">i", 1)
@@ -164,7 +214,7 @@ class TheSilent:
                             packet_id = TheSilent(0x08).writeVarInt()
 
                             x = 32
-                            y = 66
+                            y = 72
                             z = 32
                             yaw = 0
                             pitch = 0
@@ -178,12 +228,13 @@ class TheSilent:
                             self.alive.append(addr)
 
                             # send terrain data
-                            GRASS = 2
                             num_sections = 4
 
                             blocks = b''
-                            for _ in range(4096 * num_sections):
-                                blocks += struct.pack("<H", (GRASS << 4) | 0)
+                            for cx in range(64):
+                                for cy in range(64):
+                                    for cz in range(64):
+                                        blocks += struct.pack("<H", (world[cx][cy][cz] << 4) | 0)
 
                             block_light = bytes([0xFF] * (2048 * num_sections))
                             sky_light = bytes([0xFF] * (2048 * num_sections))
