@@ -93,6 +93,8 @@ class TheSilent:
         self.idx = 0
         self.players = {}
         self.alive = []
+        self.world = []
+        self.lock = threading.RLock()
 
     def readVarInt(self):
         value = 0
@@ -141,125 +143,144 @@ class TheSilent:
         start = time.time()
 
         while True:
-            end = time.time()
-            if len(self.alive) > 0 and (end - start) % 15 == 0:
-                keepalive_id = random.randint(1, 2**31-1)
+            with self.lock:
+                end = time.time()
+                if len(self.players) > 0 and (end - start) % 1 == 0:
+                    keepalive_id = random.randint(1, 2**31-1)
 
-                packet_id = TheSilent(0x00).writeVarInt()
-                payload = TheSilent(keepalive_id).writeVarInt()
+                    packet_id = TheSilent(0x00).writeVarInt()
+                    payload = TheSilent(keepalive_id).writeVarInt()
 
-                packet = packet_id + payload
-                response = TheSilent(len(packet)).writeVarInt() + packet
-                for c, addr in self.players.items():
-                    try:
-                        c.send(response)
+                    packet = packet_id + payload
+                    response = TheSilent(len(packet)).writeVarInt() + packet
+                    removal = []
+                    for c, addr in self.players.items():
+                        try:
+                            c.send(response)
 
-                    except:
-                        print(f"{self.players[c]} has disconnected")
-                        self.alive.remove(self.players[c])
-                        c.close()
+                        except:
+                            print(f"{self.players[c]} has disconnected")
+                            removal.append(c)
+                            c.close()
+
+                    for i in removal:
+                        del self.players[i]
 
     def Play(self):
         while True:
-            if self.players.items():
-                for c, addr in self.players.items():
-                    try:
-                        packet = TheSilent(c).recvall()
-                        print(f"{addr}: {packet}")
-                    except:
-                        pass
+            with self.lock:
+                if self.players.items():
+                    for c, addr in self.players.items():
+                        try:
+                            packet = TheSilent(c).recvall()
+                            if packet[0] == 0x07 and packet[1] == 0x02:
+                                pos = struct.unpack(">Q", packet[2:10])[0]
+                                x = pos >> 38
+                                y = (pos >> 26) & 0xFFF
+                                z = pos & 0x3FFFFFF
+                                if x >= 1 << 25:
+                                    x -= 1 << 26
+                                if z >= 1 << 25:
+                                    z -= 1 << 26
+                                print("block broken")
+                                self.world[x][y][z] = 57
+                        except:
+                            pass
 
     def RunServer(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.bind(("", 25565))
-        s.listen(5)
+        s.listen(10)
 
-        world = Minecraft4K().gen_terrain()
+        self.world = Minecraft4K().gen_terrain()
         play_alive_thread = threading.Thread(target=self.Play)
         play_alive_thread.start()
         keep_alive_thread = threading.Thread(target=self.KeepAlive)
         keep_alive_thread.start()
 
+        print(f"running server on port 25565")
+        
         while True:
-            try:
-                c, addr = s.accept()
-                if c:
-                    packet = TheSilent(c).recvall()
-                    state = -1
-
-                    if b'\xdd\x02' in packet:
-                        state = 2
-
-                    if state == 2 and addr[0] not in self.alive:
-                        # handshake
+            c, addr = s.accept()
+            with self.lock:
+                try:
+                    if c:
                         packet = TheSilent(c).recvall()
-                        username_length = TheSilent(bytes([packet[2]])).readVarInt()
-                        username = packet[2:username_length+2].decode("utf8")
-                        uid = str(uuid.uuid4())
-                        packet = TheSilent(2).writeVarInt() + TheSilent(len(uid)).writeVarInt() + uid.encode("utf8") + TheSilent(len(username.encode("utf8"))).writeVarInt() + username.encode("utf8")
-                        response = TheSilent(len(packet)).writeVarInt() + packet
-                        c.send(response)
-                    
-                        # login success
-                        packet_id = TheSilent(0x01).writeVarInt()
-                        entity_id = struct.pack(">i", 1)
-                        gamemode = struct.pack(">B", 0)
-                        dimension = struct.pack(">b", 0)
-                        difficulty = struct.pack(">B", 0)         # unsigned byte
-                        max_players = struct.pack(">B", 20)       # unsigned byte
-                        level_type = "default".encode("utf8")
-                        level_type = TheSilent(len(level_type)).writeVarInt() + level_type
-                        reduced_debug = struct.pack(">?", False)
+                        state = -1
+
+                        if b'\xdd\x02' in packet:
+                            state = 2
+
+                        if state == 2 and addr[0] not in self.alive:
+                            # handshake
+                            packet = TheSilent(c).recvall()
+                            username_length = TheSilent(bytes([packet[2]])).readVarInt()
+                            username = packet[2:username_length+2].decode("utf8")
+                            uid = str(uuid.uuid4())
+                            packet = TheSilent(2).writeVarInt() + TheSilent(len(uid)).writeVarInt() + uid.encode("utf8") + TheSilent(len(username.encode("utf8"))).writeVarInt() + username.encode("utf8")
+                            response = TheSilent(len(packet)).writeVarInt() + packet
+                            c.send(response)
                         
-                        packet = packet_id + entity_id + gamemode + dimension + difficulty + max_players + level_type + reduced_debug
-                        response = TheSilent(len(packet)).writeVarInt() + packet
-                        c.send(response)
+                            # login success
+                            packet_id = TheSilent(0x01).writeVarInt()
+                            entity_id = struct.pack(">i", 1)
+                            gamemode = struct.pack(">B", 0)
+                            dimension = struct.pack(">b", 0)
+                            difficulty = struct.pack(">B", 0)         # unsigned byte
+                            max_players = struct.pack(">B", 20)       # unsigned byte
+                            level_type = "default".encode("utf8")
+                            level_type = TheSilent(len(level_type)).writeVarInt() + level_type
+                            reduced_debug = struct.pack(">?", False)
+                            
+                            packet = packet_id + entity_id + gamemode + dimension + difficulty + max_players + level_type + reduced_debug
+                            response = TheSilent(len(packet)).writeVarInt() + packet
+                            c.send(response)
 
-                        # join game
-                        packet_id = TheSilent(0x08).writeVarInt()
+                            # send terrain data
+                            num_sections = 4
 
-                        x = 32
-                        y = 74
-                        z = 32
-                        yaw = 0
-                        pitch = 0
+                            blocks = b''
+                            for cx in range(64):
+                                for cy in range(64):
+                                    for cz in range(64):
+                                        blocks += struct.pack("<H", (self.world[cx][cy][cz] << 4) | 0)
 
-                        flags = bytes([0])
+                            # join game
+                            packet_id = TheSilent(0x08).writeVarInt()
 
-                        packet = packet_id + struct.pack(">ddd", x, y, z) + struct.pack(">ff", yaw, pitch) + flags
-                        response = TheSilent(len(packet)).writeVarInt() + packet
+                            x = 32
+                            y = 64
+                            z = 32
+                            yaw = 0
+                            pitch = 0
 
-                        c.send(response)
+                            flags = bytes([0])
 
-                        # send terrain data
-                        num_sections = 4
+                            packet = packet_id + struct.pack(">ddd", x, y, z) + struct.pack(">ff", yaw, pitch) + flags
+                            response = TheSilent(len(packet)).writeVarInt() + packet
 
-                        blocks = b''
-                        for cx in range(64):
-                            for cy in range(64):
-                                for cz in range(64):
-                                    blocks += struct.pack("<H", (world[cx][cy][cz] << 4) | 0)
+                            c.send(response)
 
-                        block_light = bytes([0xFF] * (2048 * num_sections))
-                        sky_light = bytes([0xFF] * (2048 * num_sections))
-                        biomes = bytes([1] * 256)
+                            block_light = bytes([0xFF] * (2048 * num_sections))
+                            sky_light = bytes([0xFF] * (2048 * num_sections))
+                            biomes = bytes([1] * 256)
 
-                        section_data = blocks + block_light + sky_light + biomes
-                        primary_bitmap = (1 << num_sections) - 1
-                        data_length = TheSilent(len(section_data)).writeVarInt()
+                            section_data = blocks + block_light + sky_light + biomes
+                            primary_bitmap = (1 << num_sections) - 1
+                            data_length = TheSilent(len(section_data)).writeVarInt()
 
-                        for cx in range(4):
-                            for cz in range(4):
-                                packet = TheSilent(0x21).writeVarInt() + struct.pack(">i", cx) + struct.pack(">i", cz) + struct.pack(">?", True) + struct.pack(">H", primary_bitmap) + data_length + section_data
-                                c.send(TheSilent(len(packet)).writeVarInt() + packet)
+                            for cx in range(4):
+                                for cz in range(4):
+                                    packet = TheSilent(0x21).writeVarInt() + struct.pack(">i", cx) + struct.pack(">i", cz) + struct.pack(">?", True) + struct.pack(">H", primary_bitmap) + data_length + section_data
+                                    c.send(TheSilent(len(packet)).writeVarInt() + packet)
 
 
-                        self.alive.append(username)
-                        self.players.update({c: username})
-                        print(f"{username} is entering world")
+                            self.alive.append(username)
+                            self.players.update({c: username})
+                            print(f"{username} is entering world")
 
-            except:
-                pass
+                except:
+                    pass
             
 if __name__ == "__main__":
     TheSilent(None).RunServer()
